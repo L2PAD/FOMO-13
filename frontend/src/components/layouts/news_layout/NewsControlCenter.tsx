@@ -10,7 +10,7 @@ import {
   npGlobalPause, npGlobalResume, npRuns,
 } from "../../services/news_parser/newsParser";
 import { fetchAllNews } from "../../services/buzz/buzzStats";
-import { naOverview, naDrafts, naRuns, naGenerate } from "../../services/news_ai/newsAi";
+import { naOverview, naDrafts, naDraft, naRuns, naGenerate, naSettings, naUpdateSettings, naEditDraft, naApprove, naReject, naRegenerate, naPublish, naUnpublish } from "../../services/news_ai/newsAi";
 
 const GREEN = "#04A584";
 const isAdmin = () => String(localStorage.getItem("fomoRole") || "").trim().toLowerCase() === "admin";
@@ -443,6 +443,7 @@ const AiGenerationTab: React.FC = () => {
   const [ov, setOv] = useState<any>(null);
   const [drafts, setDrafts] = useState<any[]>([]);
   const [runs, setRuns] = useState<any[]>([]);
+  const [settings, setSettings] = useState<any>(null);
   const [sel, setSel] = useState<any>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string>("");
@@ -451,55 +452,81 @@ const AiGenerationTab: React.FC = () => {
   const admin = isAdmin();
 
   const load = useCallback(async () => {
-    const [o, d, r] = await Promise.all([naOverview(), naDrafts(30), naRuns(20)]);
+    const [o, d, r, s] = await Promise.all([naOverview(), naDrafts(30), naRuns(20), naSettings()]);
     if (o.success) setOv(o.data);
     if (d.success) setDrafts(Array.isArray(d.data) ? d.data : []);
     if (r.success) setRuns(Array.isArray(r.data) ? r.data : []);
+    if (s.success) setSettings(s.data);
   }, []);
   useEffect(() => { load(); }, [load]);
 
   const runGenerate = async () => {
-    setBusy(true); setMsg("Генерация через FomoAiGateway…");
+    setBusy(true); setMsg("Постановка в очередь генерации…");
     const res = await naGenerate({ windowLimit, maxClusters });
     setBusy(false);
-    if (res.success && res.data?.status === "SUCCESS") {
-      setMsg(`Готово: создано ${res.data.generated}, стоимость $${(res.data.totalCostUsd || 0).toFixed(4)}, токенов ${res.data.totalTokens || 0}`);
-    } else {
-      setMsg(`Ошибка генерации: ${res.data?.error || res.data?.status || "не удалось"} (ingestion не затронут)`);
-    }
-    load();
+    if (res.success && res.data?.ok) setMsg(`В очередь поставлено ${res.data.queued}/${res.data.selected} кластеров. Обработка идёт в фоне (Bull).`);
+    else setMsg(`Ошибка постановки: ${res.data?.message || res.data?.error || "не удалось"} (ingestion не затронут)`);
+    setTimeout(load, 3000);
+  };
+
+  const saveSettings = async (patch: any) => {
+    if (!admin) return;
+    setBusy(true);
+    const res = await naUpdateSettings(patch);
+    setBusy(false);
+    if (res.success) { setSettings(res.data); setMsg("Настройки сохранены (реальные backend-policies)."); load(); }
+    else setMsg("Не удалось сохранить настройки");
   };
 
   const usd = (n: number) => `$${(Number(n) || 0).toFixed(4)}`;
+  const b = ov?.budget; const q = ov?.queue || {};
+  const budgetColor = b?.status === "LIMIT_REACHED" ? T.bad : b?.status === "WARNING" ? T.warn : GREEN;
+  const setField = (k: string, v: any) => setSettings((s: any) => ({ ...s, [k]: v }));
+  const setBudgetField = (k: string, v: any) => setSettings((s: any) => ({ ...s, budget: { ...(s?.budget || {}), [k]: v } }));
+  const numInput = (val: any, on: (n: number) => void, w = 110) => (
+    <input type="number" value={val ?? 0} onChange={(e) => on(Number(e.target.value))}
+      style={{ display: "block", marginTop: 4, width: w, padding: "7px 10px", borderRadius: 8, border: `1px solid ${T.border}`, background: "transparent", color: T.ink }} />
+  );
+  const lbl = { fontSize: 12, color: T.sub, fontWeight: 600 } as const;
 
   return (
     <div data-testid="ncc-ai-tab">
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 12, marginBottom: 16 }}>
-        <KPI label="Черновиков" value={fmtNum(ov?.drafts ?? 0)} />
-        <KPI label="Запусков генерации" value={fmtNum(ov?.runs ?? 0)} />
-        <KPI label="COGS (всего)" value={usd(ov?.totalCostUsd)} sub="провайдерская стоимость" color={GREEN} />
-        <KPI label="Токенов (всего)" value={fmtNum(ov?.totalTokens ?? 0)} />
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(170px,1fr))", gap: 12, marginBottom: 16 }}>
+        <KPI label="Budget Health" value={b?.status || "—"} color={budgetColor} sub={`использовано ${b?.usagePct ?? 0}%`} />
+        <KPI label="COGS сегодня / мес" value={`${usd(b?.todayCogs)} / ${usd(b?.monthCogs)}`} sub={`лимит $${b?.limits?.dailyCogsLimitUsd}/$${b?.limits?.monthlyCogsLimitUsd}`} />
+        <KPI label="Генераций сегодня" value={fmtNum(b?.todayGenerations ?? 0)} sub={`лимит ${b?.limits?.maxGenerationsPerDay}`} />
+        <KPI label="Очередь" value={`${q.waiting ?? 0} / ${q.active ?? 0}`} sub={`ожид/актив · fail ${q.failed ?? 0}`} />
+        <KPI label="Планировщик" value={settings?.enabled ? "Включён" : "Выключен"} color={settings?.enabled ? GREEN : T.warn} sub={`интервал ${settings?.intervalMinutes ?? "—"}м`} />
+        <KPI label="Черновиков / COGS" value={`${fmtNum(ov?.drafts ?? 0)}`} sub={`всего ${usd(ov?.totalCostUsd)} · ${fmtNum(ov?.totalTokens ?? 0)} tok`} color={GREEN} />
       </div>
 
+      {settings && (
+        <Card style={{ padding: 16, marginBottom: 16 }}>
+          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Control Center · политики генерации (реальный backend)</div>
+          <div style={{ fontSize: 12, color: T.sub, marginBottom: 12 }}>Очередь Bull/Redis, бюджет проверяется <b>до</b> вызова LLM. Модель — policy правила <b>news_synthesize</b>. Парсер и AI изолированы.</div>
+          <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "flex-end" }}>
+            <label style={lbl}>Scheduler
+              <div style={{ marginTop: 6 }}><Btn testId="ai-toggle-sched" disabled={!admin || busy} onClick={() => saveSettings({ enabled: !settings.enabled })}>{settings.enabled ? "Выключить" : "Включить"}</Btn></div>
+            </label>
+            <label style={lbl}>Интервал (мин){numInput(settings.intervalMinutes, (v) => setField("intervalMinutes", v))}</label>
+            <label style={lbl}>Max stories/run{numInput(settings.maxStoriesPerRun, (v) => setField("maxStoriesPerRun", v))}</label>
+            <label style={lbl}>Min sources{numInput(settings.minSources, (v) => setField("minSources", v))}</label>
+            <label style={lbl}>Окно статей{numInput(settings.windowLimit, (v) => setField("windowLimit", v))}</label>
+            <label style={lbl}>Daily COGS $ {numInput(settings.budget?.dailyCogsLimitUsd, (v) => setBudgetField("dailyCogsLimitUsd", v))}</label>
+            <label style={lbl}>Monthly COGS $ {numInput(settings.budget?.monthlyCogsLimitUsd, (v) => setBudgetField("monthlyCogsLimitUsd", v))}</label>
+            <label style={lbl}>Max gen/day{numInput(settings.budget?.maxGenerationsPerDay, (v) => setBudgetField("maxGenerationsPerDay", v))}</label>
+            <label style={lbl}>Warning %{numInput(settings.budget?.warningThresholdPct, (v) => setBudgetField("warningThresholdPct", v))}</label>
+            <Btn kind="primary" testId="ai-save-settings" disabled={!admin || busy} onClick={() => saveSettings({ intervalMinutes: settings.intervalMinutes, maxStoriesPerRun: settings.maxStoriesPerRun, minSources: settings.minSources, windowLimit: settings.windowLimit, budget: settings.budget })}>Сохранить настройки</Btn>
+          </div>
+        </Card>
+      )}
+
       <Card style={{ padding: 16, marginBottom: 16 }}>
-        <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Синтез новостей (FomoAiGateway · managed credential)</div>
-        <div style={{ fontSize: 12, color: T.sub, marginBottom: 12 }}>
-          Кластеризация похожих статей → ранжирование → двуязычный синтез (EN/RU). Модель — policy правила <b>news_synthesize</b>. Парсинг и AI независимы: сбой AI не роняет ingestion.
-        </div>
+        <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Ручной запуск генерации (в очередь)</div>
         <div style={{ display: "flex", gap: 12, alignItems: "flex-end", flexWrap: "wrap" }}>
-          <label style={{ fontSize: 12, color: T.sub, fontWeight: 600 }}>Окно статей
-            <input type="number" data-testid="ai-window" value={windowLimit} min={10} max={500}
-              onChange={(e) => setWindowLimit(Number(e.target.value) || 150)}
-              style={{ display: "block", marginTop: 4, width: 110, padding: "7px 10px", borderRadius: 8, border: `1px solid ${T.border}`, background: "transparent", color: T.ink }} />
-          </label>
-          <label style={{ fontSize: 12, color: T.sub, fontWeight: 600 }}>Макс. кластеров
-            <input type="number" data-testid="ai-maxclusters" value={maxClusters} min={1} max={10}
-              onChange={(e) => setMaxClusters(Number(e.target.value) || 1)}
-              style={{ display: "block", marginTop: 4, width: 110, padding: "7px 10px", borderRadius: 8, border: `1px solid ${T.border}`, background: "transparent", color: T.ink }} />
-          </label>
-          <Btn kind="primary" testId="ai-generate-btn" disabled={!admin || busy} onClick={runGenerate}>
-            {busy ? "Генерация…" : "Запустить генерацию"}
-          </Btn>
+          <label style={lbl}>Окно статей{numInput(windowLimit, (v) => setWindowLimit(v || 150))}</label>
+          <label style={lbl}>Макс. кластеров{numInput(maxClusters, (v) => setMaxClusters(v || 1))}</label>
+          <Btn kind="primary" testId="ai-generate-btn" disabled={!admin || busy} onClick={runGenerate}>{busy ? "…" : "Поставить в очередь"}</Btn>
           {!admin && <span style={{ fontSize: 12, color: T.faint }}>Только администратор</span>}
         </div>
         {msg && <div data-testid="ai-gen-msg" style={{ marginTop: 12, fontSize: 13, color: T.ink, background: T.soft, padding: "8px 12px", borderRadius: 8 }}>{msg}</div>}
@@ -592,6 +619,122 @@ const AiGenerationTab: React.FC = () => {
   );
 };
 
+// ─────────────────────────── MODERATION (Phase 4/5) ───────────────────────────
+const TRUST_COLORS: Record<string, string> = { GREEN: "#04A584", YELLOW: "#C98A00", RED: "#D14343" };
+const MOD_FILTERS = ["ALL", "NEEDS_REVIEW", "APPROVED", "PUBLISHED", "REJECTED", "ARCHIVED"];
+
+const ModerationTab: React.FC = () => {
+  const [items, setItems] = useState<any[]>([]);
+  const [filter, setFilter] = useState("ALL");
+  const [sel, setSel] = useState<any>(null);
+  const [ed, setEd] = useState<any>({});
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState("");
+  const admin = isAdmin();
+
+  const load = useCallback(async () => {
+    const r = await naDrafts(100, filter === "ALL" ? undefined : filter);
+    if (r.success) setItems(Array.isArray(r.data) ? r.data : []);
+  }, [filter]);
+  useEffect(() => { load(); }, [load]);
+
+  const open = (g: any) => { setSel(g); setEd(g.editorial || {}); setMsg(""); };
+  const refreshSel = async (hash: string) => { const r = await naDraft(hash); if (r.success) { setSel(r.data); setEd(r.data.editorial || {}); } load(); };
+
+  const act = async (fn: () => Promise<any>, label: string) => {
+    if (!admin) { setMsg("Только администратор"); return; }
+    setBusy(true); setMsg(`${label}…`);
+    const res = await fn();
+    setBusy(false);
+    setMsg(res.success ? `${label}: OK` : `${label}: ошибка — ${res.data?.message || "не удалось"}`);
+    if (sel) await refreshSel(sel.unique_hash); // always re-read backend (no optimistic fake state)
+  };
+
+  const usd = (n: number) => `$${(Number(n) || 0).toFixed(4)}`;
+  const edInput = (k: string, ph: string, area = false) => area
+    ? <textarea value={ed[k] ?? ""} placeholder={ph} onChange={(e) => setEd({ ...ed, [k]: e.target.value })} style={{ width: "100%", minHeight: 90, marginTop: 4, padding: 8, borderRadius: 8, border: `1px solid ${T.border}`, background: "transparent", color: T.ink, fontSize: 13 }} />
+    : <input value={ed[k] ?? ""} placeholder={ph} onChange={(e) => setEd({ ...ed, [k]: e.target.value })} style={{ width: "100%", marginTop: 4, padding: "7px 10px", borderRadius: 8, border: `1px solid ${T.border}`, background: "transparent", color: T.ink, fontSize: 13 }} />;
+
+  return (
+    <div data-testid="ncc-moderation-tab">
+      <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
+        {MOD_FILTERS.map((f) => (
+          <button key={f} data-testid={`mod-filter-${f}`} onClick={() => setFilter(f)}
+            style={{ padding: "6px 12px", borderRadius: 999, cursor: "pointer", fontSize: 12, fontWeight: 700, border: `1px solid ${filter === f ? GREEN : T.border}`, background: filter === f ? T.soft : "transparent", color: filter === f ? GREEN : T.sub }}>{f}</button>
+        ))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: sel ? "1fr 1.3fr" : "1fr", gap: 16 }}>
+        <Card style={{ padding: 0, overflow: "hidden" }}>
+          <div style={{ padding: "12px 16px", fontSize: 15, fontWeight: 800 }}>Очередь модерации ({items.length})</div>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead><tr><th style={th}>Trust</th><th style={th}>Заголовок</th><th style={th}>Статус</th><th style={th}>Источн.</th><th style={th}>COGS</th></tr></thead>
+              <tbody>
+                {items.map((g) => (
+                  <tr key={g.unique_hash} data-testid={`mod-row-${g.unique_hash}`} onClick={() => open(g)} style={{ cursor: "pointer", background: sel?.unique_hash === g.unique_hash ? T.soft : "transparent" }}>
+                    <td style={td}><span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 999, background: TRUST_COLORS[g.trustColor] || T.faint }} /> {g.trustColor || "—"}</td>
+                    <td style={{ ...td, whiteSpace: "normal", maxWidth: 260 }}>{(g.editorial?.titleEn || g.title_en || "").slice(0, 70)}</td>
+                    <td style={td}><Pill text={g.moderationStatus || "—"} /></td>
+                    <td style={td}>{(g.sourceArticleIds || []).length}</td>
+                    <td style={td}>{usd(g.providerCostUsd)}</td>
+                  </tr>
+                ))}
+                {items.length === 0 && <tr><td style={td} colSpan={5}>Пусто</td></tr>}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+
+        {sel && (
+          <Card style={{ padding: 16 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+              <div style={{ fontSize: 15, fontWeight: 800 }}>Материал · <Pill text={sel.moderationStatus} /></div>
+              <Btn testId="mod-close" onClick={() => setSel(null)}>Закрыть</Btn>
+            </div>
+            {/* trust explained for humans */}
+            <div data-testid="mod-trust" style={{ fontSize: 13, marginBottom: 10, color: T.ink }}>
+              <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 999, background: TRUST_COLORS[sel.trustColor] || T.faint, marginRight: 6 }} />
+              <b>{sel.trustColor}</b> · {sel.trustReason?.independentSources ?? "?"} независимых источников · confidence {sel.trustReason?.aiConfidence ?? "?"} · конфликтов {sel.trustReason?.conflicts ?? 0}
+            </div>
+
+            <div style={{ display: "grid", gap: 8, fontSize: 12, color: T.sub }}>
+              <label>Заголовок (editorial){edInput("titleEn", sel.title_en)}</label>
+              <label>Краткое (editorial){edInput("shortEn", sel.short_en, true)}</label>
+              <label>Текст (editorial){edInput("extendedEn", sel.extended_en, true)}</label>
+              <label>FOMO AI View{edInput("aiViewEn", sel.ai_view_en, true)}</label>
+              <div style={{ display: "flex", gap: 8 }}>
+                <Btn testId="mod-save" disabled={!admin || busy} onClick={() => act(() => naEditDraft(sel.unique_hash, ed), "Сохранить правки")}>Сохранить правки</Btn>
+              </div>
+            </div>
+
+            {/* AI original (preserved) */}
+            <details style={{ marginTop: 10 }}>
+              <summary style={{ cursor: "pointer", fontSize: 12, fontWeight: 700, color: T.sub }}>AI original (сохраняется)</summary>
+              <div style={{ fontSize: 12, color: T.sub, marginTop: 6 }}><b>{sel.title_en}</b><div style={{ whiteSpace: "pre-wrap", marginTop: 4 }}>{sel.extended_en}</div></div>
+            </details>
+
+            <div style={{ marginTop: 10, fontSize: 12, color: T.sub }}>
+              <div><b>Trace:</b> {sel.provider} · {sel.model} · {sel.dataMode} · tokens {sel.totalTokens} · {usd(sel.providerCostUsd)} · credits {sel.creditsCharged ?? 0}</div>
+              <div><b>Components:</b> {(sel.componentTrace || []).map((c: any) => c.component).join(", ")}</div>
+              <div><b>Provenance ({(sel.sourceUrls || []).length}):</b> {(sel.sourceUrls || []).slice(0, 6).map((u: string, i: number) => <a key={i} href={u} target="_blank" rel="noreferrer" style={{ color: T.accent, marginRight: 6 }}>[{i + 1}]</a>)}</div>
+              <div><b>Revisions:</b> {(sel.revisions || []).length}</div>
+            </div>
+
+            <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
+              <Btn kind="primary" testId="mod-approve" disabled={!admin || busy} onClick={() => act(() => naApprove(sel.unique_hash), "Approve")}>Approve</Btn>
+              <Btn kind="primary" testId="mod-publish" disabled={!admin || busy} onClick={() => act(() => naPublish(sel.unique_hash), "Publish")}>Publish</Btn>
+              <Btn testId="mod-reject" disabled={!admin || busy} onClick={() => act(() => naReject(sel.unique_hash), "Reject")}>Reject</Btn>
+              <Btn testId="mod-regen" disabled={!admin || busy} onClick={() => act(() => naRegenerate(sel.unique_hash), "Regenerate")}>Regenerate</Btn>
+              <Btn testId="mod-unpublish" disabled={!admin || busy} onClick={() => act(() => naUnpublish(sel.unique_hash), "Unpublish")}>Unpublish</Btn>
+            </div>
+            {msg && <div data-testid="mod-msg" style={{ marginTop: 10, fontSize: 13, background: T.soft, padding: "8px 12px", borderRadius: 8 }}>{msg}</div>}
+          </Card>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // ─────────────────────────── ROOT ───────────────────────────
 const NewsControlCenter: React.FC = () => {
   const [tab, setTab] = useState("overview");
@@ -615,12 +758,7 @@ const NewsControlCenter: React.FC = () => {
         {tab === "stats" && <StatsTab />}
         {tab === "diagnostics" && <DiagnosticsTab />}
         {tab === "ai" && <AiGenerationTab />}
-        {tab === "moderation" && (
-          <Placeholder title="Модерация новостей" phase="Phase 4">
-            Очередь публикации: На проверке · Опубликовано · Отклонено. Публикационный trust green / yellow / red (доверие/на проверку/отклонено),
-            политики AUTO_PUBLISH / AI_REVIEW / MANUAL_REVIEW по источнику и категории.
-          </Placeholder>
-        )}
+        {tab === "moderation" && <ModerationTab />}
       </div>
     </div>
   );

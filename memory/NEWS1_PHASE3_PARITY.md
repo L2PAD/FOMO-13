@@ -114,3 +114,22 @@ Acceptance PASS: enqueue→queue→GENERATED(trust GREEN/YELLOW), edit→approve
 - **Twitter separation**: Twitter/X parsing is NOT Buzz/News — move it OUT of the News «Парсинг» sub-tab into its OWN independent header tab. News parsing must contain zero Twitter. Twitter feature itself is deferred (not built now).
 - Rich public News detail (EN) — after Buzz frontend.
 - Calendar candidates (controlled), Full Update (Phase 5).
+
+---
+
+## STATUS — Phase 5 (Product/UI Close) — IN PROGRESS
+Forensic results (repo-wide):
+- **Full Update = NOT_FOUND** — absent in FOMO-DATA donor AND current FOMO-12 (backend/frontend/website). Only `newsSection:'fomo-update'` exists = a manual news category ("FOMO Update"), NOT a Full Update pipeline. Per mandate: return NOT_FOUND; do not invent. (Phase 5 remaining: confirm nothing in the wider main FOMO repo beyond /app if such repo becomes available.)
+- **Twitter contour**: Twitter/X parsing UI is currently embedded INSIDE the news section at `frontend/src/components/layouts/news_layout/news_tabs/parcing_tab/index.tsx`; backend twitter models under `src/twitter/*` (livenews). It is a separable contour → must be MOVED (not copied) to its own top-level/Content tab; News parsing must contain zero Twitter. Twitter feature deferred (not built now).
+
+Delivered this pass (CRM, existing NewsControlCenter, current design tokens — consumes existing endpoints, no new backend):
+- **AI-генерация → Control Center**: live Budget Health (HEALTHY/WARNING/LIMIT_REACHED), COGS today/month, generations today, queue waiting/active/failed, scheduler state; editable REAL backend policies (enabled, interval, maxStoriesPerRun, minSources, window, daily/monthly COGS, maxGenerations/day, warning%) via PATCH /settings; manual enqueue; drafts + generation-runs tables. No UI-only settings. Verified via screenshot.
+- **Модерация tab**: editorial queue with filters (ALL/NEEDS_REVIEW/APPROVED/PUBLISHED/REJECTED/ARCHIVED) + trust dots; detail card with human-explained trust (GREEN·N independent sources·confidence·conflicts), editable editorial fields (title/summary/body/aiView) preserving AI original + revisions, Trace (provider/model/tokens/COGS/credits), componentTrace (8), provenance links, revisions count; actions Approve/Publish/Reject/Regenerate/Unpublish — each re-reads backend (no optimistic fake state). Verified via screenshot.
+
+### Phase 5 REMAINING (next pass)
+- RBAC refinement: allow MODERATOR editorial review (approve/reject/edit/publish), keep scheduler/budget/global settings ADMIN-only (currently all lifecycle actions are admin-gated — safe but stricter than desired).
+- Audit trail (actor/time/before-after) for approve/reject/edit/publish/unpublish/regenerate/settings — reuse shexisting audit if present.
+- Public EN News Detail: extend the EXISTING detail route with article body + Key Takeaways + FOMO AI View + provenance/source links + category/date + related, comments; non-AI news degrades gracefully. Feed stays single (mark FOMO AI, no separate public AI feed).
+- Twitter separation: move parcing_tab (Twitter) out of news_layout into its own header/Content tab; News «Парсинг» = news ingestion only.
+- Calendar bridge (controlled): create Calendar candidate from published AI news only if it contains a future event; use existing Unified Calendar; dedupe by source/generatedNews/event identity.
+- Full acceptance: single real trace registry→parser→raw→cluster→Bull→gateway→COGS→draft→editor→approve→publish→canonical News→EN Feed→Detail→comment; + failure matrix (budget/provider/restart/5×publish/regenerate-keeps-revision/unpublish-removes/non-AI-intact/moderator-cannot-change-budget).

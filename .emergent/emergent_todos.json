@@ -1,34 +1,34 @@
 [
   {
-    "content": "Phase 2 acceptance A–E + importer bugfix (COMPLETE)",
+    "content": "Phase 2/3/4 backend (acceptance, AI synthesis, queue+budget+lifecycle+publish) — COMPLETE & verified",
     "status": "completed"
   },
   {
-    "content": "Phase 3 AI synthesis backend + CRM tab (COMPLETE, live-verified)",
+    "content": "Forensic: Full Update = NOT_FOUND (donor+current); Twitter = separable contour embedded in news UI",
     "status": "completed"
   },
   {
-    "content": "Phase 4 P0 AI Queue+Scheduler (statuses/retry/recovery/jobId-dedup/settings) — COMPLETE",
+    "content": "CRM AI-генерация → Control Center (real settings + queue/budget/scheduler state) — DONE & screenshot-verified",
     "status": "completed"
   },
   {
-    "content": "Phase 4 P0 Budget Guard (pre-LLM limit, HEALTHY/WARNING/LIMIT_REACHED, raw preserved) — COMPLETE",
+    "content": "CRM Модерация tab (editorial queue + editor + trust-explained + Approve/Publish/Reject/Regenerate/Unpublish, backend re-read) — DONE & screenshot-verified",
     "status": "completed"
   },
   {
-    "content": "Phase 4 P0 Moderation lifecycle + green/yellow/red + editor + publish→canonical News (idempotent) + unpublish — COMPLETE & verified",
-    "status": "completed"
-  },
-  {
-    "content": "NEXT: CRM Buzz frontend — fully manage Phase 3/4 backend (settings/queue/budget/moderation/editor/publish) in current design",
+    "content": "NEXT: RBAC (moderator editorial vs admin-only budget/scheduler) + audit trail",
     "status": "pending"
   },
   {
-    "content": "NEXT: Separate Twitter/X parsing out of News into its own header tab (News parsing = no Twitter; Twitter deferred)",
+    "content": "NEXT: Public EN News Detail enrich (existing route) + Feed→Detail→Comments; non-AI graceful",
     "status": "pending"
   },
   {
-    "content": "Phase 4.5: rich public News detail (EN). Phase 5: Calendar candidates + Full Update forensic",
+    "content": "NEXT: Move Twitter parcing_tab out of News into own header tab (News parsing = no Twitter)",
+    "status": "pending"
+  },
+  {
+    "content": "NEXT: Calendar bridge (controlled, future-event only, Unified Calendar) + full end-to-end acceptance (testing agent)",
     "status": "pending"
   }
 ]

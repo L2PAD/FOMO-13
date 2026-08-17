@@ -25,8 +25,19 @@ const req = async (path: string, options?: RequestInit) => {
 const base = "admin/news-ai";
 
 export const naOverview = () => req(`${base}/overview`);
-export const naDrafts = (limit = 30) => req(`${base}/drafts?limit=${limit}`);
+export const naDrafts = (limit = 30, status?: string) => req(`${base}/drafts?limit=${limit}${status ? `&status=${status}` : ""}`);
 export const naDraft = (hash: string) => req(`${base}/drafts/${hash}`);
 export const naRuns = (limit = 20) => req(`${base}/runs?limit=${limit}`);
-export const naGenerate = (body: { windowLimit?: number; maxClusters?: number; minClusterSize?: number }) =>
+export const naGenerate = (body: { windowLimit?: number; maxClusters?: number; minSources?: number }) =>
   req(`${base}/generate`, { method: "POST", body: JSON.stringify(body || {}) });
+
+// Phase 5 — settings + moderation lifecycle
+export const naSettings = () => req(`${base}/settings`);
+export const naUpdateSettings = (patch: any) => req(`${base}/settings`, { method: "PATCH", body: JSON.stringify(patch || {}) });
+export const naBudget = () => req(`${base}/budget`);
+export const naEditDraft = (hash: string, editorial: any) => req(`${base}/drafts/${hash}`, { method: "PATCH", body: JSON.stringify({ editorial }) });
+export const naApprove = (hash: string) => req(`${base}/drafts/${hash}/approve`, { method: "POST" });
+export const naReject = (hash: string) => req(`${base}/drafts/${hash}/reject`, { method: "POST" });
+export const naRegenerate = (hash: string) => req(`${base}/drafts/${hash}/regenerate`, { method: "POST" });
+export const naPublish = (hash: string) => req(`${base}/drafts/${hash}/publish`, { method: "POST" });
+export const naUnpublish = (hash: string) => req(`${base}/drafts/${hash}/unpublish`, { method: "POST" });
