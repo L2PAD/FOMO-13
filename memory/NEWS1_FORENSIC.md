@@ -75,7 +75,14 @@ Implemented in `fomo-backend/src/news-parser/` (reuses NewsService importer, Bul
 **Verified (real data):** 121 sources seeded → 85+ runs (47 SUCCESS / 49 FAILED-isolated) → **706 real articles** in `news_articles` → **122 canonical `News`** (active/default) → public API `/api/news/crypto` total 132 → website **Buzz→News EN** renders real articles (Decrypt/OpenAI/XRP) with images+categories.
 
 ## NEXT (Phase 2+) — not yet built
-- Phase 2: CRM News Control Center UI (RU, our design) under Контент→Новости (Обзор/Источники/Парсинг/Запуски/Статистика/Диагностика) consuming the above endpoints.
+
+## STATUS — Phase 2 (CRM News Control Center) COMPLETE & VERIFIED
+Backend (added to `news-parser.service`/controller): `GET parsing` (scheduler/queue depth/workers/redis), `GET diagnostics` (functional checks: queue, registry, raw, importer, scheduler heartbeat), `GET sources` now returns human `state` + freshness + uniquenessPct, `GET sources/:id/health` (recent runs, latency p50/p95, circuit-breaker), scheduler heartbeat, freshness = max(interval×2, tierThreshold). Destructive/global ops (global pause/resume, run all/tier, source create/edit/delete, seed) gated to **admin** (moderator = view + run/test single source) — P51.
+Frontend: `frontend/src/components/layouts/news_layout/NewsControlCenter.tsx` mounted under **Контент → Новости** (`/admin/content/news`). Internal header (green #04A584): Обзор · Новости · Источники · Парсинг · Запуски · AI-генерация · Модерация · Статистика · Диагностика. Human statuses (Работает/Есть проблемы/Ошибка/На паузе/Устарели данные/Не настроено). Overview = System Health (8) + Needs Attention + KPI; Источники operational table + row actions + health drawer; Парсинг global controls + queue + Run Tier/All (queue-only); Запуски history + trace drawer; Статистика recharts (fetched/unique/dup, top sources); Диагностика functional test button. AI-генерация & Модерация present in nav as Phase 3/4 placeholders (IA не переделывать).
+Verified: all endpoints 200 with real data (121 sources, 910 articles, 232 runs, successRate 41%), admin compiles, Overview renders real health + needs-attention.
+Pending verification: full testing_agent runtime pack (run→queued→success, pause/resume, global pause, restart recovery) — recommended next.
+
+### Old Phase 2 line (done):
 - Phase 3: clustering + provenance + AI synthesis via FomoAiGateway (classify/cluster/synthesis/translate) → GeneratedNews.
 - Phase 4: moderation (green/yellow/red publication trust) + publish lifecycle + website regression.
 - Phase 5: Full Update pipeline + calendar linkage + audit + permissions + acceptance.

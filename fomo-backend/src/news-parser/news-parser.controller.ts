@@ -2,29 +2,53 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from "@nestjs/common";
 import { Request } from "express";
-import { Req } from "@nestjs/common";
 import { Roles } from "src/auth/role.decorator";
 import { JwtAuthGuard } from "src/auth/jwt.auth.guard";
 import { NewsParserService } from "./news-parser.service";
 
-// CRM News Control Center backend (P20–P34). RU-facing UI consumes these.
+// CRM News Control Center backend (P20-P34). RU-facing UI consumes these.
 @Roles("admin,moderator")
 @UseGuards(JwtAuthGuard)
 @Controller("admin/news-parser")
 export class NewsParserController {
   constructor(private readonly service: NewsParserService) {}
 
+  // destructive/global ops require admin (P51); moderator can view + run/test single source.
+  private requireAdmin(req: Request) {
+    const role = (req as any)?.user?.role;
+    const roles = Array.isArray(role)
+      ? role.map((r: any) => String(r).toLowerCase())
+      : [String(role || "").toLowerCase()];
+    if (!roles.includes("admin")) {
+      throw new ForbiddenException(
+        "Требуются права администратора для этого действия."
+      );
+    }
+  }
+
   @Get("overview")
   overview() {
     return this.service.overview();
+  }
+
+  @Get("parsing")
+  parsing() {
+    return this.service.getParsingControls();
+  }
+
+  @Get("diagnostics")
+  diagnostics() {
+    return this.service.diagnostics();
   }
 
   @Get("stats")
@@ -38,17 +62,20 @@ export class NewsParserController {
   }
 
   @Post("global/pause")
-  pauseGlobal() {
+  pauseGlobal(@Req() req: Request) {
+    this.requireAdmin(req);
     return this.service.setGlobalPaused(true);
   }
 
   @Post("global/resume")
-  resumeGlobal() {
+  resumeGlobal(@Req() req: Request) {
+    this.requireAdmin(req);
     return this.service.setGlobalPaused(false);
   }
 
   @Post("seed")
-  seed() {
+  seed(@Req() req: Request) {
+    this.requireAdmin(req);
     return this.service.seedSources();
   }
 
@@ -58,7 +85,7 @@ export class NewsParserController {
     @Query("status") status?: string,
     @Query("q") q?: string
   ) {
-    return this.service.listSources({ tier, status, q });
+    return this.service.listSourcesWithHealth({ tier, status, q });
   }
 
   @Get("sources/:id")
@@ -66,24 +93,36 @@ export class NewsParserController {
     return this.service.getSource(id);
   }
 
+  @Get("sources/:id/health")
+  sourceHealth(@Param("id") id: string) {
+    return this.service.sourceHealth(id);
+  }
+
   @Post("sources")
-  createSource(@Body() body: any) {
+  createSource(@Body() body: any, @Req() req: Request) {
+    this.requireAdmin(req);
     return this.service.createSource(body);
   }
 
   @Patch("sources/:id")
-  updateSource(@Param("id") id: string, @Body() body: any) {
+  updateSource(@Param("id") id: string, @Body() body: any, @Req() req: Request) {
+    this.requireAdmin(req);
     return this.service.updateSource(id, body);
   }
 
   @Delete("sources/:id")
-  deleteSource(@Param("id") id: string) {
+  deleteSource(@Param("id") id: string, @Req() req: Request) {
+    this.requireAdmin(req);
     return this.service.deleteSource(id);
   }
 
   @Post("sources/:id/run")
   runSource(@Param("id") id: string, @Req() req: Request) {
-    return this.service.enqueueSource(id, "manual", String((req as any)?.user?._id || "admin"));
+    return this.service.enqueueSource(
+      id,
+      "manual",
+      String((req as any)?.user?._id || "admin")
+    );
   }
 
   @Post("sources/:id/pause")
@@ -103,11 +142,16 @@ export class NewsParserController {
 
   @Post("run/tier/:tier")
   runTier(@Param("tier") tier: "A" | "B" | "C", @Req() req: Request) {
-    return this.service.enqueueTier(tier, String((req as any)?.user?._id || "admin"));
+    this.requireAdmin(req);
+    return this.service.enqueueTier(
+      tier,
+      String((req as any)?.user?._id || "admin")
+    );
   }
 
   @Post("run/all")
   runAll(@Req() req: Request) {
+    this.requireAdmin(req);
     return this.service.enqueueAll(String((req as any)?.user?._id || "admin"));
   }
 

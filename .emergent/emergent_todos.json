@@ -1,18 +1,18 @@
 [
   {
-    "content": "P0: Full forensic of FOMO-DATA + FOMO-12, capability map (NEWS1_FORENSIC.md)",
+    "content": "P0: Full forensic + capability map (NEWS1_FORENSIC.md)",
     "status": "completed"
   },
   {
-    "content": "Phase 1 (backbone): NewsSource registry (121 seeded) + NewsFetcher (rss-parser) + NewsParserRun + multi-layer dedupe + write news_articles + import→News + Bull staggered scheduler + fetch safety/retry/circuit-breaker + admin endpoints",
+    "content": "Phase 1 (backbone): registry(121)+fetcher+runs+dedupe+news_articles+import→News+staggered scheduler+circuit-breaker+admin API — verified real data",
     "status": "completed"
   },
   {
-    "content": "Phase 1 verify: real RSS news end-to-end → news_articles(706) → News(122) → website Buzz→News EN (verified via API+DB+screenshot)",
+    "content": "Phase 2: CRM News Control Center under Контент→Новости (RU, 9 tabs, Health+Needs Attention, sources table+drawer, parsing controls, runs, stats, diagnostics, human statuses, freshness, admin-gated destructive ops) — endpoints 200 + UI verified",
     "status": "completed"
   },
   {
-    "content": "Phase 2: CRM News Control Center under Контент→Новости (RU, our design): Обзор/Источники/Парсинг/Запуски/Статистика/Диагностика + Health",
+    "content": "Phase 2 acceptance: testing_agent runtime pack (run→queued→success, pause/resume, global pause, restart recovery, source→site trace)",
     "status": "pending"
   },
   {
@@ -20,11 +20,11 @@
     "status": "pending"
   },
   {
-    "content": "Phase 4: Moderation (green/yellow/red publication trust) + publish lifecycle + website detail/comments + regression of Buzz/Topics/Calendar",
+    "content": "Phase 4: Moderation (green/yellow/red publication trust) + publish lifecycle + website detail/comments + regression",
     "status": "pending"
   },
   {
-    "content": "Phase 5: Full Update pipeline + calendar linkage + audit + permissions + bootstrap idempotency + final runtime acceptance",
+    "content": "Phase 5: Full Update pipeline + calendar linkage + audit + permissions + acceptance",
     "status": "pending"
   }
 ]

@@ -7,8 +7,9 @@ import CreateFAQLayout from '../../components/layouts/settings_layout/FAQ_layout
 import CalendarLayout from '../../components/layouts/calendar_layout/CalendarControlCenter';
 import TabsLayout from '../../components/layouts/tabs_layout';
 import InfoLayout from '../../components/layouts/info_layout/InfoLayout';
+import NewsControlCenter from '../../components/layouts/news_layout/NewsControlCenter';
 
-type TabKey = 'footer' | 'faq' | 'calendar' | 'tabs' | 'info';
+type TabKey = 'footer' | 'faq' | 'calendar' | 'tabs' | 'info' | 'news';
 
 interface TabDef {
     key: TabKey;
@@ -17,6 +18,7 @@ interface TabDef {
 }
 
 const TABS: TabDef[] = [
+    { key: 'news', label: 'Новости' },
     { key: 'footer', label: 'Футер' },
     { key: 'faq', label: 'FAQ' },
     { key: 'calendar', label: 'Календарь' },
@@ -36,6 +38,8 @@ const ContentPage = () => {
 
     const renderTab = () => {
         switch (tab) {
+            case 'news':
+                return <NewsControlCenter />;
             case 'footer':
                 return <FooterLayout />;
             case 'faq':

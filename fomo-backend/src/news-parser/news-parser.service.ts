@@ -459,4 +459,145 @@ export class NewsParserService implements OnModuleInit {
       .select("id")
       .lean();
   }
+
+  // \u2014\u2014 scheduler heartbeat (P31/diagnostics) \u2014\u2014
+  async touchSchedulerHeartbeat(): Promise<void> {
+    await this.globalColl().updateOne(
+      { _id: "global" as any },
+      { $set: { schedulerLastTickAt: new Date() } },
+      { upsert: true }
+    );
+  }
+
+  // human status + freshness (P29/P30)
+  private tierStaleThreshold(tier: string): number {
+    return tier === "A" ? 30 : tier === "B" ? 60 : 120;
+  }
+  private staleThresholdMin(source: any): number {
+    const interval = Number(source.pollingIntervalMinutes || 60);
+    return Math.max(interval * 2, this.tierStaleThreshold(source.tier));
+  }
+  private freshnessMinutes(source: any, now = Date.now()): number {
+    if (!source.lastSuccessAt) return Infinity;
+    return (now - new Date(source.lastSuccessAt).getTime()) / 60000;
+  }
+  private humanState(source: any, now = Date.now()): { state: string; stale: boolean; freshnessMinutes: number } {
+    const fresh = this.freshnessMinutes(source, now);
+    const stale = fresh > this.staleThresholdMin(source);
+    let state = "Работает";
+    if (source.status === "PAUSED") state = "На паузе";
+    else if (source.status === "DISABLED") state = "Отключён";
+    else if (source.status === "ERROR") state = "Ошибка";
+    else if (!source.lastRunAt) state = "Не настроено";
+    else if (Number(source.consecutiveFailures || 0) > 0) state = "Есть проблемы";
+    else if (stale) state = "Устарели данные";
+    return { state, stale, freshnessMinutes: isFinite(fresh) ? Math.round(fresh) : -1 };
+  }
+
+  async listSourcesWithHealth(filter: { tier?: string; status?: string; q?: string } = {}) {
+    const rows = await this.listSources(filter);
+    const now = Date.now();
+    return rows.map((s: any) => {
+      const h = this.humanState(s, now);
+      const uniqueness = s.lastFetched ? Math.round((1 - (s.lastDuplicates || 0) / Math.max(s.lastFetched, 1)) * 100) : null;
+      return { ...s, ...h, uniquenessPct: uniqueness };
+    });
+  }
+
+  // parsing controls: scheduler + queue depth + workers (P25/P26)
+  async getParsingControls() {
+    let counts: any = { waiting: 0, active: 0, completed: 0, failed: 0, delayed: 0, paused: 0 };
+    let redisOk = false;
+    try {
+      counts = await this.queue.getJobCounts();
+      redisOk = true;
+    } catch {
+      redisOk = false;
+    }
+    const g = await this.getGlobal();
+    return {
+      schedulerEnabled: String(process.env.NEWS_PARSER_SCHEDULER_ENABLED || "true") !== "false",
+      workerEnabled: String(process.env.NEWS_PARSER_WORKER_ENABLED || "true") !== "false",
+      globalPaused: g.paused,
+      concurrency: 4,
+      redisOk,
+      queue: counts,
+      queueDepth: Number(counts.waiting || 0) + Number(counts.delayed || 0),
+      activeWorkers: Number(counts.active || 0),
+      tierIntervals: NEWS_PARSER_DEFAULTS.tierIntervalMinutes,
+    };
+  }
+
+  // per-source health cardiogram (P23)
+  async sourceHealth(id: string) {
+    const source: any = await this.getSource(id);
+    const runs = await this.runModel.find({ sourceId: id }).sort({ startedAt: -1 }).limit(20).lean();
+    const durations = runs.filter((r: any) => r.durationMs).map((r: any) => r.durationMs).sort((a, b) => a - b);
+    const p = (q: number) => (durations.length ? durations[Math.min(durations.length - 1, Math.floor(durations.length * q))] : 0);
+    const agg = runs.reduce(
+      (acc: any, r: any) => {
+        acc.fetched += r.fetchedItems || 0;
+        acc.newItems += r.newItems || 0;
+        acc.duplicates += r.duplicates || 0;
+        acc.failed += r.status === "FAILED" ? 1 : 0;
+        return acc;
+      },
+      { fetched: 0, newItems: 0, duplicates: 0, failed: 0 }
+    );
+    const h = this.humanState(source);
+    return {
+      source: { ...source, ...h, staleThresholdMinutes: this.staleThresholdMin(source) },
+      circuitBreaker: {
+        consecutiveFailures: source.consecutiveFailures || 0,
+        threshold: NEWS_PARSER_DEFAULTS.circuitBreakerThreshold,
+        tripped: source.status === "ERROR",
+      },
+      latency: { p50Ms: p(0.5), p95Ms: p(0.95) },
+      last20: agg,
+      recentRuns: runs,
+      lastError: source.lastError || null,
+    };
+  }
+
+  // functional diagnostics (P33/P34)
+  async diagnostics() {
+    const checks: Array<{ key: string; label: string; ok: boolean; detail: string }> = [];
+    const push = (key: string, label: string, ok: boolean, detail = "") => checks.push({ key, label, ok, detail });
+    try {
+      const c = await this.queue.getJobCounts();
+      push("queue", "Redis / Bull очередь", true, `waiting=${c.waiting}, active=${c.active}, failed=${c.failed}`);
+    } catch (e: any) {
+      push("queue", "Redis / Bull очередь", false, String(e?.message || e));
+    }
+    try {
+      const n = await this.sourceModel.countDocuments();
+      push("registry", "Реестр источников (Mongo fomo_market)", n > 0, `источников: ${n}`);
+    } catch (e: any) {
+      push("registry", "Реестр источников", false, String(e?.message || e));
+    }
+    try {
+      const n = await this.rawModel.estimatedDocumentCount();
+      push("raw", "Сырые статьи (news_articles)", n > 0, `всего: ${n}`);
+    } catch (e: any) {
+      push("raw", "Сырые статьи", false, String(e?.message || e));
+    }
+    try {
+      const cnt = await this.newsService.getActiveNewsCount().catch(() => null as any);
+      const ok = cnt === null ? true : Number(cnt) > 0;
+      push("importer", "Импортёр news_articles → News", ok, cnt === null ? "проверка пропущена" : `активных новостей: ${cnt}`);
+    } catch (e: any) {
+      push("importer", "Импортёр", false, String(e?.message || e));
+    }
+    try {
+      const g: any = await this.globalColl().findOne({ _id: "global" as any });
+      const last = g?.schedulerLastTickAt ? new Date(g.schedulerLastTickAt).getTime() : 0;
+      const ageSec = last ? Math.round((Date.now() - last) / 1000) : -1;
+      push("scheduler", "Планировщик (heartbeat)", last > 0 && ageSec < 180, ageSec >= 0 ? `последний тик ${ageSec}с назад` : "ещё не тикал");
+    } catch (e: any) {
+      push("scheduler", "Планировщик", false, String(e?.message || e));
+    }
+    const allOk = checks.every((c) => c.ok);
+    return { ok: allOk, checks };
+  }
+
 }

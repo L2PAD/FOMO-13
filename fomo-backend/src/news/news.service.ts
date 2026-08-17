@@ -89,8 +89,11 @@ export class NewsService implements OnModuleInit {
     }
   }
 
-  async syncNewsFromArticlesCollection(limit: number = 30): Promise<{
-    candidates: number;
+  async getActiveNewsCount(): Promise<number> {
+    return this.newsModel.countDocuments({ status: "active", newsSection: "default" });
+  }
+
+  async syncNewsFromArticlesCollection(limit: number = 30): Promise<{    candidates: number;
     saved: number;
     duplicates: number;
     failed: number;

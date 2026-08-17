@@ -31,6 +31,7 @@ export class NewsParserScheduler implements OnModuleInit, OnModuleDestroy {
     if (this.ticking) return;
     this.ticking = true;
     try {
+      await this.service.touchSchedulerHeartbeat();
       const due = await this.service.findDueSources(new Date());
       let queued = 0;
       for (const s of due) {
