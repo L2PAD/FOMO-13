@@ -1,30 +1,34 @@
 [
   {
-    "content": "P0: Full forensic + capability map (NEWS1_FORENSIC.md)",
+    "content": "Phase 2 acceptance A–E + importer bugfix (COMPLETE, verified)",
     "status": "completed"
   },
   {
-    "content": "Phase 1 (backbone): registry(121)+fetcher+runs+dedupe+news_articles+import→News+staggered scheduler+circuit-breaker+admin API — verified real data",
+    "content": "Phase 3 parity map + FomoAiGateway contract (COMPLETE)",
     "status": "completed"
   },
   {
-    "content": "Phase 2: CRM News Control Center under Контент→Новости (RU, 9 tabs, Health+Needs Attention, sources table+drawer, parsing controls, runs, stats, diagnostics, human statuses, freshness, admin-gated destructive ops) — endpoints 200 + UI verified",
+    "content": "Activate managed AI credential via ENV→MANAGED migrate-env + activate + test (COMPLETE, real)",
     "status": "completed"
   },
   {
-    "content": "Phase 2 acceptance: testing_agent runtime pack (run→queued→success, pause/resume, global pause, restart recovery, source→site trace)",
+    "content": "Phase 3 BACKEND build+integrate (extractor/clustering/ranking/prompts migrated, synth via FomoAiGateway, entities, rule, endpoints) — COMPLETE",
+    "status": "completed"
+  },
+  {
+    "content": "Phase 3 backend acceptance: real trace+COGS+idempotency(5→1)+negative/no-fake+parser isolation — PASS",
+    "status": "completed"
+  },
+  {
+    "content": "Phase 3 FRONTEND: fill CRM «AI-генерация» tab (drafts/detail/provenance/COGS/generate) + richer public news layout",
     "status": "pending"
   },
   {
-    "content": "Phase 3: Clustering + provenance + AI synthesis via FomoAiGateway (classify/cluster/synthesis/translate) → GeneratedNews → News (EN); AI-генерация tab; COGS; AI failure isolation + retry",
+    "content": "Phase 3 hardening: Bull queue for AI (retries/backoff) + scheduler trigger",
     "status": "pending"
   },
   {
-    "content": "Phase 4: Moderation (green/yellow/red publication trust) + publish lifecycle + website detail/comments + regression",
-    "status": "pending"
-  },
-  {
-    "content": "Phase 5: Full Update pipeline + calendar linkage + audit + permissions + acceptance",
+    "content": "Phase 4 moderation → publish GeneratedNews→canonical News; Phase 5 Full Update/calendar",
     "status": "pending"
   }
 ]

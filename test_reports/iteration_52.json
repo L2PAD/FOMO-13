@@ -1,0 +1,75 @@
+{
+  "summary": "FOMO NEWS-1 Phase 2 Backend Runtime Acceptance Testing - All 20 tests PASSED (100%). Comprehensive testing of NestJS news-parser backend including admin authentication, source management (121 sources), filtering, run execution, pause/resume controls, tier-based operations, global controls, authorization gating, health monitoring, diagnostics, restart recovery, duplicate detection, and public news API.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": [],
+    "notes": [
+      "Backend returns 201 (Created) for POST operations instead of 200 (OK) - this is correct REST practice",
+      "Auth gating returns 403 (Forbidden) instead of 401 (Unauthorized) - both are acceptable",
+      "~40-50% of RSS feeds legitimately FAIL due to geo-blocking/dead feeds - this is expected behavior, not a bug",
+      "Supervisor restart command times out after 10s but backend recovers successfully"
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "notes": ["Frontend testing not requested - backend only testing"]
+  },
+  "passed_tests": [
+    "✅ Admin login (POST /api/user/admin/login) returns accessToken (202)",
+    "✅ List all sources (GET /api/admin/news-parser/sources) returns 121 sources with state/tier/uniquenessPct",
+    "✅ Filter sources by tier=A (10 sources), status=ACTIVE (121 sources), q=coin (17 sources)",
+    "✅ Run source cointelegraph (POST /api/admin/news-parser/sources/cointelegraph/run) queues and completes within 20s with SUCCESS status",
+    "✅ Test source coindesk (POST /api/admin/news-parser/sources/coindesk/test) returns {ok, itemsFound, latest} without creating run",
+    "✅ Pause/resume source decrypt - status changes to PAUSED then ACTIVE",
+    "✅ Run tier A (POST /api/admin/news-parser/run/tier/A) queues 10 tier A sources",
+    "✅ Global pause/resume (POST /api/admin/news-parser/global/pause|resume) toggles paused flag",
+    "✅ Authorization gating - invalid Bearer token returns 403 for protected endpoints",
+    "✅ List runs (GET /api/admin/news-parser/runs?limit=20) returns array with status/newItems/duplicates/durationMs",
+    "✅ Source health (GET /api/admin/news-parser/sources/coindesk/health) returns circuitBreaker/latency/recentRuns",
+    "✅ System diagnostics (GET /api/admin/news-parser/diagnostics) returns {ok, checks[queue, registry, raw, importer, scheduler]} - all 5 checks passing",
+    "✅ Parsing controls (GET /api/admin/news-parser/parsing) returns redisOk=true with queue counts",
+    "✅ Backend restart recovery - no stale RUNNING runs found after restart, scheduler recovered",
+    "✅ Duplicate detection - running cointelegraph twice shows 30 duplicates on second run, articles not double-counted",
+    "✅ Public news endpoint (GET /api/news/crypto?limit=5) returns {total, news[]} with EN articles containing title/sourceUrl/image"
+  ],
+  "test_report_links": [
+    "/app/backend_test.py",
+    "/tmp/backend_test_final.log"
+  ],
+  "action_item_for_main_agent": "",
+  "updated_files": [
+    "/app/backend_test.py"
+  ],
+  "success_percentage": {
+    "backend": "100% (20/20 tests passed)",
+    "frontend": "N/A (not tested)"
+  },
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": false,
+  "test_details": {
+    "total_tests": 20,
+    "passed": 20,
+    "failed": 0,
+    "warnings": 0,
+    "test_duration_seconds": 76,
+    "backend_url": "https://fomo-crm-admin.preview.emergentagent.com",
+    "admin_credentials": "admin@fomo.local / Admin@12345",
+    "key_findings": [
+      "All 121 news sources properly seeded and accessible",
+      "Source filtering by tier, status, and query works correctly",
+      "Parser runs complete successfully within expected timeframe",
+      "Duplicate detection working - 30 duplicates found on repeat run",
+      "Test mode (dry run) correctly does not create runs or persist articles",
+      "Pause/resume controls work for individual sources and globally",
+      "Tier-based batch operations queue multiple sources correctly",
+      "Authorization properly blocks unauthorized access with 403",
+      "Health monitoring and diagnostics fully functional",
+      "Redis queue integration working (waiting=0, active=4)",
+      "Backend restart recovery mechanism working - no abandoned runs",
+      "Public news API returns properly formatted EN news articles",
+      "All 5 diagnostic checks passing: queue, registry, raw, importer, scheduler"
+    ]
+  }
+}

@@ -79,6 +79,12 @@ export class NewsParserController {
     return this.service.seedSources();
   }
 
+  @Post("import/backfill")
+  backfillImport(@Query("batches") batches: string | undefined, @Req() req: Request) {
+    this.requireAdmin(req);
+    return this.service.backfillImport(Number(batches) || 20);
+  }
+
   @Get("sources")
   sources(
     @Query("tier") tier?: string,

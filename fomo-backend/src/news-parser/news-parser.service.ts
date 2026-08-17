@@ -42,6 +42,29 @@ export class NewsParserService implements OnModuleInit {
     } catch (e: any) {
       this.logger.warn(`[NewsParser] seed skipped: ${e?.message || e}`);
     }
+    try {
+      const n = await this.recoverStaleRuns();
+      if (n) this.logger.log(`[NewsParser] recovered ${n} stale RUNNING run(s) after restart`);
+    } catch (e: any) {
+      this.logger.warn(`[NewsParser] stale-run recovery skipped: ${e?.message || e}`);
+    }
+  }
+
+  // Restart recovery (P3.13/acceptance): hung RUNNING runs must not stay forever.
+  async recoverStaleRuns(maxAgeMinutes = 10): Promise<number> {
+    const cutoff = new Date(Date.now() - maxAgeMinutes * 60000);
+    const res = await this.runModel.updateMany(
+      { status: "RUNNING", startedAt: { $lt: cutoff } },
+      {
+        $set: {
+          status: "FAILED",
+          finishedAt: new Date(),
+          errorCode: "ABANDONED",
+          errorMessage: "Run abandoned (worker/backend restart) — auto-recovered",
+        },
+      }
+    );
+    return (res as any).modifiedCount || 0;
   }
 
   // —— P1: seed managed source registry from donor catalog (idempotent) ——
@@ -321,6 +344,25 @@ export class NewsParserService implements OnModuleInit {
     }
 
     return { source: source.id, status, fetched: result.itemCount, new: newItems, duplicates, failed };
+  }
+
+  // —— backfill importer (ops): drain un-imported raw -> canonical News ——
+  // Fresh articles auto-import after each successful run (newItems>0). This
+  // endpoint drains any historical backlog that accumulated before the import
+  // ordering fix, in batches, until nothing new is saved.
+  async backfillImport(maxBatches = 20): Promise<any> {
+    const total = { batches: 0, candidates: 0, saved: 0, duplicates: 0, invalid: 0, failed: 0 };
+    for (let i = 0; i < Math.min(Math.max(maxBatches, 1), 60); i++) {
+      const r = await this.newsService.syncNewsFromArticlesCollection(200);
+      total.batches++;
+      total.candidates += r.candidates;
+      total.saved += r.saved;
+      total.duplicates += r.duplicates;
+      total.invalid += (r as any).invalid || 0;
+      total.failed += r.failed;
+      if (r.candidates === 0) break; // fully drained
+    }
+    return total;
   }
 
   // —— dry test (P34): fetch, no persist ——

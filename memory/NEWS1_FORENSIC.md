@@ -86,3 +86,29 @@ Pending verification: full testing_agent runtime pack (run→queued→success, p
 - Phase 3: clustering + provenance + AI synthesis via FomoAiGateway (classify/cluster/synthesis/translate) → GeneratedNews.
 - Phase 4: moderation (green/yellow/red publication trust) + publish lifecycle + website regression.
 - Phase 5: Full Update pipeline + calendar linkage + audit + permissions + acceptance.
+
+
+---
+
+## STATUS — Phase 2 FORMAL RUNTIME ACCEPTANCE (A–E) COMPLETE ✅ (this session)
+Method: combined curl + direct Mongo + supervisor restarts + testing_agent (UI). Evidence captured live.
+
+- **Package A — Source lifecycle: PASS.** dry `test` does not persist (news_articles unchanged); manual `run` enqueues→SUCCESS run record (fetched/new/dup); `pause`→PAUSED (human "На паузе")→`resume`→ACTIVE; circuit breaker: bad feed 5 consecutive fails → source ERROR + FAILED runs (errorCode=ENOTFOUND); recovery: fix feed → SUCCESS → ACTIVE, consecutiveFailures=0, lastError cleared; `parserVersion` bumped on feedUrl change (P48).
+- **Package B — Scheduler/queue + permissions: PASS.** moderator gets 403 on all admin-only ops (run/all, run/tier, global pause, source create/patch/delete, seed); moderator allowed view+run+test single source; admin allowed all. Global pause blocks scheduler (findDueSources→[] proven with due source over a real 80s tick: no schedule run) and resume re-enables (schedule-triggered run appeared); heartbeat fresh; queue counts visible.
+- **Package C — Reliability: PASS.** idempotency: 2 sequential runs → dup=30/new=0, raw delta=0, 0 duplicate canonical_urls; stuck RUNNING (15m old) auto-recovered to FAILED/ABANDONED by scheduler tick; backend restart → onModuleInit recovered stuck run, 0 leftover stale RUNNING, endpoints 200 in ~5s; Redis restart → Bull reconnected, redisOk=true, enqueue+process SUCCESS.
+- **Package D — CRM UI: PASS (testing_agent).** login + wallet-gate bypass; all 9 tabs render (Обзор/Новости/Источники/Парсинг/Запуски/AI-генерация/Модерация/Статистика/Диагностика) with real data, no console errors; KPI/health/needsAttention populated; AI-генерация & Модерация show Phase 3/4 placeholders.
+- **Package E — End-to-end: PASS (after bugfix).** source run → raw `news_articles` → canonical `News` → public `/api/news/crypto` (sorted newest-first) → website EN.
+
+### 🐞 CRITICAL BUG FOUND & FIXED during Package E — News importer ordering
+- **Symptom:** freshly parsed articles never reached canonical `News`/public site; `News` frozen at 139 while raw grew to ~930.
+- **Root cause:** `NewsService.syncNewsFromArticlesCollection()` selected the top-30 by `sort({published_at:-1,...})` where `published_at` is an RFC-822 **string** → **lexicographic** sort. Stale rows like "Wed, 30 Oct 2024" out-ranked fresh "Mon, 17 Aug 2026" (weekday/first-char dominates). 431 rows sorted above the newest article → it never entered the 30-window.
+- **Fix (`src/news/news.service.ts`):** select un-processed raw via `{ ingest_status: { $nin: ["imported","invalid"] } }` sorted by `_id: -1` (monotonic insertion order = real ingestion recency); after import/duplicate mark raw `ingest_status="imported"`, invalid (no title/text) → `"invalid"` — idempotent, drains backlog, no re-scan. Batch cap raised 30→200.
+- **Ops tool added:** `POST /api/admin/news-parser/import/backfill?batches=N` (admin-gated) drains historical backlog in batches.
+- **Verified:** backfill saved 787 → `News` 139→**927/930**; Ansem (newest) now in News + top of public `/api/news/crypto`; second backfill drains cleanly to candidates=0.
+- **Build note:** fomo_nest runs compiled `dist/main.js` (supervisor `node dist/main.js`), NOT ts-node — **any backend src change requires `yarn build` + `supervisorctl restart fomo_nest`**.
+
+### Known non-blocking (future P3 — Source Cleanup Diagnostics)
+- ~16–17 sources in ERROR (circuit breaker tripped) → ~47% 24h success. These are GEO_BLOCKED/DEAD/RATE_LIMITED feeds in preview. Per user mandate: **do NOT mass-disable to inflate success rate**; classify later in P3.
+
+### Donor source location (for Phase 3 migration parity)
+- FOMO-DATA cloned at **`/tmp/FOMO-DATA`** (`backend/src/modules/news-intelligence/*`, `backend/src/modules/news/*`). Use for 1:1 parity: article selection, sorting/ranking, story grouping/clustering, prompts, Full Update, generation retries, provenance.

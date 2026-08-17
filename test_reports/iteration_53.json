@@ -1,0 +1,69 @@
+{
+  "summary": "Package D (CRM News Control Center UI) acceptance testing complete. All 9 internal tabs render and switch without errors. Backend regression (light) confirms news pipeline operational after importer fix: 121 sources, 927 articles, public API returns sorted news. System health DEGRADED (16 sources in ERROR state, 46% success rate 24h) but functional. Main agent already validated packages A/B/C/E via curl+DB.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "warnings": [
+      {
+        "issue": "System health DEGRADED: 16 sources in ERROR state (Coinspeaker, CryptoGlobe, CoinQuora, BTCManager, DeFi Pulse, CryptoRank News, Bits.media, Bankless, Messari Research, Delphi Digital, etc.)",
+        "impact": "46% success rate in last 24h (278 failed runs out of 522 total)",
+        "fix_priority": "MEDIUM",
+        "note": "Sources have 3+ consecutive failures. Circuit breaker may have tripped. Not blocking Package D acceptance."
+      },
+      {
+        "endpoint": "/api/admin/news-parser/import/backfill?batches=5",
+        "issue": "Backfill returned 5 invalid articles (candidates=5, saved=0, invalid=5)",
+        "impact": "Some raw articles cannot be imported to canonical News",
+        "fix_priority": "LOW",
+        "note": "Importer fix is working (927 articles imported), but some edge cases remain"
+      }
+    ],
+    "flaky_endpoints": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "Backend: Admin login (POST /api/user/admin/login) - 202 status, returns accessToken",
+    "Backend: Overview endpoint returns 121 sources, 927 articles, system health DEGRADED",
+    "Backend: Parsing controls show scheduler/worker enabled, Redis OK, queue operational",
+    "Backend: Diagnostics show all 5 checks passing (queue, registry, raw, importer, scheduler)",
+    "Backend: Sources list returns 121 sources (105 ACTIVE, 16 ERROR)",
+    "Backend: Runs history returns 30 runs (SUCCESS/FAILED/RUNNING statuses)",
+    "Backend: Backfill import endpoint operational (returns summary object)",
+    "Backend: Public GET /api/news/crypto returns 10 articles sorted by date desc (newest first)",
+    "Frontend: Admin login through UI successful (wallet gate bypassed)",
+    "Frontend: Navigation to Контент → Новости works",
+    "Frontend: News Control Center component loads with data-testid='news-control-center'",
+    "Frontend: All 9 internal tabs render: Обзор, Новости, Источники, Парсинг, Запуски, AI-генерация, Модерация, Статистика, Диагностика",
+    "Frontend: Обзор tab displays System Health section with 8 status indicators",
+    "Frontend: Обзор tab displays KPI cards: 104/121 sources active, 4.5K fetched (24h), 928 new (24h), 46% success rate, 928 total articles, last parse timestamp",
+    "Frontend: Обзор tab displays Needs Attention list with 20 items (stale sources and failing sources)",
+    "Frontend: Tabs switch without console errors",
+    "Frontend: No error messages on page",
+    "Frontend: AI-генерация tab shows Phase 3 placeholder",
+    "Frontend: Модерация tab shows Phase 4 placeholder"
+  ],
+  "test_report_links": [
+    "/app/tests/news_parser_backend_test.py"
+  ],
+  "success_percentage": {
+    "backend": "100% (8/8 tests passed)",
+    "frontend": "100% (UI loads, all tabs render, no errors)"
+  },
+  "action_item_for_main_agent": "",
+  "updated_files": [
+    "/app/tests/news_parser_backend_test.py"
+  ],
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": false,
+  "notes": {
+    "package_d_acceptance": "PASS - CRM News Control Center UI fully functional",
+    "backend_regression": "PASS - News pipeline operational after importer fix (139→927 articles)",
+    "importer_fix_verified": "YES - Public API returns articles sorted by date desc (newest first), confirming _id desc ordering fix",
+    "system_health": "DEGRADED but operational - 16 sources in ERROR state, 46% success rate 24h",
+    "main_agent_validation": "Packages A/B/C/E already validated by main agent via curl+DB (source lifecycle, permissions, reliability, end-to-end)",
+    "testing_scope": "Package D (UI acceptance) + light backend regression as requested"
+  }
+}

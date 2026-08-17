@@ -99,7 +99,13 @@ export class NewsService implements OnModuleInit {
     failed: number;
     invalid: number;
   }> {
-    const batchLimit = Math.min(Math.max(Number(limit) || 30, 1), 30);
+    // NEWS-1 fix: select by real ingestion recency, not lexicographic date strings.
+    // `published_at`/`created_at` are stored as RFC-822 strings; sorting them
+    // lexicographically buried fresh articles behind stale "Wed, .. 2024" rows,
+    // so newly parsed articles never reached canonical News. We now drive the
+    // import off insertion order (_id desc) and drain the backlog idempotently
+    // by marking each processed raw article with ingest_status.
+    const batchLimit = Math.min(Math.max(Number(limit) || 50, 1), 200);
     const result = {
       candidates: 0,
       saved: 0,
@@ -109,26 +115,32 @@ export class NewsService implements OnModuleInit {
     };
 
     const articles = await this.newsArticleSourceModel
-      .find({})
-      .sort({
-        published_at: -1,
-        pubDate: -1,
-        created_at: -1,
-        createdAt: -1,
-        _id: -1,
-      })
+      .find({ ingest_status: { $nin: ["imported", "invalid"] } })
+      .sort({ _id: -1 })
       .limit(batchLimit)
       .lean();
 
     result.candidates = articles.length;
 
     for (const article of articles) {
+      const markRaw = async (ingest_status: string, extra: Record<string, any> = {}) => {
+        if (!article?._id) return;
+        try {
+          await this.newsArticleSourceModel.updateOne(
+            { _id: article._id },
+            { $set: { ingest_status, importedAt: new Date(), ...extra } },
+          );
+        } catch {
+          /* non-fatal: raw marking is best-effort */
+        }
+      };
       try {
         const mapped = this.mapNewsArticleToNews(article);
         if (!mapped) {
           result.invalid++;
           result.failed++;
           this.logger.warn(`[NewsImport] Skipped invalid source article: ${this.describeSourceArticle(article)}`);
+          await markRaw("invalid");
           continue;
         }
 
@@ -139,11 +151,13 @@ export class NewsService implements OnModuleInit {
 
         if (existing) {
           result.duplicates++;
+          await markRaw("imported");
           continue;
         }
 
         await this.newsModel.create(mapped);
         result.saved++;
+        await markRaw("imported");
       } catch (error: any) {
         result.failed++;
         this.logger.error(

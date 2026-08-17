@@ -10,6 +10,7 @@ import {
   npGlobalPause, npGlobalResume, npRuns,
 } from "../../services/news_parser/newsParser";
 import { fetchAllNews } from "../../services/buzz/buzzStats";
+import { naOverview, naDrafts, naRuns, naGenerate } from "../../services/news_ai/newsAi";
 
 const GREEN = "#04A584";
 const isAdmin = () => String(localStorage.getItem("fomoRole") || "").trim().toLowerCase() === "admin";
@@ -437,6 +438,160 @@ const Placeholder: React.FC<{ title: string; phase: string; children: React.Reac
   </Card>
 );
 
+// ─────────────────────────── AI GENERATION (Phase 3) ───────────────────────────
+const AiGenerationTab: React.FC = () => {
+  const [ov, setOv] = useState<any>(null);
+  const [drafts, setDrafts] = useState<any[]>([]);
+  const [runs, setRuns] = useState<any[]>([]);
+  const [sel, setSel] = useState<any>(null);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string>("");
+  const [windowLimit, setWindowLimit] = useState(150);
+  const [maxClusters, setMaxClusters] = useState(3);
+  const admin = isAdmin();
+
+  const load = useCallback(async () => {
+    const [o, d, r] = await Promise.all([naOverview(), naDrafts(30), naRuns(20)]);
+    if (o.success) setOv(o.data);
+    if (d.success) setDrafts(Array.isArray(d.data) ? d.data : []);
+    if (r.success) setRuns(Array.isArray(r.data) ? r.data : []);
+  }, []);
+  useEffect(() => { load(); }, [load]);
+
+  const runGenerate = async () => {
+    setBusy(true); setMsg("Генерация через FomoAiGateway…");
+    const res = await naGenerate({ windowLimit, maxClusters });
+    setBusy(false);
+    if (res.success && res.data?.status === "SUCCESS") {
+      setMsg(`Готово: создано ${res.data.generated}, стоимость $${(res.data.totalCostUsd || 0).toFixed(4)}, токенов ${res.data.totalTokens || 0}`);
+    } else {
+      setMsg(`Ошибка генерации: ${res.data?.error || res.data?.status || "не удалось"} (ingestion не затронут)`);
+    }
+    load();
+  };
+
+  const usd = (n: number) => `$${(Number(n) || 0).toFixed(4)}`;
+
+  return (
+    <div data-testid="ncc-ai-tab">
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 12, marginBottom: 16 }}>
+        <KPI label="Черновиков" value={fmtNum(ov?.drafts ?? 0)} />
+        <KPI label="Запусков генерации" value={fmtNum(ov?.runs ?? 0)} />
+        <KPI label="COGS (всего)" value={usd(ov?.totalCostUsd)} sub="провайдерская стоимость" color={GREEN} />
+        <KPI label="Токенов (всего)" value={fmtNum(ov?.totalTokens ?? 0)} />
+      </div>
+
+      <Card style={{ padding: 16, marginBottom: 16 }}>
+        <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Синтез новостей (FomoAiGateway · managed credential)</div>
+        <div style={{ fontSize: 12, color: T.sub, marginBottom: 12 }}>
+          Кластеризация похожих статей → ранжирование → двуязычный синтез (EN/RU). Модель — policy правила <b>news_synthesize</b>. Парсинг и AI независимы: сбой AI не роняет ingestion.
+        </div>
+        <div style={{ display: "flex", gap: 12, alignItems: "flex-end", flexWrap: "wrap" }}>
+          <label style={{ fontSize: 12, color: T.sub, fontWeight: 600 }}>Окно статей
+            <input type="number" data-testid="ai-window" value={windowLimit} min={10} max={500}
+              onChange={(e) => setWindowLimit(Number(e.target.value) || 150)}
+              style={{ display: "block", marginTop: 4, width: 110, padding: "7px 10px", borderRadius: 8, border: `1px solid ${T.border}`, background: "transparent", color: T.ink }} />
+          </label>
+          <label style={{ fontSize: 12, color: T.sub, fontWeight: 600 }}>Макс. кластеров
+            <input type="number" data-testid="ai-maxclusters" value={maxClusters} min={1} max={10}
+              onChange={(e) => setMaxClusters(Number(e.target.value) || 1)}
+              style={{ display: "block", marginTop: 4, width: 110, padding: "7px 10px", borderRadius: 8, border: `1px solid ${T.border}`, background: "transparent", color: T.ink }} />
+          </label>
+          <Btn kind="primary" testId="ai-generate-btn" disabled={!admin || busy} onClick={runGenerate}>
+            {busy ? "Генерация…" : "Запустить генерацию"}
+          </Btn>
+          {!admin && <span style={{ fontSize: 12, color: T.faint }}>Только администратор</span>}
+        </div>
+        {msg && <div data-testid="ai-gen-msg" style={{ marginTop: 12, fontSize: 13, color: T.ink, background: T.soft, padding: "8px 12px", borderRadius: 8 }}>{msg}</div>}
+      </Card>
+
+      <div style={{ display: "grid", gridTemplateColumns: sel ? "1.4fr 1fr" : "1fr", gap: 16 }}>
+        <Card style={{ padding: 0, overflow: "hidden" }}>
+          <div style={{ padding: "12px 16px", fontSize: 15, fontWeight: 800 }}>Черновики ({drafts.length})</div>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead><tr>
+                <th style={th}>Заголовок (EN)</th><th style={th}>Тип</th><th style={th}>Источников</th>
+                <th style={th}>Модель</th><th style={th}>Режим</th><th style={th}>COGS</th><th style={th}>Токены</th>
+              </tr></thead>
+              <tbody>
+                {drafts.map((d) => (
+                  <tr key={d.unique_hash} data-testid={`ai-draft-row-${d.unique_hash}`} onClick={() => setSel(d)}
+                    style={{ cursor: "pointer", background: sel?.unique_hash === d.unique_hash ? T.soft : "transparent" }}>
+                    <td style={{ ...td, whiteSpace: "normal", maxWidth: 320 }}>{d.title_en}</td>
+                    <td style={td}><Pill text={d.event_type || "news"} /></td>
+                    <td style={td}>{(d.sourceArticleIds || []).length}</td>
+                    <td style={td}>{d.model || "—"}</td>
+                    <td style={td}><Pill text={d.dataMode || "—"} color={d.dataMode === "real" ? GREEN : T.warn} /></td>
+                    <td style={td}>{usd(d.providerCostUsd)}</td>
+                    <td style={td}>{fmtNum(d.totalTokens || 0)}</td>
+                  </tr>
+                ))}
+                {drafts.length === 0 && <tr><td style={td} colSpan={7}>Черновиков пока нет. Запустите генерацию.</td></tr>}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+
+        {sel && (
+          <Card style={{ padding: 16 }} >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+              <div style={{ fontSize: 15, fontWeight: 800 }}>Черновик</div>
+              <Btn testId="ai-draft-close" onClick={() => setSel(null)}>Закрыть</Btn>
+            </div>
+            <div data-testid="ai-draft-detail" style={{ fontSize: 13, color: T.ink, display: "grid", gap: 10 }}>
+              <div><b>EN:</b> {sel.title_en}</div>
+              <div><b>RU:</b> {sel.title_ru}</div>
+              <div style={{ color: T.sub }}>{sel.short_en}</div>
+              <div style={{ whiteSpace: "pre-wrap", background: T.soft, padding: 10, borderRadius: 8, fontSize: 12 }}>{sel.extended_en}</div>
+              <div style={{ fontStyle: "italic", color: GREEN }}>{sel.ai_view_en}</div>
+              <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 8 }}>
+                <div style={{ fontWeight: 700, marginBottom: 4 }}>Trace / COGS</div>
+                <div style={{ fontSize: 12, color: T.sub }}>provider: {sel.provider} · model: {sel.model} · mode: {sel.dataMode}</div>
+                <div style={{ fontSize: 12, color: T.sub }}>tokens: {sel.totalTokens} · COGS: {usd(sel.providerCostUsd)} · credits: {sel.creditsCharged ?? 0}</div>
+                <div style={{ fontSize: 12, color: T.sub }}>credentialId: {sel.credentialId || "—"} · policy: {sel.policyVersion}</div>
+                <div style={{ fontSize: 12, color: T.sub }}>requestIds: {(sel.gatewayRequestIds || []).length}</div>
+              </div>
+              <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 8 }}>
+                <div style={{ fontWeight: 700, marginBottom: 4 }}>Provenance ({(sel.sourceUrls || []).length})</div>
+                {(sel.sourceUrls || []).map((u: string, i: number) => (
+                  <div key={i} style={{ fontSize: 12 }}><a href={u} target="_blank" rel="noreferrer" style={{ color: T.accent }}>{u}</a></div>
+                ))}
+              </div>
+            </div>
+          </Card>
+        )}
+      </div>
+
+      <Card style={{ padding: 0, overflow: "hidden", marginTop: 16 }}>
+        <div style={{ padding: "12px 16px", fontSize: 15, fontWeight: 800 }}>Запуски генерации</div>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead><tr>
+              <th style={th}>Статус</th><th style={th}>Кластеров</th><th style={th}>Создано</th><th style={th}>Ошибок</th>
+              <th style={th}>COGS</th><th style={th}>Токены</th><th style={th}>Начат</th>
+            </tr></thead>
+            <tbody>
+              {runs.map((r) => (
+                <tr key={r._id}>
+                  <td style={td}><Pill text={r.status} color={r.status === "SUCCESS" ? GREEN : r.status === "FAILED" ? T.bad : T.warn} /></td>
+                  <td style={td}>{r.clustersSelected ?? 0}</td>
+                  <td style={td}>{r.generated ?? 0}</td>
+                  <td style={td}>{r.failed ?? 0}</td>
+                  <td style={td}>{usd(r.totalCostUsd)}</td>
+                  <td style={td}>{fmtNum(r.totalTokens || 0)}</td>
+                  <td style={td}>{fmtDate(r.startedAt)}</td>
+                </tr>
+              ))}
+              {runs.length === 0 && <tr><td style={td} colSpan={7}>Запусков пока нет.</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
 // ─────────────────────────── ROOT ───────────────────────────
 const NewsControlCenter: React.FC = () => {
   const [tab, setTab] = useState("overview");
@@ -459,12 +614,7 @@ const NewsControlCenter: React.FC = () => {
         {tab === "runs" && <RunsTab />}
         {tab === "stats" && <StatsTab />}
         {tab === "diagnostics" && <DiagnosticsTab />}
-        {tab === "ai" && (
-          <Placeholder title="AI-генерация новостей" phase="Phase 3">
-            Кластеризация похожих статей → классификация → синтез двуязычных материалов через существующий FomoAiGateway (managed credential из Настройки → AI).
-            Здесь появятся операции NEWS_CLASSIFY / NEWS_CLUSTER_SUMMARY / NEWS_SYNTHESIS / NEWS_TRANSLATE, черновики, provenance источников и COGS. Парсинг и AI независимы: сбой AI не роняет ingestion.
-          </Placeholder>
-        )}
+        {tab === "ai" && <AiGenerationTab />}
         {tab === "moderation" && (
           <Placeholder title="Модерация новостей" phase="Phase 4">
             Очередь публикации: На проверке · Опубликовано · Отклонено. Публикационный trust green / yellow / red (доверие/на проверку/отклонено),
