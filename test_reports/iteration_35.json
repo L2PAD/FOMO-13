@@ -1,0 +1,107 @@
+{
+  "summary": "Tested unified ad engine LocalAdBadge component across 9 public pages. Backend API working correctly (all placements return filled:true). Only 2/9 pages showing badges correctly. Critical issues: Next.js MIME type errors preventing proper page loading, Fomies page missing LocalAdBadge integration, most badges not rendering despite being in code.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "working_correctly": [
+      {
+        "endpoint": "/api/ads/serve",
+        "status": "All placements return filled:true",
+        "tested_placements": [
+          "CRYPTO_PROMOTED",
+          "OTC_MARKET",
+          "SPACEPORT_FEED",
+          "BAKERS_FEED",
+          "UNLOCKING_FEED",
+          "FUNDING_FEED",
+          "LAUNCHPAD_FEATURED",
+          "EARLYLAND_FEED",
+          "FOMIES_SPOTLIGHT"
+        ]
+      }
+    ]
+  },
+  "frontend_issues": {
+    "critical_bugs": [
+      {
+        "component": "Next.js Build/Serving",
+        "issue": "296 console errors: 'Refused to execute script' - JS/CSS chunks returning HTML (MIME type 'text/html') instead of proper content",
+        "impact": "Most pages not loading content properly, showing blank pages or 'no results' messages",
+        "affected_pages": "All pages",
+        "fix_priority": "CRITICAL"
+      },
+      {
+        "component": "Fomies Layout",
+        "file": "/app/website_front/components/layouts/projects/Fomies/index.tsx",
+        "issue": "LocalAdBadge component NOT INTEGRATED - missing from component code",
+        "expected": "Should have <LocalAdBadge placement='FOMIES_SPOTLIGHT' placementLabel='Fomies' />",
+        "fix_priority": "HIGH"
+      }
+    ],
+    "ui_bugs": [
+      {
+        "page": "Home page (/)",
+        "component": "LocalAdBadge",
+        "issue": "Badge exists in DOM but NOT VISIBLE (likely CSS/positioning issue)",
+        "testid": "localad-CRYPTO_PROMOTED",
+        "fix_priority": "HIGH"
+      },
+      {
+        "page": "OTC Market (/utility/otc)",
+        "component": "LocalAdBadge",
+        "issue": "Badge NOT FOUND in DOM despite being in DesktopMarketHeader component code",
+        "testid": "localad-OTC_MARKET",
+        "expected_location": "/app/website_front/components/layouts/projects/OTC/components/DesktopMarketHeader.tsx line 133",
+        "fix_priority": "HIGH"
+      },
+      {
+        "page": "Unlocking (/crypto/unlocking)",
+        "component": "LocalAdBadge",
+        "issue": "Badge NOT FOUND in DOM despite being in component code",
+        "testid": "localad-UNLOCKING_FEED",
+        "expected_location": "/app/website_front/components/layouts/projects/Unlocking/Unlocking/index.tsx",
+        "fix_priority": "MEDIUM"
+      },
+      {
+        "page": "Funding Feed (/crypto/funding-feed)",
+        "component": "LocalAdBadge",
+        "issue": "Badge NOT FOUND in DOM despite being in component code",
+        "testid": "localad-FUNDING_FEED",
+        "expected_location": "/app/website_front/components/layouts/projects/FundingFeed/index.tsx",
+        "fix_priority": "MEDIUM"
+      },
+      {
+        "page": "Launchpad (/utility/launchpad)",
+        "component": "LocalAdBadge",
+        "issue": "Badge NOT FOUND in DOM despite being in component code",
+        "testid": "localad-LAUNCHPAD_FEATURED",
+        "expected_location": "/app/website_front/components/layouts/launchpad/index.tsx",
+        "fix_priority": "MEDIUM"
+      },
+      {
+        "page": "Earlyland (/crypto/earlyland)",
+        "component": "LocalAdBadge",
+        "issue": "Badge rendering inconsistently - test shows visible but needs verification",
+        "testid": "localad-EARLYLAND_FEED",
+        "expected_location": "/app/website_front/components/layouts/projects/Crypto/Earlyland/index.tsx",
+        "fix_priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": []
+  },
+  "passed_tests": [
+    "Backend API /api/ads/serve returns filled:true for all 9 placements",
+    "Spaceport page (/core/spaceport): LocalAdBadge visible and functional, popover opens on hover",
+    "Backers page (/crypto/backers): LocalAdBadge visible and functional, popover opens on hover",
+    "LocalAdBadge component correctly implemented with proper testids (localad-{PLACEMENT}, localad-pop-{PLACEMENT})",
+    "Demo campaigns seeded correctly in database"
+  ],
+  "test_report_links": [],
+  "success_percentage": {
+    "backend": "100% (all API endpoints working)",
+    "frontend": "22% (2 out of 9 pages showing badges correctly)"
+  },
+  "updated_files": [],
+  "action_item_for_main_agent": "CRITICAL: Fix Next.js build/serving issue causing MIME type errors (JS chunks returning HTML). Add LocalAdBadge to Fomies layout component. Investigate why badges are not rendering on 7 pages despite being in component code - likely related to Next.js build issue. Fix home page badge visibility (exists but not visible). Verify all pages load content properly before retesting badges.",
+  "should_call_test_agent_after_fix": "true",
+  "should_main_agent_test_itself": "false"
+}

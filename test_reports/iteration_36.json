@@ -1,0 +1,69 @@
+{
+  "summary": "Tested unified LocalAdBadge ad banners across FOMO public website sections. CRITICAL ISSUE: Next.js chunk loading failures causing intermittent badge rendering. Badges work inconsistently due to JavaScript chunks returning HTML (MIME errors) or failing to load (ERR_ABORTED). The previously reported 'output: standalone' issue is NOT fully resolved.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": [
+      {
+        "endpoint": "/api/ads/serve",
+        "issue": "Rate limiting (429 errors) observed during testing",
+        "impact": "Some ad requests may be throttled",
+        "fix_priority": "MEDIUM"
+      }
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "flow": "LocalAdBadge rendering across all sections",
+        "issue": "CRITICAL: Intermittent chunk loading failures causing badges to not render. JavaScript chunks returning 'text/html' MIME type instead of 'application/javascript', or failing with ERR_ABORTED",
+        "affected_selectors": [
+          "[data-testid='localad-CRYPTO_PROMOTED']",
+          "[data-testid='localad-UNLOCKING_FEED']",
+          "[data-testid='localad-FUNDING_FEED']",
+          "[data-testid='localad-BAKERS_FEED']",
+          "[data-testid='localad-SPACEPORT_FEED']",
+          "[data-testid='localad-LAUNCHPAD_FEATURED']",
+          "[data-testid='localad-FOMIES_SPOTLIGHT']"
+        ],
+        "evidence": [
+          "Test 1: Most badges visible",
+          "Test 2: Same badges NOT found in DOM",
+          "Test 3: Badges visible again",
+          "119 MIME errors: 'Refused to execute script... MIME type (text/html) is not executable'",
+          "Multiple ERR_ABORTED errors for _next/static/chunks/*.js files"
+        ],
+        "fix_priority": "CRITICAL"
+      },
+      {
+        "flow": "Home page CRYPTO_PROMOTED badge",
+        "issue": "Badge only visible on mobile viewport, not visible on desktop viewport. Badge is placed in MainInfoDescription component which is hidden on desktop.",
+        "affected_selectors": ["[data-testid='localad-CRYPTO_PROMOTED']"],
+        "fix_priority": "MEDIUM"
+      }
+    ],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "✅ /crypto/unlocking - UNLOCKING_FEED badge present and visible (when chunks load successfully)",
+    "✅ /crypto/funding-feed - FUNDING_FEED badge present and visible (when chunks load successfully)",
+    "✅ /crypto/backers - BAKERS_FEED badge present and visible (when chunks load successfully)",
+    "✅ /core/spaceport - SPACEPORT_FEED badge present and visible (when chunks load successfully)",
+    "✅ /utility/launchpad - LAUNCHPAD_FEATURED badge present and visible (when chunks load successfully)",
+    "✅ /crypto/fomies - FOMIES_SPOTLIGHT badge present and visible (newly added, when chunks load successfully)",
+    "✅ Home page mobile - CRYPTO_PROMOTED badge visible on mobile viewport",
+    "✅ /utility/otc - OLD PromotedDeals carousel NOT present (correctly removed)",
+    "✅ All badges use consistent dark premium 'Ad' badge style",
+    "✅ Backend API /api/ads/serve returns filled:true for all placements",
+    "✅ Hovering on badges opens rich popover (when not blocked by overlay)"
+  ],
+  "test_report_links": [],
+  "success_percentage": {
+    "backend": "100% (API serving ads correctly)",
+    "frontend": "30% (badges render intermittently due to chunk loading failures)"
+  },
+  "updated_files": [],
+  "action_item_for_main_agent": "CRITICAL: Fix Next.js chunk loading issue. JavaScript chunks are intermittently returning HTML (MIME errors) or failing to load (ERR_ABORTED), causing LocalAdBadge components to not hydrate. This is the same 'output: standalone' vs 'next start' issue that was supposedly fixed but is NOT fully resolved. Investigate:\n1. Next.js build configuration (verify no 'output: standalone' in next.config.js)\n2. Deployment/serving configuration (chunks must be served with correct MIME type)\n3. CDN/caching issues (chunks may be cached incorrectly)\n4. Rebuild and restart frontend with proper configuration\n\nMEDIUM: Add CRYPTO_PROMOTED badge to desktop header in /app/website_front/components/layouts/projects/CryptoMarket/index.tsx (currently only visible on mobile)",
+  "should_call_test_agent_after_fix": "true",
+  "should_main_agent_test_itself": "false"
+}

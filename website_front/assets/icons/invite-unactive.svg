@@ -1,0 +1,19 @@
+<svg width="96.000000" height="96.000000" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs>
+		<radialGradient id="paint_angular_4_1207_0" cx="0.000000" cy="0.000000" r="1.000000" gradientUnits="userSpaceOnUse" gradientTransform="translate(47.7358 47.7264) rotate(-90.5402) scale(37.449 37.4633)">
+			<stop stop-color="#FFFFFF" stop-opacity="0.000000"/>
+			<stop offset="1.000000" stop-color="#02BEFB"/>
+		</radialGradient>
+		<radialGradient id="paint_angular_4_1208_0" cx="0.000000" cy="0.000000" r="1.000000" gradientUnits="userSpaceOnUse" gradientTransform="translate(47.8142 47.7654) rotate(-89.3237) scale(24.1523 24.1523)">
+			<stop stop-color="#5191B2"/>
+			<stop offset="1.000000" stop-color="#D1D1D1" stop-opacity="0.000000"/>
+		</radialGradient>
+	</defs>
+	<path id="Polygon 11" d="M30.26 17.47L65.21 17.46L82.68 47.71L65.19 77.97L30.25 77.98L12.78 47.73L30.26 17.47Z" fill="#256574" fill-opacity="1.000000" fill-rule="evenodd"/>
+	<path id="Polygon 11" d="M65.21 17.46L82.68 47.71L65.19 77.97L30.25 77.98L12.78 47.73L30.26 17.47L65.21 17.46Z" stroke="url(#paint_angular_4_1207_0)" stroke-opacity="1.000000" stroke-width="2.000000"/>
+	<path id="Polygon 14" d="M35.31 26.11L60.31 26.11L72.81 47.76L60.31 69.41L35.31 69.41L22.81 47.76L35.31 26.11Z" fill="#0A7DBE" fill-opacity="0.800000" fill-rule="evenodd"/>
+	<path id="Polygon 14" d="M60.31 26.11L72.81 47.76L60.31 69.41L35.31 69.41L22.81 47.76L35.31 26.11L60.31 26.11ZM59.73 27.11L71.66 47.76L59.73 68.41L35.89 68.41L23.96 47.76L35.89 27.11L59.73 27.11Z" fill="url(#paint_angular_4_1208_0)" fill-opacity="0.460000" fill-rule="evenodd"/>
+</svg>

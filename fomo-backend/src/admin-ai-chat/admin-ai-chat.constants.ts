@@ -1,0 +1,337 @@
+export const ADMIN_AI_CONNECTION_NAME = "adminAiConnection";
+export const ADMIN_AI_PARSER_CONNECTION_NAME = "adminAiParserConnection";
+
+export const ADMIN_AI_REQUIRED_DB_TARGET = "development";
+export const ADMIN_AI_REQUIRED_DB_NAME = "fomo_dev";
+export const ADMIN_AI_REQUIRED_PARSER_DB_NAME = "parser_new_dev";
+
+export const ADMIN_AI_CHAT_COLLECTIONS = [
+  "admin_ai_chat_folders",
+  "admin_ai_chat_threads",
+  "admin_ai_chat_messages",
+  "admin_ai_chat_tool_runs",
+  "ai_admin_tool_runs",
+] as const;
+
+export const ADMIN_AI_FOMO_V2_COLLECTION_ALLOWLIST = [
+  "canonical_projects",
+  "market_assets",
+  "market_project_read_models",
+  "market_project_histories",
+  "project_asset_links",
+  "canonical_project_sources",
+  "source_entities",
+  "source_evidence",
+  "source_conflicts",
+  "review_cases",
+  "review_batches",
+  "backers",
+  "backer_sources",
+  "backer_portfolio_holdings",
+  "funding_rounds",
+  "funding_round_participants",
+  "token_allocations",
+  "token_allocation_snapshots",
+  "vesting_schedules",
+  "vesting_events",
+  "unlock_events",
+  "unresolved_backers",
+  "import_candidates",
+  "source_policies",
+  "news_articles",
+] as const;
+
+export const ADMIN_AI_PARSER_COLLECTION_ALLOWLIST = [
+  "parser_sources",
+  "parser_runs",
+  "parser_raw_documents",
+  "parser_extractions",
+  "parser_identity_candidates",
+  "parser_review_cases",
+  "parser_ai_reviews",
+  "parser_write_batches",
+  "parser_write_audit_logs",
+  "parser_conflicts",
+  "ico_projects",
+  "dropstab_coin_catalog",
+  "dropstab_coin_detail_data",
+  "dropstab_project_candidates",
+  "dropstab_project_data",
+  "intel_fundraising",
+  "intel_investors",
+  "intel_unlocks",
+  "project_external_data",
+  "ico_parser_errors",
+  "ico_parser_locks",
+] as const;
+
+export const ADMIN_AI_SENSITIVE_COLLECTION_DENYLIST = [
+  "users",
+  "admins",
+  "sessions",
+  "deposits",
+  "withdraws",
+  "support",
+  "auth",
+  "tokens",
+  "password_resets",
+  "email_confirmations",
+] as const;
+
+export type AdminAiCollectionDbTarget = "mainV2Db" | "parserDb" | "adminAiDb";
+
+export type AdminAiCollectionRegistryItem = {
+  dbTarget: AdminAiCollectionDbTarget;
+  collectionName: string;
+  access: readonly ["read"];
+  domain: string;
+  description: string;
+};
+
+export const ADMIN_AI_COLLECTION_REGISTRY: readonly AdminAiCollectionRegistryItem[] = [
+  {
+    dbTarget: "adminAiDb",
+    collectionName: "admin_ai_chat_folders",
+    access: ["read"],
+    domain: "admin_ai.chat",
+    description: "Admin AI Chat folder organization metadata.",
+  },
+  {
+    dbTarget: "adminAiDb",
+    collectionName: "admin_ai_chat_threads",
+    access: ["read"],
+    domain: "admin_ai.chat",
+    description: "Admin AI Chat threads scoped by admin user.",
+  },
+  {
+    dbTarget: "adminAiDb",
+    collectionName: "admin_ai_chat_messages",
+    access: ["read"],
+    domain: "admin_ai.chat",
+    description: "Admin AI Chat user and assistant messages.",
+  },
+  {
+    dbTarget: "adminAiDb",
+    collectionName: "admin_ai_chat_tool_runs",
+    access: ["read"],
+    domain: "admin_ai.chat",
+    description: "Safe summaries of AI tool calls linked to assistant messages.",
+  },
+  {
+    dbTarget: "adminAiDb",
+    collectionName: "ai_admin_tool_runs",
+    access: ["read"],
+    domain: "admin_ai.audit",
+    description: "Guarded audit log for every Admin AI backend tool call.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "canonical_projects",
+    access: ["read"],
+    domain: "main_v2.identity",
+    description: "Canonical FOMO v2 project identities.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "market_assets",
+    access: ["read"],
+    domain: "main_v2.market",
+    description: "Market assets imported from market data providers.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "market_project_read_models",
+    access: ["read"],
+    domain: "main_v2.market",
+    description: "Materialized market read model for projects.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "market_project_histories",
+    access: ["read"],
+    domain: "main_v2.market",
+    description: "Historical project market points.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "project_asset_links",
+    access: ["read"],
+    domain: "main_v2.market",
+    description: "Links between canonical projects and market assets.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "canonical_project_sources",
+    access: ["read"],
+    domain: "main_v2.sources",
+    description: "Source mappings for canonical projects.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "source_entities",
+    access: ["read"],
+    domain: "main_v2.sources",
+    description: "Normalized source entities and resolution status.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "source_snapshots",
+    access: ["read"],
+    domain: "main_v2.sources",
+    description: "Captured source snapshots and normalized previews.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "project_domain_sources",
+    access: ["read"],
+    domain: "main_v2.sources",
+    description: "Selected source policy per project domain.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "review_batches",
+    access: ["read"],
+    domain: "main_v2.review",
+    description: "Review batches and conflict cases.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "backers",
+    access: ["read"],
+    domain: "main_v2.backers",
+    description: "Canonical backer profiles.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "backer_source_profiles",
+    access: ["read"],
+    domain: "main_v2.backers",
+    description: "Backer source profiles.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "backer_portfolio_holdings",
+    access: ["read"],
+    domain: "main_v2.backers",
+    description: "Materialized backer holdings.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "funding_rounds",
+    access: ["read"],
+    domain: "main_v2.funding",
+    description: "Project funding rounds.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "funding_round_participants",
+    access: ["read"],
+    domain: "main_v2.funding",
+    description: "Funding round participants and linked backers.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "token_allocations",
+    access: ["read"],
+    domain: "main_v2.tokenomics",
+    description: "Token allocation records.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "vesting_rounds",
+    access: ["read"],
+    domain: "main_v2.tokenomics",
+    description: "Vesting rounds linked to token allocations.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "vesting_schedules",
+    access: ["read"],
+    domain: "main_v2.tokenomics",
+    description: "Vesting schedules.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "vesting_summaries",
+    access: ["read"],
+    domain: "main_v2.tokenomics",
+    description: "Materialized vesting summaries.",
+  },
+  {
+    dbTarget: "mainV2Db",
+    collectionName: "unlock_events",
+    access: ["read"],
+    domain: "main_v2.unlocks",
+    description: "Token unlock events and apply status.",
+  },
+  {
+    dbTarget: "parserDb",
+    collectionName: "parser_sources",
+    access: ["read"],
+    domain: "parser_v2.runs",
+    description: "Configured parser sources.",
+  },
+  {
+    dbTarget: "parserDb",
+    collectionName: "parser_runs",
+    access: ["read"],
+    domain: "parser_v2.runs",
+    description: "Parser run records.",
+  },
+  {
+    dbTarget: "parserDb",
+    collectionName: "parser_raw_documents",
+    access: ["read"],
+    domain: "parser_v2.raw",
+    description: "Parser raw documents with safe previews only.",
+  },
+  {
+    dbTarget: "parserDb",
+    collectionName: "parser_extractions",
+    access: ["read"],
+    domain: "parser_v2.raw",
+    description: "Parser extraction artifacts.",
+  },
+  {
+    dbTarget: "parserDb",
+    collectionName: "parser_identity_candidates",
+    access: ["read"],
+    domain: "parser_v2.review",
+    description: "Parser identity candidate records.",
+  },
+  {
+    dbTarget: "parserDb",
+    collectionName: "parser_review_cases",
+    access: ["read"],
+    domain: "parser_v2.review",
+    description: "Parser review case queue.",
+  },
+  {
+    dbTarget: "parserDb",
+    collectionName: "parser_ai_reviews",
+    access: ["read"],
+    domain: "parser_v2.review",
+    description: "AI review artifacts for parser cases.",
+  },
+  {
+    dbTarget: "parserDb",
+    collectionName: "parser_write_batches",
+    access: ["read"],
+    domain: "parser_v2.review",
+    description: "Parser write batch metadata for audit only.",
+  },
+  {
+    dbTarget: "parserDb",
+    collectionName: "parser_write_audit_logs",
+    access: ["read"],
+    domain: "parser_v2.review",
+    description: "Parser write audit log metadata for audit only.",
+  },
+  {
+    dbTarget: "parserDb",
+    collectionName: "parser_conflicts",
+    access: ["read"],
+    domain: "parser_v2.review",
+    description: "Parser conflict records.",
+  },
+] as const;

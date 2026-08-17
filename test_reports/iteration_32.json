@@ -1,0 +1,42 @@
+{
+  "summary": "Completed testing of sidebar double-highlight bug fix, P2P stats endpoint, and P2P dashboard. PRIMARY BUG FIX VERIFIED: On /admin/users_list/otc (Bazaar page), only 'Bazaar' is highlighted in the sidebar, NOT 'Пользователи'. The longest-path matching logic in layout.tsx is working correctly.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "Backend: Admin login (202)",
+    "Backend: GET /api/deals/admin/p2p-stats returns 200 with correct structure",
+    "Backend: P2P stats data is sane (avgSellRate: 1.0333, avgBuyRate: 0.9817, spread: 5.13%)",
+    "Backend: All Customer 360 dossier endpoints (summary, otc, p2p, deposits, withdraws, portfolios, comments, support, appeals)",
+    "PRIMARY BUG FIX: On /admin/users_list/otc, ONLY 'Bazaar' is highlighted (NOT 'Пользователи')",
+    "REGRESSION: On /admin/users_list, ONLY 'Пользователи' is highlighted",
+    "REGRESSION: On /admin/users_list/user/{id}, ONLY 'Пользователі' is highlighted (NOT Bazaar)",
+    "Frontend: P2P dashboard renders with data-testid='p2p-dashboard'",
+    "Frontend: P2P dashboard shows 8 KPI cards (Объявлений, Ср. курс продажи, Ср. курс покупки, Спред, Активные обмены, Заблокировано на контракте, Расчёт, Трейдеров)",
+    "Frontend: P2P dashboard shows 2 order book tables (sell ads: 3 rows, buy ads: 3 rows)",
+    "Frontend: Clicking seller/buyer in P2P order book navigates to Customer 360 (/admin/users_list/user/{id})"
+  ],
+  "test_report_links": [
+    "/app/backend_test.py",
+    "/app/.screenshots/bazaar_sidebar.png",
+    "/app/.screenshots/users_list_sidebar.png",
+    "/app/.screenshots/customer360_sidebar.png",
+    "/app/.screenshots/p2p_dashboard.png"
+  ],
+  "success_percentage": {
+    "backend": "100% (11/11 tests passed)",
+    "frontend": "100% (all sidebar highlighting tests and P2P dashboard tests passed)"
+  },
+  "updated_files": [
+    "/app/backend_test.py"
+  ],
+  "action_item_for_main_agent": "",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": false
+}

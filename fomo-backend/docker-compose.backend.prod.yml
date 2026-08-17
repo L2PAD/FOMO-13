@@ -1,0 +1,41 @@
+services:
+  backend:
+    container_name: fomo-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./.env.production
+    ports:
+      - "127.0.0.1:5000:5000"
+    volumes:
+      - /opt/fomoland/uploads:/app/uploads
+      - /opt/fomoland/admin-ai-exports:/app/admin-ai-exports
+    environment:
+      AI_ADMIN_EXPORT_DIR: /app/admin-ai-exports
+      FOMO_V2_LAUNCHPAD_INDEXER_ENABLED: "false"
+    networks:
+      - fomo_internal
+
+  launchpad-indexer:
+    container_name: fomo-launchpad-indexer
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command:
+      ["node", "dist/fomo-v2/domains/launchpad/runners/launchpad-indexer.runner.js"]
+    env_file:
+      - ./.env.production
+    environment:
+      NODE_ENV: production
+      FOMO_V2_LAUNCHPAD_INDEXER_ENABLED: "true"
+    networks:
+      - fomo_internal
+    healthcheck:
+      disable: true
+
+networks:
+  fomo_internal:
+    external: true

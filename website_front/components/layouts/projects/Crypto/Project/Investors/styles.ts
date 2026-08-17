@@ -1,0 +1,47 @@
+import styled from "styled-components";
+import Typography from "../../../../../global/common/Typography";
+import PersonCard from "../../../../../global/PersonCard";
+
+export const Wrapper = styled.div`
+  margin-top: 64px;
+`;
+
+export const Title = styled(Typography)`
+  font-weight: var(--font-weight-semibold);
+  font-size: 20px;
+  line-height: 24px;
+  color: var(--color-text-muted);
+`;
+
+export const InvestorsContainer = styled.div`
+  overflow-x: auto;
+`;
+
+export const InvestorsWrapper = styled.div`
+  display: flex;
+  margin-top: 16px;
+  gap: 16px;
+  width: 1204px;
+  padding-bottom: 5px;
+`;
+
+export const PersonCardWrapper = styled(PersonCard)`
+  flex: 1 0 18%;
+  width: 228px !important;
+  max-width: 228px !important;
+`;
+
+export const ShowAllWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+`;
+
+export const ShowAllButton = styled.button`
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--color-primary);
+  border: none;
+  background: none;
+`;

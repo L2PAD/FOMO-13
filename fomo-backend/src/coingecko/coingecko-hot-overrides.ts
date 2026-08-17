@@ -1,0 +1,16 @@
+export const COINGECKO_HOT_ID_OVERRIDES: Record<string, string> = {
+  avalanche: "avalanche-2",
+  cronos: "crypto-com-chain",
+  worldcoin: "worldcoin-wld",
+  "jupiter-station": "jupiter-exchange-solana",
+  "flare-network": "flare-networks",
+  "sonic-labs": "sonic-3",
+  stacks: "blockstack",
+  dydx: "dydx-chain",
+  "core-dao": "coredaoorg",
+  "multivers-x": "elrond-erd-2",
+  "falcon-stable": "falcon-finance-ff",
+  zndtoken: "znd-token",
+  berachain: "berachain-bera",
+  vameon: "von",
+};

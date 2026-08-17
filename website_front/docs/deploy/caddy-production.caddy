@@ -1,0 +1,15 @@
+# Proposed production routes. Do not apply until DNS, env files, and containers are confirmed.
+
+www.fomo.cx {
+  redir https://fomo.cx{uri} permanent
+}
+
+fomo.cx {
+  encode zstd gzip
+  reverse_proxy 127.0.0.1:3000
+}
+
+api.fomo.cx {
+  encode zstd gzip
+  reverse_proxy 127.0.0.1:5001
+}

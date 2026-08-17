@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-08-13T07:31:39.891053",
+  "tests_run": 11,
+  "tests_passed": 11,
+  "success_rate": "100.0%",
+  "results": {
+    "Admin Login": {
+      "passed": true,
+      "status": 202,
+      "expected_status": 202,
+      "check_msg": "",
+      "sample": "{'accessToken': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTdjZGQ0MGYzZDA1YjFkMmYwMDk2NDMiLCJlbWFpbCI6ImFkbWluQGZvbW8ubG9jYWwiLCJ3YWxsZXQiOiIiLCJyb2xlIjpbImFkbWluIl0sImlzQWN0aXZlIjp0cnVlLCJpcz"
+    },
+    "Economics Dashboard": {
+      "passed": true,
+      "status": 200,
+      "expected_status": 200,
+      "check_msg": "",
+      "sample": "{'window': {'days': 30, 'from': '2026-07-14T07:31:28.215Z', 'to': '2026-08-13T07:31:28.222Z'}, 'users': {'active30d': 3, 'membershipUsers': 1}, 'requests': {'today': 2, 'sevenDays': 8, 'thirtyDays': 8"
+    },
+    "Operation Analytics": {
+      "passed": true,
+      "status": 200,
+      "expected_status": 200,
+      "check_msg": "",
+      "sample": "{'items': [{'operation': 'ask_fomo', 'requests': 3, 'failed': 0, 'uniqueUsers': 2, 'successRatePct': 1, 'releaseRatePct': 0, 'avgInputTokens': 1368, 'avgOutputTokens': 176, 'credits': {'avg': 2, 'p50'"
+    },
+    "Provider Analytics": {
+      "passed": true,
+      "status": 200,
+      "expected_status": 200,
+      "check_msg": "",
+      "sample": "{'items': [{'provider': 'openai', 'model': 'gpt-4.1-mini', 'requests': 5, 'failed': 0, 'errorRatePct': 0, 'inputTokens': 9351, 'outputTokens': 1163, 'costUsd': {'total': 0.005601, 'avg': 0.00112, 'p50"
+    },
+    "Users Analytics Table": {
+      "passed": true,
+      "status": 200,
+      "expected_status": 200,
+      "check_msg": "",
+      "sample": "{'items': [{'userId': '000000000000000000000000', 'email': '', 'wallet': '', 'membership': '\u2014', 'periodEnd': None, 'granted': 0, 'spent': 0, 'remaining': 0, 'reserved': 0, 'utilizationPct': None, 'req"
+    },
+    "User Analytics Detail": {
+      "passed": true,
+      "status": 200,
+      "expected_status": 200,
+      "check_msg": "",
+      "sample": "{'ok': True, 'userId': '6a7cdd40a104ec674f9f6021', 'wallet': '0xFocusB0b00000000000000000000000000000B0B', 'email': 'bob.fomie@fomo.local', 'subscription': None, 'balances': {'monthly': 0, 'topup': 0,"
+    },
+    "Knowledge Registry": {
+      "passed": true,
+      "status": 200,
+      "expected_status": 200,
+      "check_msg": "",
+      "sample": "{'items': [{'key': 'projects', 'name': 'projects', 'source': 'ico_project_read_models', 'connected': True, 'recordsCount': 5249, 'lastObservedAt': '2026-06-20T13:24:52.197Z', 'freshnessStatus': 'STALE"
+    },
+    "Knowledge Test Retrieval": {
+      "passed": true,
+      "status": 201,
+      "expected_status": 201,
+      "check_msg": "",
+      "sample": "{'connected': True, 'source': 'activities', 'domain': 'earlyland', 'dataMode': 'real', 'data': [{'entityId': '6a7a0fad05a0dc9383fb1a98', 'title': 'Monad Testnet', 'updatedAt': '2026-08-12T20:53:20.746"
+    },
+    "AI Health": {
+      "passed": true,
+      "status": 200,
+      "expected_status": 200,
+      "check_msg": "",
+      "sample": "{'ai': {'gateway': 'ok', 'provider': 'emergent', 'providerStatus': 'READY', 'providerMessage': '\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u00b7 \u043c\u043e\u0434\u0435\u043b\u044c gpt-4.1-mini \u00b7 1178 \u043c\u0441', 'knowledge': 'ok', 'creditLedger': 'ok'}}"
+    },
+    "Providers Status": {
+      "passed": true,
+      "status": 200,
+      "expected_status": 200,
+      "check_msg": "",
+      "sample": "{'activeProvider': 'emergent', 'connection': {'ok': True, 'mode': 'emergent', 'provider': 'openai', 'model': 'gpt-4.1-mini', 'latencyMs': 717, 'sample': 'pong', 'message': '\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u00b7 \u043c\u043e\u0434\u0435\u043b"
+    },
+    "Grounded AI Ask": {
+      "passed": true,
+      "status": 201,
+      "expected_status": 201,
+      "check_msg": "",
+      "sample": "{'ok': True, 'answer': '[FOMO DATA]\\nThere are two related projects named Monad and Monad Pad. Monad is a proof-of-stake (PoS) blockchain and decentralized computation platform. Monad Pad is a platfor"
+    }
+  }
+}

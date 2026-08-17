@@ -1,0 +1,58 @@
+@import "variables";
+@import "mixins";
+
+.mobile-milestones {
+  overflow: scroll;
+  position: relative;
+  z-index: 70;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+
+  svg {
+    height: 250px;
+    transform: translateX(40px);
+    width: auto;
+  }
+}
+
+#first-milestone-label {
+  opacity: 1;
+  transition-duration: 1s;
+}
+
+#second-milestone-label {
+  opacity: 0;
+  transition-duration: 1s;
+}
+
+#second-milestone-line {
+  stroke-dashoffset: 150;
+  stroke-dasharray: 150;
+  transition-duration: 1s;
+}
+
+#first-milestone-line {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 150;
+  transition-duration: 1s;
+}
+
+// #first-milestone:hover ~ #first-milestone-label {
+//     @include label-mixin;
+
+// }
+
+// #second-milestone:hover ~ #second-milestone-label {
+//     @include label-mixin;
+// }
+
+// #first-milestone:hover ~ #first-milestone-line {
+//     @include line-mixin;
+
+//   }
+
+// #second-milestone:hover ~ #second-milestone-line {
+//     @include line-mixin;
+// }

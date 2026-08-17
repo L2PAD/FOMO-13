@@ -1,0 +1,27 @@
+{
+  "summary": "Completed frontend testing for ad banner migration - LocalAdBadge implementation across OTC, Crypto home, and EarlyLand pages",
+  "backend_issues": {},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "REGRESSION TEST PASSED: No OLD PromotedDeals banner on /utility/otc page",
+    "The 'add-text' element found is from GlobalAd in top navigation (expected), not the old OTC banner",
+    "LocalAdBadge with data-testid='localad-CRYPTO_PROMOTED' is present on home page '/'",
+    "LocalAdBadge with data-testid='localad-EARLYLAND_FEED' is present on /crypto/earlyland",
+    "Old PromotedProjects banner NOT found on EarlyLand page (successfully removed)",
+    "Consistency check: All other pages (/core/spaceport, /crypto/backers, /crypto/unlocking, /crypto/funding-feed, /utility/launchpad) loaded correctly",
+    "LocalAdBadge components render null when placement returns filled:false (expected behavior)",
+    "OTC page loads correctly with market header visible"
+  ],
+  "test_report_links": [],
+  "success_percentage": {
+    "frontend": "100%"
+  },
+  "updated_files": [],
+  "action_item_for_main_agent": "All tests passed. The ad banner migration is complete and working correctly. The old PromotedDeals and PromotedProjects banners have been successfully removed and replaced with the unified LocalAdBadge component. Note: Some placements (OTC_MARKET, SPACEPORT_FEED, etc.) return filled:false from the ad server, so their badges correctly render nothing - this is expected behavior.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": false
+}

@@ -1,0 +1,41 @@
+{
+  "summary": "Completed testing of Bazaar NFT marketplace consolidation (G28). Backend NFT stats endpoint working correctly with seeded data. Frontend successfully displays 'Bazaar' header, NFT tab with KPI cards, top collections, top sellers, and listings. Sidebar correctly shows 'Bazaar' and 'NFTs' dropdown removed. All existing tabs (Обзор/OTC/P2P) working without regression.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "Backend: Admin login successful (POST /api/user/admin/login returns 202 with accessToken)",
+    "Backend: GET /api/collectionNft/admin/stats returns correct structure with seeded data (3 collections, 5 listings, 1 sale, 2 sellers)",
+    "Backend: GET /api/deals/admin/market-stats still works (no regression)",
+    "Frontend: /admin/users_list/otc page displays 'Bazaar' header",
+    "Frontend: NFT tab present with data-testid='deals-tab-NFT' between P2P and Выводы tabs",
+    "Frontend: NFT tab displays KPI cards: 'Коллекций в продаже' (3), 'NFT выставлено' (5), 'Объём листингов' ($4.6K), 'Продаж (закрыто)' (1)",
+    "Frontend: 'Топ-коллекции' section displays with bars (Cosmic Crabs, Fomo Genesis, zkPunks)",
+    "Frontend: 'Топ-продавцы NFT' table displays with data-testid='nft-seller-0' showing alice_nakamoto and bob_buterin",
+    "Frontend: 'Листинги на продажу' table displays with data-testid='nft-listing-0' showing NFTs from Fomo Genesis collection",
+    "Frontend: Sidebar navigation shows 'Bazaar' menu item",
+    "Frontend: 'NFTs' dropdown correctly removed from sidebar",
+    "Frontend: Existing tabs (Обзор, OTC, P2P, Выводы, Депозиты, Апелляции, Смарт-контракт) all present and working"
+  ],
+  "test_report_links": [
+    "/app/fomo-backend/backend_test_bazaar_nft.py",
+    "/app/.screenshots/bazaar_page_state.png",
+    "/app/.screenshots/nft_tab_content.png"
+  ],
+  "success_percentage": {
+    "backend": "100% (3/3 tests passed)",
+    "frontend": "100% (12/12 tests passed)"
+  },
+  "updated_files": [
+    "/app/fomo-backend/backend_test_bazaar_nft.py"
+  ],
+  "action_item_for_main_agent": "",
+  "should_call_test_agent_after_fix": "false",
+  "should_main_agent_test_itself": "false"
+}

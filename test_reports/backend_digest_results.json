@@ -1,0 +1,99 @@
+{
+  "timestamp": "2026-08-16T20:08:09.747183",
+  "total_tests": 15,
+  "passed_tests": 15,
+  "failed_tests": 0,
+  "success_rate": "100.0%",
+  "test_details": [
+    {
+      "test": "Admin List Digests",
+      "passed": true,
+      "message": "Status: 200, Has items: True",
+      "data": null
+    },
+    {
+      "test": "Create Digest",
+      "passed": true,
+      "message": "Created digest ID: 6a82189abd30c457331a65d4",
+      "data": null
+    },
+    {
+      "test": "Get Digest by ID",
+      "passed": true,
+      "message": "Retrieved digest: Test Digest 200754",
+      "data": null
+    },
+    {
+      "test": "Patch Digest",
+      "passed": true,
+      "message": "Updated outlook: BULLISH",
+      "data": null
+    },
+    {
+      "test": "AI Generate WEEK",
+      "passed": true,
+      "message": "Draft: A Pivotal Week for Crypto: FOMO AI Launch and Bull, Events: 1, News: 6",
+      "data": null
+    },
+    {
+      "test": "AI Generate MONTH",
+      "passed": true,
+      "message": "Draft generated: True",
+      "data": null
+    },
+    {
+      "test": "AI Generate QUARTER",
+      "passed": true,
+      "message": "Draft generated: True",
+      "data": null
+    },
+    {
+      "test": "Publish Digest",
+      "passed": true,
+      "message": "Status: PUBLISHED",
+      "data": null
+    },
+    {
+      "test": "Public List Digests",
+      "passed": true,
+      "message": "Found 2 published digests, no sensitive fields: True",
+      "data": null
+    },
+    {
+      "test": "Public Get Digest",
+      "passed": true,
+      "message": "Retrieved published digest, no sensitive fields: True",
+      "data": null
+    },
+    {
+      "test": "Unpublish Digest",
+      "passed": true,
+      "message": "Status: DRAFT",
+      "data": null
+    },
+    {
+      "test": "Public Get Draft 404",
+      "passed": true,
+      "message": "Status: 404 (expected 404 for DRAFT)",
+      "data": null
+    },
+    {
+      "test": "Archive Digest",
+      "passed": true,
+      "message": "Status: ARCHIVED",
+      "data": null
+    },
+    {
+      "test": "Calendar Events RelatedArticleId",
+      "passed": "6a81bbda654f6d9792480901",
+      "message": "ARB event has relatedArticleId: 6a81bbda654f6d9792480901",
+      "data": null
+    },
+    {
+      "test": "Delete Digest",
+      "passed": true,
+      "message": "Digest deleted successfully",
+      "data": null
+    }
+  ]
+}

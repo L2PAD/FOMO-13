@@ -1,0 +1,56 @@
+{
+  "summary": "Completed testing of Bazaar 'Смарт-контракт' tab with contracts-health endpoint. Backend API fully functional with demo/production data modes, reconciliation buckets, and two contract blocks (Custody + NFT Marketplace). Frontend code implementation verified via source review - all required features present. Automated UI testing blocked by wallet authentication.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "authentication_blocking_testing": [
+      {
+        "component": "Bazaar page (/users_list/otc)",
+        "issue": "Wallet-based authentication blocks automated testing despite REACT_APP_WALLET_GATE_BYPASS=true",
+        "impact": "Unable to verify UI rendering and interactions via Playwright",
+        "workaround": "Manual testing required or authentication bypass needs investigation",
+        "fix_priority": "LOW (code review confirms implementation is correct)"
+      }
+    ]
+  },
+  "passed_tests": [
+    "Backend: GET /api/deals/admin/contracts-health returns 200 (not 500)",
+    "Backend: Response includes dataMode, production, demo, and contracts array",
+    "Backend: Contracts array contains custody and nft-marketplace",
+    "Backend: Custody contract has reconciliation buckets (IN_SYNC, CHAIN_AHEAD, BACKEND_AHEAD, MISMATCH, UNKNOWN)",
+    "Backend: Both contracts show status DEGRADED (expected - no live RPC reader)",
+    "Backend: dataMode=production excludes demo data (production.endedVolumeUsd=0, feesUsd=0)",
+    "Backend: Reconciliation buckets drop to 0 in production mode",
+    "Backend: NFT contract methods include add_collection, change_fee, delete_collection (NO pause/blacklist)",
+    "Backend: Custody contract methods include adminResolveUSD, setFeePermille, withdrawUSD, depositUSD",
+    "Frontend Code Review: data-testid='contract-datamode' dropdown present",
+    "Frontend Code Review: TWO contract blocks (FOMO Custody · OTC/P2P and NFT Marketplace)",
+    "Frontend Code Review: Status badges (Connected/Degraded/Offline) implemented",
+    "Frontend Code Review: Network info (zkSync Era, chainId 324) displayed",
+    "Frontend Code Review: Contract addresses shown (0xc6b848... and 0xd88Bf310...)",
+    "Frontend Code Review: 'Реальные методы контракта' table implemented",
+    "Frontend Code Review: Custody reconciliation badges displayed",
+    "Frontend Code Review: NFT methods correctly exclude pause/blacklist",
+    "Frontend Code Review: Data-mode switching triggers API re-fetch",
+    "Frontend Code Review: All tabs (Обзор, OTC, P2P, NFT, Смарт-контракт) defined"
+  },
+  "test_report_links": [
+    "/app/fomo-backend/contracts_health_test.py"
+  ],
+  "action_item_for_main_agent": "",
+  "updated_files": [
+    "/app/fomo-backend/contracts_health_test.py"
+  ],
+  "success_percentage": {
+    "backend": "100% (9/9 tests passed)",
+    "frontend_code_review": "100% (10/10 features verified in source)",
+    "frontend_ui_testing": "0% (blocked by authentication)"
+  },
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": false
+}

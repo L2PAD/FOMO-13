@@ -1,0 +1,34 @@
+name: Deploy admin frontend
+
+on:
+  push:
+    branches:
+      - fomo_v2_architecture
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.HETZNER_SSH_KEY }}" > ~/.ssh/hetzner_key
+          chmod 600 ~/.ssh/hetzner_key
+          ssh-keyscan -H "${{ secrets.HETZNER_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy on Hetzner
+        env:
+          HETZNER_HOST: ${{ secrets.HETZNER_HOST }}
+          HETZNER_USER: ${{ secrets.HETZNER_USER }}
+          APP_DIR: /opt/stacks/fomo/apps/FOMO-ADMIN
+          DEPLOY_BRANCH: fomo_v2_architecture
+        run: |
+          ssh -i ~/.ssh/hetzner_key "${HETZNER_USER}@${HETZNER_HOST}" \
+            "APP_DIR='${APP_DIR}' DEPLOY_BRANCH='${DEPLOY_BRANCH}' bash -s" <<'EOF'
+          set -euo pipefail
+          cd "${APP_DIR}"
+          chmod +x scripts/deploy/deploy-admin.sh
+          bash scripts/deploy/deploy-admin.sh
+          EOF

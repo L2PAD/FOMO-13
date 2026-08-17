@@ -1,0 +1,226 @@
+{
+  "timestamp": "2026-08-14T00:15:48.419271",
+  "total": 10,
+  "passed": 9,
+  "failed": 1,
+  "results": [
+    {
+      "test": "Admin Login",
+      "status": "PASSED",
+      "expected": 202,
+      "actual": 202,
+      "response": {
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTdlNDI0Yzk1NDAxNTFjYjliZTcxNjMiLCJlbWFpbCI6ImFkbWluQGZvbW8ubG9jYWwiLCJ3YWxsZXQiOiIweEQxMjhmMUUzYjI5MzhlQjAwNUJjNWM3NTBBNjZiODIxNzNmNjI4NTciLCJyb2xlIjpbImFkbWluIl0sImlzQWN0aXZlIjp0cnVlLCJpczJGQVZlcmlmaWVkIjp0cnVlLCJpczJGQUVuYWJsZWQiOmZhbHNlLCJpYXQiOjE3ODY2NjY1NDYsImV4cCI6MTc4NzI3MTM0Nn0.Z6PHCNPVHcyvyRyjvgvw59yXDUWnaZl5urjaOLgjyoQ",
+        "user": {
+          "_id": "6a7e424c9540151cb9be7163",
+          "email": "admin@fomo.local",
+          "role": [
+            "admin"
+          ],
+          "isActive": true
+        }
+      }
+    },
+    {
+      "test": "Purchase with 0 balance (expect 400 Insufficient Balance)",
+      "status": "FAILED",
+      "expected": 400,
+      "actual": 201,
+      "response": {
+        "ok": true,
+        "purchase": {
+          "id": "6a7e5e3212407a996120231b",
+          "productCode": "FOMO_AI",
+          "planCode": "FOMO_AI_MEMBERSHIP",
+          "amount": 1,
+          "asset": "USDC",
+          "status": "SETTLED",
+          "subscriptionId": "6a7e5aa912407a9961201ef5",
+          "aiCreditsGranted": 1000,
+          "settledAt": "2026-08-14T00:15:46.787Z"
+        },
+        "balance": {
+          "asset": "USDC",
+          "network": "ZKSYNC",
+          "available": 0,
+          "reserved": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "test": "Credit admin +1 USDC",
+      "status": "PASSED",
+      "expected": 201,
+      "actual": 201,
+      "response": {
+        "ok": true,
+        "before": 0,
+        "delta": 1,
+        "after": 1,
+        "balance": {
+          "asset": "USDC",
+          "network": "ZKSYNC",
+          "available": 1,
+          "reserved": 0,
+          "total": 1
+        }
+      }
+    },
+    {
+      "test": "Purchase FOMO AI Membership",
+      "status": "PASSED",
+      "expected": 201,
+      "actual": 201,
+      "response": {
+        "ok": true,
+        "purchase": {
+          "id": "6a7e5e3312407a9961202348",
+          "productCode": "FOMO_AI",
+          "planCode": "FOMO_AI_MEMBERSHIP",
+          "amount": 1,
+          "asset": "USDC",
+          "status": "SETTLED",
+          "subscriptionId": "6a7e5aa912407a9961201ef5",
+          "aiCreditsGranted": 1000,
+          "settledAt": "2026-08-14T00:15:47.178Z"
+        },
+        "balance": {
+          "asset": "USDC",
+          "network": "ZKSYNC",
+          "available": 0,
+          "reserved": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "test": "Credit admin +1 USDC for idempotency test",
+      "status": "PASSED",
+      "expected": 201,
+      "actual": 201,
+      "response": {
+        "ok": true,
+        "before": 0,
+        "delta": 1,
+        "after": 1,
+        "balance": {
+          "asset": "USDC",
+          "network": "ZKSYNC",
+          "available": 1,
+          "reserved": 0,
+          "total": 1
+        }
+      }
+    },
+    {
+      "test": "Repeat FOMO AI purchase (same idempotencyKey)",
+      "status": "PASSED",
+      "expected": 201,
+      "actual": 201,
+      "response": {
+        "ok": true,
+        "purchase": {
+          "id": "6a7e5e3312407a9961202348",
+          "productCode": "FOMO_AI",
+          "planCode": "FOMO_AI_MEMBERSHIP",
+          "amount": 1,
+          "asset": "USDC",
+          "status": "SETTLED",
+          "subscriptionId": "6a7e5aa912407a9961201ef5",
+          "aiCreditsGranted": 1000,
+          "settledAt": "2026-08-14T00:15:47.178Z"
+        },
+        "balance": {
+          "asset": "USDC",
+          "network": "ZKSYNC",
+          "available": 1,
+          "reserved": 0,
+          "total": 1
+        }
+      }
+    },
+    {
+      "test": "Credit admin +79 USDC",
+      "status": "PASSED",
+      "expected": 201,
+      "actual": 201,
+      "response": {
+        "ok": true,
+        "before": 1,
+        "delta": 79,
+        "after": 80,
+        "balance": {
+          "asset": "USDC",
+          "network": "ZKSYNC",
+          "available": 80,
+          "reserved": 0,
+          "total": 80
+        }
+      }
+    },
+    {
+      "test": "Purchase FOMO Intel Subscription",
+      "status": "PASSED",
+      "expected": 201,
+      "actual": 201,
+      "response": {
+        "ok": true,
+        "purchase": {
+          "id": "6a7e5e3412407a9961202389",
+          "productCode": "FOMO_INTEL",
+          "planCode": "FOMO_INTEL_SUB",
+          "amount": 79,
+          "asset": "USDC",
+          "status": "SETTLED",
+          "subscriptionId": "6a7e5aaa12407a9961201f29",
+          "aiCreditsGranted": 0,
+          "settledAt": "2026-08-14T00:15:48.064Z"
+        },
+        "balance": {
+          "asset": "USDC",
+          "network": "ZKSYNC",
+          "available": 1,
+          "reserved": 0,
+          "total": 1
+        }
+      }
+    },
+    {
+      "test": "Get Intel entitlements (correct secret)",
+      "status": "PASSED",
+      "expected": 200,
+      "actual": 200,
+      "response": {
+        "product": "FOMO_INTEL",
+        "count": 1,
+        "generatedAt": "2026-08-14T00:15:48.214Z",
+        "items": [
+          {
+            "userId": "6a7e424c9540151cb9be7163",
+            "email": "admin@fomo.local",
+            "wallet": "0xd128f1e3b2938eb005bc5c750a66b82173f62857",
+            "username": "admin",
+            "product": "FOMO_INTEL",
+            "planCode": "",
+            "status": "ACTIVE",
+            "periodStart": "2026-08-14T00:15:48.063Z",
+            "periodEnd": "2026-11-12T00:00:42.427Z",
+            "accessGranted": true
+          }
+        ]
+      }
+    },
+    {
+      "test": "Get Intel entitlements (wrong secret - expect 403)",
+      "status": "PASSED",
+      "expected": 403,
+      "actual": 403,
+      "response": {
+        "statusCode": 403,
+        "message": "Invalid integration secret",
+        "error": "Forbidden"
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+development.fomo.cx {
+    encode zstd gzip
+    reverse_proxy 127.0.0.1:3001
+}
+
+devapi.fomo.cx {
+    reverse_proxy 127.0.0.1:5000
+}
+
+admin.fomo.cx {
+    encode zstd gzip
+    reverse_proxy 127.0.0.1:3002
+}
+
+# Alternative if the admin build is served directly by host Caddy:
+#
+# admin.fomo.cx {
+#     encode zstd gzip
+#     root * /opt/stacks/fomo/apps/FOMO-ADMIN/build
+#     try_files {path} /index.html
+#     file_server
+# }

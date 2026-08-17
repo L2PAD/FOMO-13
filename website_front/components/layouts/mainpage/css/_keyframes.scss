@@ -1,0 +1,85 @@
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes line-appear {
+  0% {
+    stroke-dashoffset: 150;
+  }
+  15% {
+    stroke-dashoffset: 0;
+  }
+  30% {
+    stroke-dashoffset: 150;
+  }
+  100% {
+    stroke-dashoffset: 150;
+  }
+}
+
+@keyframes gems-line-appear {
+  0% {
+    stroke-dashoffset: 170;
+  }
+  15% {
+    stroke-dashoffset: 0;
+  }
+  30% {
+    stroke-dashoffset: 170;
+  }
+  100% {
+    stroke-dashoffset: 170;
+  }
+}
+
+@keyframes main-line-appear {
+  0% {
+    stroke-dashoffset: 210;
+  }
+  15% {
+    stroke-dashoffset: 0;
+  }
+  30% {
+    stroke-dashoffset: 210;
+  }
+  100% {
+    stroke-dashoffset: 210;
+  }
+}
+
+@keyframes milestone-path-appear {
+  0% {
+    -webkit-filter: drop-shadow(0);
+    filter: drop-shadow(0);
+  }
+  20% {
+    -webkit-filter: drop-shadow(0 0 75px rgba(243, 226, 226, 1));
+    filter: drop-shadow(0 0 75px rgba(243, 226, 226, 1));
+  }
+  100% {
+    -webkit-filter: drop-shadow(0);
+    filter: drop-shadow(0);
+  }
+}
+
+@keyframes milestone-path-hover-appear {
+  0% {
+    -webkit-filter: drop-shadow(0);
+    filter: drop-shadow(0);
+  }
+  100% {
+    -webkit-filter: drop-shadow(0 0 75px rgba(243, 226, 226, 1));
+    filter: drop-shadow(0 0 75px rgba(243, 226, 226, 1));
+  }
+}

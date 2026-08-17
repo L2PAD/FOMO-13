@@ -1,0 +1,27 @@
+name: Deploy devapi backend
+
+on:
+  push:
+    branches:
+      - fomo_v2_architecture
+
+jobs:
+  deploy:
+    name: Deploy to Hetzner
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HETZNER_HOST }}
+          username: ${{ secrets.HETZNER_USER }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script_stop: true
+          script: |
+            cd /opt/stacks/fomo/apps/FOMO-BACK
+            git fetch origin fomo_v2_architecture
+            git reset --hard origin/fomo_v2_architecture
+            chmod +x scripts/deploy/deploy-devapi.sh
+            bash scripts/deploy/deploy-devapi.sh

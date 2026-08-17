@@ -1,0 +1,246 @@
+import React from "react";
+import { CalendarIcon, FolderKanban } from "lucide-react";
+import Tasks from "../components/global/Icons/nav/tasks";
+import Board from "../components/global/Icons/nav/board";
+import Compendium from "../components/global/Icons/nav/compendium";
+import Feed from "../components/global/Icons/nav/feed";
+
+export const EarlylandProjects = [
+  {
+    variant: "default",
+    userAvatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyz-77X11MoGE22xVjjPhbpW6lPj6I0SkcTQ&usqp=CAU",
+    userName: "name",
+    userRating: 94,
+    userStatus: "warn",
+    status: "upcoming",
+    title: "SharkRace Club",
+    description: "NFT & Collectibles",
+    progress: 30,
+    redFlagsCount: 14,
+    activityType: "Testing",
+    type: "Private",
+    percentage: 75,
+  },
+  {
+    variant: "default",
+    userAvatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyz-77X11MoGE22xVjjPhbpW6lPj6I0SkcTQ&usqp=CAU",
+    userName: "name",
+    userRating: 94,
+    userStatus: "warn",
+    status: "upcoming",
+    title: "SharkRace Club",
+    description: "NFT & Collectibles",
+    progress: 30,
+    redFlagsCount: 14,
+    activityType: "Testing",
+    type: "Private",
+    percentage: 75,
+  },
+  {
+    variant: "default",
+    userAvatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyz-77X11MoGE22xVjjPhbpW6lPj6I0SkcTQ&usqp=CAU",
+    userName: "name",
+    userRating: 94,
+    userStatus: "warn",
+    status: "upcoming",
+    title: "SharkRace Club",
+    description: "NFT & Collectibles",
+    progress: 30,
+    redFlagsCount: 14,
+    activityType: "Testing",
+    type: "Private",
+    percentage: 75,
+  },
+  {
+    variant: "default",
+    userAvatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyz-77X11MoGE22xVjjPhbpW6lPj6I0SkcTQ&usqp=CAU",
+    userName: "name",
+    userRating: 94,
+    userStatus: "warn",
+    status: "upcoming",
+    title: "SharkRace Club",
+    description: "NFT & Collectibles",
+    progress: 30,
+    redFlagsCount: 14,
+    activityType: "Testing",
+    type: "Private",
+    percentage: 75,
+  },
+  {
+    variant: "default",
+    userAvatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyz-77X11MoGE22xVjjPhbpW6lPj6I0SkcTQ&usqp=CAU",
+    userName: "name",
+    userRating: 94,
+    userStatus: "warn",
+    status: "upcoming",
+    title: "SharkRace Club",
+    description: "NFT & Collectibles",
+    progress: 30,
+    redFlagsCount: 14,
+    activityType: "Testing",
+    type: "Private",
+    percentage: 75,
+  },
+  {
+    variant: "default",
+    userAvatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyz-77X11MoGE22xVjjPhbpW6lPj6I0SkcTQ&usqp=CAU",
+    userName: "name",
+    userRating: 94,
+    userStatus: "warn",
+    status: "upcoming",
+    title: "SharkRace Club",
+    description: "NFT & Collectibles",
+    progress: 30,
+    redFlagsCount: 14,
+    activityType: "Testing",
+    type: "Private",
+    percentage: 75,
+  },
+  {
+    variant: "default",
+    userAvatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyz-77X11MoGE22xVjjPhbpW6lPj6I0SkcTQ&usqp=CAU",
+    userName: "name",
+    userRating: 94,
+    userStatus: "warn",
+    status: "upcoming",
+    title: "SharkRace Club",
+    description: "NFT & Collectibles",
+    progress: 30,
+    redFlagsCount: 14,
+    activityType: "Testing",
+    type: "Private",
+    percentage: 75,
+  },
+  {
+    variant: "default",
+    userAvatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyz-77X11MoGE22xVjjPhbpW6lPj6I0SkcTQ&usqp=CAU",
+    userName: "name",
+    userRating: 94,
+    userStatus: "warn",
+    status: "upcoming",
+    title: "SharkRace Club",
+    description: "NFT & Collectibles",
+    progress: 30,
+    redFlagsCount: 14,
+    activityType: "Testing",
+    type: "Private",
+    percentage: 75,
+  },
+  {
+    variant: "default",
+    userAvatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyz-77X11MoGE22xVjjPhbpW6lPj6I0SkcTQ&usqp=CAU",
+    userName: "name",
+    userRating: 94,
+    userStatus: "warn",
+    status: "upcoming",
+    title: "SharkRace Club",
+    description: "NFT & Collectibles",
+    progress: 30,
+    redFlagsCount: 14,
+    activityType: "Testing",
+    type: "Private",
+    percentage: 75,
+  },
+  {
+    variant: "default",
+    userAvatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyz-77X11MoGE22xVjjPhbpW6lPj6I0SkcTQ&usqp=CAU",
+    userName: "name",
+    userRating: 94,
+    userStatus: "warn",
+    status: "upcoming",
+    title: "SharkRace Club",
+    description: "NFT & Collectibles",
+    progress: 30,
+    redFlagsCount: 14,
+    activityType: "Testing",
+    type: "Private",
+    percentage: 75,
+  },
+  {
+    variant: "default",
+    userAvatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyz-77X11MoGE22xVjjPhbpW6lPj6I0SkcTQ&usqp=CAU",
+    userName: "name",
+    userRating: 94,
+    userStatus: "warn",
+    status: "upcoming",
+    title: "SharkRace Club",
+    description: "NFT & Collectibles",
+    progress: 30,
+    redFlagsCount: 14,
+    activityType: "Testing",
+    type: "Private",
+    percentage: 75,
+  },
+  {
+    variant: "default",
+    userAvatar:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyz-77X11MoGE22xVjjPhbpW6lPj6I0SkcTQ&usqp=CAU",
+    userName: "name",
+    userRating: 94,
+    userStatus: "warn",
+    status: "upcoming",
+    title: "SharkRace Club",
+    description: "NFT & Collectibles",
+    progress: 30,
+    redFlagsCount: 14,
+    activityType: "Testing",
+    type: "Private",
+    percentage: 75,
+  },
+];
+
+export const EarlylandPages = [
+  { title: "Projects", link: "", icon: <FolderKanban /> },
+  { title: "Calendar", link: "calendar", icon: <CalendarIcon /> },
+  { title: "Feed", link: "feed", icon: <Feed /> },
+  { title: "Tasks", link: "tasks", icon: <Tasks /> },
+  { title: "Board", link: "board", icon: <Board /> },
+  { title: "Compendium", link: "compendium", icon: <Compendium /> },
+];
+
+export const EarlylandLogoutPages = [
+  { title: "Projects", link: "" },
+  { title: "Calendar", link: "calendar" },
+  { title: "Feed", link: "feed" },
+];
+
+export const boards = [
+  {
+    id: 1,
+    title: "To do",
+    items: [
+      { id: 1, title: "Name1" },
+      { id: 2, title: "Name2" },
+      { id: 3, title: "Name3" },
+    ],
+  },
+  {
+    id: 2,
+    title: "In progress",
+    items: [
+      { id: 4, title: "Name4" },
+      { id: 5, title: "Name5" },
+      { id: 6, title: "Name6" },
+    ],
+  },
+  {
+    id: 3,
+    title: "Completed",
+    items: [
+      { id: 7, title: "Name7" },
+      { id: 8, title: "Name8" },
+      { id: 9, title: "Name9" },
+    ],
+  },
+];

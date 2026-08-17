@@ -1,0 +1,86 @@
+services:
+  fomo-backend-production:
+    container_name: fomo-backend-production
+    image: fomo-backend-production:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./.env.production
+    environment:
+      NODE_ENV: production
+      PORT: "5001"
+      UPLOAD_DIR: /app/uploads
+      AI_ADMIN_EXPORT_DIR: /app/admin-ai-exports
+      FOMO_V2_LAUNCHPAD_INDEXER_ENABLED: "false"
+    ports:
+      - "127.0.0.1:5001:5001"
+    volumes:
+      - /opt/fomoland/uploads:/app/uploads
+      - /opt/fomoland/admin-ai-exports:/app/admin-ai-exports
+    networks:
+      - fomo_internal
+
+  fomo-v2-market-worker-production:
+    container_name: fomo-v2-market-worker-production
+    image: fomo-backend-production:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: ["node", "dist/fomo-v2-market-worker.js"]
+    env_file:
+      - ./.env.production
+    environment:
+      NODE_ENV: production
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - /opt/fomoland/uploads:/app/uploads
+    networks:
+      - fomo_internal
+    healthcheck:
+      disable: true
+
+  fomo-v2-launchpad-indexer-production:
+    container_name: fomo-v2-launchpad-indexer-production
+    image: fomo-backend-production:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command:
+      ["node", "dist/fomo-v2/domains/launchpad/runners/launchpad-indexer.runner.js"]
+    env_file:
+      - ./.env.production
+    environment:
+      NODE_ENV: production
+      FOMO_V2_LAUNCHPAD_INDEXER_ENABLED: "true"
+    networks:
+      - fomo_internal
+    healthcheck:
+      disable: true
+
+  fomo-portfolio-worker-production:
+    container_name: fomo-portfolio-worker-production
+    image: fomo-backend-production:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: ["node", "dist/portfolio-worker.js"]
+    env_file:
+      - ./.env.production
+    environment:
+      NODE_ENV: production
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - /opt/fomoland/uploads:/app/uploads
+    networks:
+      - fomo_internal
+    healthcheck:
+      disable: true
+
+networks:
+  fomo_internal:
+    external: true

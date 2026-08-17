@@ -1,0 +1,247 @@
+@import "variables";
+@import "mixins";
+@import "keyframes";
+
+#nfts-path:hover ~ #nfts-line {
+  @include line-mixin;
+}
+
+#evol-path:hover ~ #evol-line {
+  @include line-mixin;
+}
+
+#early-land-path:hover ~ #early-land-line {
+  @include line-mixin;
+}
+
+#gems-labs-path:hover ~ #gems-labs-line {
+  @include line-mixin;
+}
+
+#crypto-path:hover ~ #crypto-line {
+  @include line-mixin;
+}
+
+#dashboard-path:hover ~ #dashboard-line {
+  @include line-mixin;
+}
+
+#utility-path:hover ~ #utility-line {
+  @include line-mixin;
+}
+
+#crypto-line,
+#nfts-line,
+#evol-line,
+#early-land-line,
+#gems-labs-line,
+#utility-line,
+#dashboard-line,
+#planet-line {
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
+}
+
+#gems-labs-path:hover ~ #gems-labs-label {
+  @include label-mixin;
+}
+
+#nfts-path:hover ~ #nfts-label {
+  @include label-mixin;
+}
+
+#evol-path:hover ~ #evol-label {
+  @include label-mixin;
+}
+
+#early-land-path:hover ~ #early-land-label {
+  @include label-mixin;
+}
+
+#crypto-path:hover ~ #crypto-label {
+  @include label-mixin;
+}
+
+#dashboard-path:hover ~ #dashboard-label {
+  @include label-mixin;
+}
+
+#utility-path:hover ~ #utility-label {
+  @include label-mixin;
+}
+
+#crypto-label,
+#nfts-label,
+#evol-label,
+#early-land-label,
+#gems-labs-label,
+#utility-label,
+#dashboard-label,
+#planet-label {
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
+}
+
+#nfts-path-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 2.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#evol-path-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 2.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#crypto-path-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 2s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#utility-path-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 3s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+#dashboard-path-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 3.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#early-land-path-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 1s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#gems-labs-path-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 0.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#gems-labs-label-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 0.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#gems-labs-line-dublicate {
+  animation: gems-line-appear 10s ease forwards;
+  animation-delay: 0.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#early-land-label-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 1s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#early-land-line-dublicate {
+  animation: line-appear 10s ease forwards;
+  animation-delay: 1s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+#dashboard-line-dublicate {
+  animation: line-appear 10s ease forwards;
+  animation-delay: 3.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#crypto-label-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 2s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#crypto-line-dublicate {
+  animation: line-appear 10s ease forwards;
+  animation-delay: 2s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#nfts-label-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 2.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#utility-label-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 3s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+#dashboard-label-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 3.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+#evol-label-dublicate {
+  animation: appear 10s ease forwards;
+  animation-delay: 2.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#nfts-line-dublicate {
+  animation: line-appear 10s ease forwards;
+  animation-delay: 2.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#utility-line-dublicate {
+  animation: line-appear 10s ease forwards;
+  animation-delay: 3s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#evol-line-dublicate {
+  animation: line-appear 10s ease forwards;
+  animation-delay: 2.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}

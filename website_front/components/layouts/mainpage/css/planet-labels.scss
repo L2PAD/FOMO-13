@@ -1,0 +1,119 @@
+@import "variables";
+@import "mixins";
+@import "keyframes";
+
+#planet-path-duplicate {
+  opacity: 0;
+  -webkit-animation: appear 10s ease forwards;
+  animation: appear 10s ease forwards;
+  -webkit-animation-delay: 0.5s;
+  animation-delay: 0.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#planet-line-duplicate {
+  -webkit-animation: main-line-appear 10s ease forwards;
+  animation: main-line-appear 10s ease forwards;
+  -webkit-animation-delay: 0.5s;
+  animation-delay: 0.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#planet-label-duplicate {
+  opacity: 0;
+  -webkit-animation: appear 10s ease forwards;
+  animation: appear 10s ease forwards;
+  -webkit-animation-delay: 0.5s;
+  animation-delay: 0.5s;
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+#milestone-path {
+  -webkit-animation: milestone-path-appear 10s ease forwards;
+  animation: milestone-path-appear 10s ease forwards;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-delay: 1s;
+  animation-delay: 1s;
+
+  &:hover {
+    -webkit-animation: milestone-path-hover-appear 0.1s ease forwards;
+    animation: milestone-path-hover-appear 0.1s ease forwards;
+  }
+}
+
+#milestone-path2 {
+  -webkit-animation: milestone-path-appear 10s ease forwards;
+  animation: milestone-path-appear 10s ease forwards;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-delay: 6s;
+  animation-delay: 6s;
+
+  &:hover {
+    -webkit-animation: milestone-path-hover-appear 0.1s ease forwards;
+    animation: milestone-path-hover-appear 0.1s ease forwards;
+  }
+}
+
+#milestone-path3 {
+  -webkit-animation: milestone-path-appear 10s ease forwards;
+  animation: milestone-path-appear 10s ease forwards;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-delay: 2s;
+  animation-delay: 2s;
+
+  &:hover {
+    -webkit-animation: milestone-path-hover-appear 0.1s ease forwards;
+    animation: milestone-path-hover-appear 0.1s ease forwards;
+  }
+}
+
+#milestone-path4 {
+  -webkit-animation: milestone-path-appear 10s ease forwards;
+  animation: milestone-path-appear 10s ease forwards;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-delay: 5s;
+  animation-delay: 5s;
+
+  &:hover {
+    -webkit-animation: milestone-path-hover-appear 0.1s ease forwards;
+    animation: milestone-path-hover-appear 0.1s ease forwards;
+  }
+}
+
+#milestone-path5 {
+  -webkit-animation: milestone-path-appear 10s ease forwards;
+  animation: milestone-path-appear 10s ease forwards;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-delay: 3s;
+  animation-delay: 3s;
+
+  &:hover {
+    -webkit-animation: milestone-path-hover-appear 0.1s ease forwards;
+    animation: milestone-path-hover-appear 0.1s ease forwards;
+  }
+}
+
+#milestone-path6 {
+  -webkit-animation: milestone-path-appear 10s ease forwards;
+  animation: milestone-path-appear 10s ease forwards;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-delay: 4s;
+  animation-delay: 4s;
+
+  &:hover {
+    -webkit-animation: milestone-path-hover-appear 0.1s ease forwards;
+    animation: milestone-path-hover-appear 0.1s ease forwards;
+  }
+}

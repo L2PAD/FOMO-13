@@ -1,0 +1,11 @@
+export enum NFT_PROJECT_INVESTORS_TABS {
+    TEAM = 'Team',
+    ADVISOR = 'Advisors',
+    PARTNERS = 'Partners',
+}
+
+export const NFTProjectInvestorsTabs = [
+    NFT_PROJECT_INVESTORS_TABS.TEAM,
+    NFT_PROJECT_INVESTORS_TABS.ADVISOR,
+    NFT_PROJECT_INVESTORS_TABS.PARTNERS,
+]

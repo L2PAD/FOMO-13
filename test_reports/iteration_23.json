@@ -1,0 +1,52 @@
+{
+  "summary": "Completed backend API testing and CRM admin interface testing for FOMO crypto payment fix. All backend APIs working correctly with clean error handling. CRM admin Эквайринг page fully functional.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "component": "Website memberships page",
+        "issue": "Route /memberships returns 404. Unable to verify website paywall UI (FOMO AI chat icon, FOMO Intel chart icon, button alignment) as specified in requirements.",
+        "affected_routes": ["/memberships"],
+        "fix_priority": "MEDIUM",
+        "note": "Website root (/) loads successfully but does not have visible memberships navigation. The website_front code references /memberships route but it's not accessible."
+      }
+    ],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "Admin login (POST /api/user/admin/login) - returns 202 with accessToken",
+    "Purchase with 0 balance returns clean 400 error 'Insufficient FOMO Balance' (NOT 500) - KEY FIX VERIFIED",
+    "Credit admin account via POST /api/admin/money/users/{userId}/adjust - returns 201 with updated balance",
+    "FOMO AI purchase via POST /api/money/purchases/legacy - returns 201 with status SETTLED and subscriptionId",
+    "Idempotency test - same idempotencyKey returns same purchase without double-charge",
+    "FOMO Intel purchase via POST /api/money/purchases/legacy - returns 201 with status SETTLED and subscriptionId",
+    "Integration export GET /api/integrations/intel/entitlements with correct secret - returns 200 with entitlements list",
+    "Integration export with wrong secret - correctly returns 403 Forbidden",
+    "CRM admin login at /admin with admin@fomo.local / Admin@12345 - successful",
+    "CRM admin Эквайринг page navigation - successful",
+    "CRM admin Обзор tab - displays charts (динамика + пончик) and KPI including 'На смарт-контракте'",
+    "CRM admin Балансы tab - has search box, pagination, and data table",
+    "CRM admin Депозиты tab - has search box, pagination, and data table",
+    "CRM admin Покупки tab - has search box, pagination, and data table",
+    "CRM admin Выводы tab - has search box, pagination, and data table"
+  ],
+  "test_report_links": [
+    "/app/backend_test.py",
+    "/app/backend_test_results.json"
+  ],
+  "action_item_for_main_agent": "Website /memberships route returns 404. Need to verify if the route exists or if there's a different URL for the memberships page. The website_front code at /app/website_front/components/layouts/memberships/index.tsx exists but the route is not accessible. Please check Next.js routing configuration or provide the correct URL for testing the website paywall UI (FOMO AI chat icon, FOMO Intel chart icon, button alignment).",
+  "updated_files": [
+    "/app/backend_test.py"
+  ],
+  "success_percentage": {
+    "backend": "100% (10/10 tests passed)",
+    "frontend_crm": "100% (CRM admin fully functional)",
+    "frontend_website": "0% (route not accessible for testing)"
+  },
+  "should_call_test_agent_after_fix": "false",
+  "should_main_agent_test_itself": "true"
+}

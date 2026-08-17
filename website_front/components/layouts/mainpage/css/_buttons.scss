@@ -1,0 +1,19 @@
+@import "mixins";
+
+.add-photo-button {
+  background: none;
+  @include green-title(16px, 19px, 600);
+  border: none;
+  padding-left: 24px;
+}
+
+.publish-comment-button {
+  background: var(--color-primary);
+  padding: 13px 100px;
+  border-radius: 8px;
+  font-weight: var(--font-weight-semibold);
+  font-size: 18px;
+  line-height: 22px;
+  color: var(--color-white);
+  border: none;
+}

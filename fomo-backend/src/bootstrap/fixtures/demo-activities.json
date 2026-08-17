@@ -1,0 +1,839 @@
+[
+  {
+    "_id": {
+      "$oid": "6a7a0fad05a0dc9383fb1a98"
+    },
+    "slug": "monad-testnet-prime",
+    "accessTier": "prime",
+    "aiProposals": [],
+    "auditTrail": [
+      {
+        "action": "publish",
+        "actor": "seed-earlyland-prime",
+        "at": {
+          "$date": "2026-08-10T17:51:41.725Z"
+        },
+        "revision": 1,
+        "note": "seeded prime card"
+      }
+    ],
+    "canonicalResolution": {
+      "status": "unprocessed",
+      "candidates": []
+    },
+    "createdAt": {
+      "$date": "2026-08-10T17:51:41.725Z"
+    },
+    "currentDraft": {
+      "name": "Monad Testnet",
+      "projectName": "Monad Testnet",
+      "symbol": "MON",
+      "logo": "",
+      "projectLogo": "",
+      "score": "9.2",
+      "activityType": "Testnet",
+      "category": "Layer 1",
+      "difficulty": "medium",
+      "cost": "Free",
+      "timeEstimate": "20 min",
+      "taskFrequency": "daily",
+      "isHot": true,
+      "rewardLabel": "Potential Airdrop",
+      "ecosystem": [
+        "Monad"
+      ],
+      "platform": [
+        "Web"
+      ],
+      "tags": [
+        "Monad",
+        "Testnet",
+        "Airdrop",
+        "Prime"
+      ],
+      "requirements": [
+        "Web3 wallet",
+        "Testnet funds"
+      ],
+      "approxStartDate": "2026-01-01",
+      "approxEndDate": "2026-06-30",
+      "timezone": "UTC",
+      "description": {
+        "about": "Monad is a high-performance EVM-compatible L1 with parallel execution. Complete the Prime testnet track for potential rewards.",
+        "aboutHtml": "<p>Monad is a high-performance EVM-compatible L1 with parallel execution. Complete the Prime testnet track for potential rewards.</p>",
+        "howToParticipate": "Connect wallet, complete the guided steps and stay active.",
+        "howToParticipateHtml": "<p>Connect wallet, complete the guided steps and stay active.</p>"
+      },
+      "participants": 12840,
+      "fundsRaised": 225000000,
+      "joinLink": "https://fomo.cx",
+      "links": [
+        {
+          "label": "Official site",
+          "url": "https://fomo.cx"
+        }
+      ],
+      "review": {
+        "text": "Prime review: Monad's parallel EVM and strong backers (Paradigm-led $225M) make this a top-tier testnet to farm early.",
+        "textHtml": "<p>Prime review: Monad's parallel EVM and strong backers (Paradigm-led $225M) make this a top-tier testnet to farm early.</p>",
+        "scores": [
+          {
+            "label": "Team",
+            "value": 9
+          },
+          {
+            "label": "Tokenomics",
+            "value": 8
+          }
+        ],
+        "isLocked": true
+      },
+      "taskGuide": {
+        "title": "Monad Testnet Prime Guide",
+        "description": "Exclusive step-by-step Prime walkthrough.",
+        "descriptionHtml": "<p>Exclusive step-by-step Prime walkthrough.</p>",
+        "ctaLabel": "Start",
+        "ctaUrl": "https://fomo.cx",
+        "successMessage": "Task completed!",
+        "isLocked": true,
+        "steps": [
+          {
+            "id": "step-1",
+            "title": "Bridge to Monad testnet",
+            "description": "Bridge to Monad testnet",
+            "descriptionHtml": "<p>Bridge to Monad testnet</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-2",
+            "title": "Swap on a Monad DEX",
+            "description": "Swap on a Monad DEX",
+            "descriptionHtml": "<p>Swap on a Monad DEX</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-3",
+            "title": "Provide liquidity",
+            "description": "Provide liquidity",
+            "descriptionHtml": "<p>Provide liquidity</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-4",
+            "title": "Mint a testnet NFT",
+            "description": "Mint a testnet NFT",
+            "descriptionHtml": "<p>Mint a testnet NFT</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-5",
+            "title": "Daily check-in x7",
+            "description": "Daily check-in x7",
+            "descriptionHtml": "<p>Daily check-in x7</p>",
+            "timeEstimate": "5 min"
+          }
+        ]
+      }
+    },
+    "hiddenAt": null,
+    "isSponsored": false,
+    "lifecycleStatus": "active",
+    "manualOverrideFields": [],
+    "publicationStatus": "published",
+    "publishedAt": {
+      "$date": "2026-08-10T17:51:41.725Z"
+    },
+    "publishedBy": "seed-earlyland-prime",
+    "publishedMetadata": {
+      "slug": "monad-testnet-prime",
+      "lifecycleStatus": "active",
+      "accessTier": "prime"
+    },
+    "publishedSnapshot": {
+      "name": "Monad Testnet",
+      "projectName": "Monad Testnet",
+      "symbol": "MON",
+      "logo": "",
+      "projectLogo": "",
+      "score": "9.2",
+      "activityType": "Testnet",
+      "category": "Layer 1",
+      "difficulty": "medium",
+      "cost": "Free",
+      "timeEstimate": "20 min",
+      "taskFrequency": "daily",
+      "isHot": true,
+      "rewardLabel": "Potential Airdrop",
+      "ecosystem": [
+        "Monad"
+      ],
+      "platform": [
+        "Web"
+      ],
+      "tags": [
+        "Monad",
+        "Testnet",
+        "Airdrop",
+        "Prime"
+      ],
+      "requirements": [
+        "Web3 wallet",
+        "Testnet funds"
+      ],
+      "approxStartDate": "2026-01-01",
+      "approxEndDate": "2026-06-30",
+      "timezone": "UTC",
+      "description": {
+        "about": "Monad is a high-performance EVM-compatible L1 with parallel execution. Complete the Prime testnet track for potential rewards.",
+        "aboutHtml": "<p>Monad is a high-performance EVM-compatible L1 with parallel execution. Complete the Prime testnet track for potential rewards.</p>",
+        "howToParticipate": "Connect wallet, complete the guided steps and stay active.",
+        "howToParticipateHtml": "<p>Connect wallet, complete the guided steps and stay active.</p>"
+      },
+      "participants": 12840,
+      "fundsRaised": 225000000,
+      "joinLink": "https://fomo.cx",
+      "links": [
+        {
+          "label": "Official site",
+          "url": "https://fomo.cx"
+        }
+      ],
+      "review": {
+        "text": "Prime review: Monad's parallel EVM and strong backers (Paradigm-led $225M) make this a top-tier testnet to farm early.",
+        "textHtml": "<p>Prime review: Monad's parallel EVM and strong backers (Paradigm-led $225M) make this a top-tier testnet to farm early.</p>",
+        "scores": [
+          {
+            "label": "Team",
+            "value": 9
+          },
+          {
+            "label": "Tokenomics",
+            "value": 8
+          }
+        ],
+        "isLocked": true
+      },
+      "taskGuide": {
+        "title": "Monad Testnet Prime Guide",
+        "description": "Exclusive step-by-step Prime walkthrough.",
+        "descriptionHtml": "<p>Exclusive step-by-step Prime walkthrough.</p>",
+        "ctaLabel": "Start",
+        "ctaUrl": "https://fomo.cx",
+        "successMessage": "Task completed!",
+        "isLocked": true,
+        "steps": [
+          {
+            "id": "step-1",
+            "title": "Bridge to Monad testnet",
+            "description": "Bridge to Monad testnet",
+            "descriptionHtml": "<p>Bridge to Monad testnet</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-2",
+            "title": "Swap on a Monad DEX",
+            "description": "Swap on a Monad DEX",
+            "descriptionHtml": "<p>Swap on a Monad DEX</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-3",
+            "title": "Provide liquidity",
+            "description": "Provide liquidity",
+            "descriptionHtml": "<p>Provide liquidity</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-4",
+            "title": "Mint a testnet NFT",
+            "description": "Mint a testnet NFT",
+            "descriptionHtml": "<p>Mint a testnet NFT</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-5",
+            "title": "Daily check-in x7",
+            "description": "Daily check-in x7",
+            "descriptionHtml": "<p>Daily check-in x7</p>",
+            "timeEstimate": "5 min"
+          }
+        ]
+      }
+    },
+    "reviewStatus": "published",
+    "revision": 1,
+    "sourceKeys": [],
+    "sourceSnapshotIds": [],
+    "sources": [
+      {
+        "source": "manual",
+        "sourceUrl": "https://fomo.cx",
+        "lastSeenAt": {
+          "$date": "2026-08-10T17:51:41.725Z"
+        }
+      }
+    ],
+    "sponsoredPriority": 0,
+    "updatedAt": {
+      "$date": "2026-08-10T17:51:41.725Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a7a0fad05a0dc9383fb1a9a"
+    },
+    "slug": "berachain-prime-guide",
+    "accessTier": "prime",
+    "aiProposals": [],
+    "auditTrail": [
+      {
+        "action": "publish",
+        "actor": "seed-earlyland-prime",
+        "at": {
+          "$date": "2026-08-10T17:51:41.725Z"
+        },
+        "revision": 1,
+        "note": "seeded prime card"
+      }
+    ],
+    "canonicalResolution": {
+      "status": "unprocessed",
+      "candidates": []
+    },
+    "createdAt": {
+      "$date": "2026-08-10T17:51:41.725Z"
+    },
+    "currentDraft": {
+      "name": "Berachain",
+      "projectName": "Berachain",
+      "symbol": "BERA",
+      "logo": "",
+      "projectLogo": "",
+      "score": "9.2",
+      "activityType": "Testnet",
+      "category": "Layer 1",
+      "difficulty": "medium",
+      "cost": "Free",
+      "timeEstimate": "20 min",
+      "taskFrequency": "daily",
+      "isHot": true,
+      "rewardLabel": "Potential Airdrop",
+      "ecosystem": [
+        "Berachain"
+      ],
+      "platform": [
+        "Web"
+      ],
+      "tags": [
+        "Berachain",
+        "Testnet",
+        "Airdrop",
+        "Prime"
+      ],
+      "requirements": [
+        "Web3 wallet",
+        "Testnet funds"
+      ],
+      "approxStartDate": "2026-01-01",
+      "approxEndDate": "2026-06-30",
+      "timezone": "UTC",
+      "description": {
+        "about": "Berachain is a Proof-of-Liquidity L1. Follow the Prime guide to maximize your Boyco / airdrop eligibility.",
+        "aboutHtml": "<p>Berachain is a Proof-of-Liquidity L1. Follow the Prime guide to maximize your Boyco / airdrop eligibility.</p>",
+        "howToParticipate": "Connect wallet, complete the guided steps and stay active.",
+        "howToParticipateHtml": "<p>Connect wallet, complete the guided steps and stay active.</p>"
+      },
+      "participants": 12840,
+      "fundsRaised": 225000000,
+      "joinLink": "https://fomo.cx",
+      "links": [
+        {
+          "label": "Official site",
+          "url": "https://fomo.cx"
+        }
+      ],
+      "review": {
+        "text": "Prime review: PoL is a novel incentive design. Deep liquidity actions and validator delegation score highest for eligibility.",
+        "textHtml": "<p>Prime review: PoL is a novel incentive design. Deep liquidity actions and validator delegation score highest for eligibility.</p>",
+        "scores": [
+          {
+            "label": "Team",
+            "value": 9
+          },
+          {
+            "label": "Tokenomics",
+            "value": 8
+          }
+        ],
+        "isLocked": true
+      },
+      "taskGuide": {
+        "title": "Berachain Prime Guide",
+        "description": "Exclusive step-by-step Prime walkthrough.",
+        "descriptionHtml": "<p>Exclusive step-by-step Prime walkthrough.</p>",
+        "ctaLabel": "Start",
+        "ctaUrl": "https://fomo.cx",
+        "successMessage": "Task completed!",
+        "isLocked": true,
+        "steps": [
+          {
+            "id": "step-1",
+            "title": "Set up wallet",
+            "description": "Set up wallet",
+            "descriptionHtml": "<p>Set up wallet</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-2",
+            "title": "Deposit into Boyco",
+            "description": "Deposit into Boyco",
+            "descriptionHtml": "<p>Deposit into Boyco</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-3",
+            "title": "Delegate to a validator",
+            "description": "Delegate to a validator",
+            "descriptionHtml": "<p>Delegate to a validator</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-4",
+            "title": "Bex swaps",
+            "description": "Bex swaps",
+            "descriptionHtml": "<p>Bex swaps</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-5",
+            "title": "Honey mint",
+            "description": "Honey mint",
+            "descriptionHtml": "<p>Honey mint</p>",
+            "timeEstimate": "5 min"
+          }
+        ]
+      }
+    },
+    "hiddenAt": null,
+    "isSponsored": false,
+    "lifecycleStatus": "active",
+    "manualOverrideFields": [],
+    "publicationStatus": "published",
+    "publishedAt": {
+      "$date": "2026-08-10T17:51:41.725Z"
+    },
+    "publishedBy": "seed-earlyland-prime",
+    "publishedMetadata": {
+      "slug": "berachain-prime-guide",
+      "lifecycleStatus": "active",
+      "accessTier": "prime"
+    },
+    "publishedSnapshot": {
+      "name": "Berachain",
+      "projectName": "Berachain",
+      "symbol": "BERA",
+      "logo": "",
+      "projectLogo": "",
+      "score": "9.2",
+      "activityType": "Testnet",
+      "category": "Layer 1",
+      "difficulty": "medium",
+      "cost": "Free",
+      "timeEstimate": "20 min",
+      "taskFrequency": "daily",
+      "isHot": true,
+      "rewardLabel": "Potential Airdrop",
+      "ecosystem": [
+        "Berachain"
+      ],
+      "platform": [
+        "Web"
+      ],
+      "tags": [
+        "Berachain",
+        "Testnet",
+        "Airdrop",
+        "Prime"
+      ],
+      "requirements": [
+        "Web3 wallet",
+        "Testnet funds"
+      ],
+      "approxStartDate": "2026-01-01",
+      "approxEndDate": "2026-06-30",
+      "timezone": "UTC",
+      "description": {
+        "about": "Berachain is a Proof-of-Liquidity L1. Follow the Prime guide to maximize your Boyco / airdrop eligibility.",
+        "aboutHtml": "<p>Berachain is a Proof-of-Liquidity L1. Follow the Prime guide to maximize your Boyco / airdrop eligibility.</p>",
+        "howToParticipate": "Connect wallet, complete the guided steps and stay active.",
+        "howToParticipateHtml": "<p>Connect wallet, complete the guided steps and stay active.</p>"
+      },
+      "participants": 12840,
+      "fundsRaised": 225000000,
+      "joinLink": "https://fomo.cx",
+      "links": [
+        {
+          "label": "Official site",
+          "url": "https://fomo.cx"
+        }
+      ],
+      "review": {
+        "text": "Prime review: PoL is a novel incentive design. Deep liquidity actions and validator delegation score highest for eligibility.",
+        "textHtml": "<p>Prime review: PoL is a novel incentive design. Deep liquidity actions and validator delegation score highest for eligibility.</p>",
+        "scores": [
+          {
+            "label": "Team",
+            "value": 9
+          },
+          {
+            "label": "Tokenomics",
+            "value": 8
+          }
+        ],
+        "isLocked": true
+      },
+      "taskGuide": {
+        "title": "Berachain Prime Guide",
+        "description": "Exclusive step-by-step Prime walkthrough.",
+        "descriptionHtml": "<p>Exclusive step-by-step Prime walkthrough.</p>",
+        "ctaLabel": "Start",
+        "ctaUrl": "https://fomo.cx",
+        "successMessage": "Task completed!",
+        "isLocked": true,
+        "steps": [
+          {
+            "id": "step-1",
+            "title": "Set up wallet",
+            "description": "Set up wallet",
+            "descriptionHtml": "<p>Set up wallet</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-2",
+            "title": "Deposit into Boyco",
+            "description": "Deposit into Boyco",
+            "descriptionHtml": "<p>Deposit into Boyco</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-3",
+            "title": "Delegate to a validator",
+            "description": "Delegate to a validator",
+            "descriptionHtml": "<p>Delegate to a validator</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-4",
+            "title": "Bex swaps",
+            "description": "Bex swaps",
+            "descriptionHtml": "<p>Bex swaps</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-5",
+            "title": "Honey mint",
+            "description": "Honey mint",
+            "descriptionHtml": "<p>Honey mint</p>",
+            "timeEstimate": "5 min"
+          }
+        ]
+      }
+    },
+    "reviewStatus": "published",
+    "revision": 1,
+    "sourceKeys": [],
+    "sourceSnapshotIds": [],
+    "sources": [
+      {
+        "source": "manual",
+        "sourceUrl": "https://fomo.cx",
+        "lastSeenAt": {
+          "$date": "2026-08-10T17:51:41.725Z"
+        }
+      }
+    ],
+    "sponsoredPriority": 0,
+    "updatedAt": {
+      "$date": "2026-08-10T17:51:41.725Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a7a0fad05a0dc9383fb1a9c"
+    },
+    "slug": "megaeth-early-access",
+    "accessTier": "prime",
+    "aiProposals": [],
+    "auditTrail": [
+      {
+        "action": "publish",
+        "actor": "seed-earlyland-prime",
+        "at": {
+          "$date": "2026-08-10T17:51:41.725Z"
+        },
+        "revision": 1,
+        "note": "seeded prime card"
+      }
+    ],
+    "canonicalResolution": {
+      "status": "unprocessed",
+      "candidates": []
+    },
+    "createdAt": {
+      "$date": "2026-08-10T17:51:41.725Z"
+    },
+    "currentDraft": {
+      "name": "MegaETH",
+      "projectName": "MegaETH",
+      "symbol": "MEGA",
+      "logo": "",
+      "projectLogo": "",
+      "score": "9.2",
+      "activityType": "Testnet",
+      "category": "Layer 2",
+      "difficulty": "medium",
+      "cost": "Free",
+      "timeEstimate": "20 min",
+      "taskFrequency": "daily",
+      "isHot": true,
+      "rewardLabel": "Potential Airdrop",
+      "ecosystem": [
+        "MegaETH"
+      ],
+      "platform": [
+        "Web"
+      ],
+      "tags": [
+        "MegaETH",
+        "Testnet",
+        "Airdrop",
+        "Prime"
+      ],
+      "requirements": [
+        "Web3 wallet",
+        "Testnet funds"
+      ],
+      "approxStartDate": "2026-01-01",
+      "approxEndDate": "2026-06-30",
+      "timezone": "UTC",
+      "description": {
+        "about": "MegaETH is a real-time Ethereum L2 targeting 100k+ TPS. Prime early-access track for testnet participants.",
+        "aboutHtml": "<p>MegaETH is a real-time Ethereum L2 targeting 100k+ TPS. Prime early-access track for testnet participants.</p>",
+        "howToParticipate": "Connect wallet, complete the guided steps and stay active.",
+        "howToParticipateHtml": "<p>Connect wallet, complete the guided steps and stay active.</p>"
+      },
+      "participants": 12840,
+      "fundsRaised": 225000000,
+      "joinLink": "https://fomo.cx",
+      "links": [
+        {
+          "label": "Official site",
+          "url": "https://fomo.cx"
+        }
+      ],
+      "review": {
+        "text": "Prime review: real-time L2 with impressive throughput demos. Early testnet users are historically well rewarded.",
+        "textHtml": "<p>Prime review: real-time L2 with impressive throughput demos. Early testnet users are historically well rewarded.</p>",
+        "scores": [
+          {
+            "label": "Team",
+            "value": 9
+          },
+          {
+            "label": "Tokenomics",
+            "value": 8
+          }
+        ],
+        "isLocked": true
+      },
+      "taskGuide": {
+        "title": "MegaETH Prime Guide",
+        "description": "Exclusive step-by-step Prime walkthrough.",
+        "descriptionHtml": "<p>Exclusive step-by-step Prime walkthrough.</p>",
+        "ctaLabel": "Start",
+        "ctaUrl": "https://fomo.cx",
+        "successMessage": "Task completed!",
+        "isLocked": true,
+        "steps": [
+          {
+            "id": "step-1",
+            "title": "Join testnet",
+            "description": "Join testnet",
+            "descriptionHtml": "<p>Join testnet</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-2",
+            "title": "Claim faucet",
+            "description": "Claim faucet",
+            "descriptionHtml": "<p>Claim faucet</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-3",
+            "title": "Deploy a demo contract",
+            "description": "Deploy a demo contract",
+            "descriptionHtml": "<p>Deploy a demo contract</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-4",
+            "title": "Interact daily",
+            "description": "Interact daily",
+            "descriptionHtml": "<p>Interact daily</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-5",
+            "title": "Refer a friend",
+            "description": "Refer a friend",
+            "descriptionHtml": "<p>Refer a friend</p>",
+            "timeEstimate": "5 min"
+          }
+        ]
+      }
+    },
+    "hiddenAt": null,
+    "isSponsored": false,
+    "lifecycleStatus": "upcoming",
+    "manualOverrideFields": [],
+    "publicationStatus": "published",
+    "publishedAt": {
+      "$date": "2026-08-10T17:51:41.725Z"
+    },
+    "publishedBy": "seed-earlyland-prime",
+    "publishedMetadata": {
+      "slug": "megaeth-early-access",
+      "lifecycleStatus": "upcoming",
+      "accessTier": "prime"
+    },
+    "publishedSnapshot": {
+      "name": "MegaETH",
+      "projectName": "MegaETH",
+      "symbol": "MEGA",
+      "logo": "",
+      "projectLogo": "",
+      "score": "9.2",
+      "activityType": "Testnet",
+      "category": "Layer 2",
+      "difficulty": "medium",
+      "cost": "Free",
+      "timeEstimate": "20 min",
+      "taskFrequency": "daily",
+      "isHot": true,
+      "rewardLabel": "Potential Airdrop",
+      "ecosystem": [
+        "MegaETH"
+      ],
+      "platform": [
+        "Web"
+      ],
+      "tags": [
+        "MegaETH",
+        "Testnet",
+        "Airdrop",
+        "Prime"
+      ],
+      "requirements": [
+        "Web3 wallet",
+        "Testnet funds"
+      ],
+      "approxStartDate": "2026-01-01",
+      "approxEndDate": "2026-06-30",
+      "timezone": "UTC",
+      "description": {
+        "about": "MegaETH is a real-time Ethereum L2 targeting 100k+ TPS. Prime early-access track for testnet participants.",
+        "aboutHtml": "<p>MegaETH is a real-time Ethereum L2 targeting 100k+ TPS. Prime early-access track for testnet participants.</p>",
+        "howToParticipate": "Connect wallet, complete the guided steps and stay active.",
+        "howToParticipateHtml": "<p>Connect wallet, complete the guided steps and stay active.</p>"
+      },
+      "participants": 12840,
+      "fundsRaised": 225000000,
+      "joinLink": "https://fomo.cx",
+      "links": [
+        {
+          "label": "Official site",
+          "url": "https://fomo.cx"
+        }
+      ],
+      "review": {
+        "text": "Prime review: real-time L2 with impressive throughput demos. Early testnet users are historically well rewarded.",
+        "textHtml": "<p>Prime review: real-time L2 with impressive throughput demos. Early testnet users are historically well rewarded.</p>",
+        "scores": [
+          {
+            "label": "Team",
+            "value": 9
+          },
+          {
+            "label": "Tokenomics",
+            "value": 8
+          }
+        ],
+        "isLocked": true
+      },
+      "taskGuide": {
+        "title": "MegaETH Prime Guide",
+        "description": "Exclusive step-by-step Prime walkthrough.",
+        "descriptionHtml": "<p>Exclusive step-by-step Prime walkthrough.</p>",
+        "ctaLabel": "Start",
+        "ctaUrl": "https://fomo.cx",
+        "successMessage": "Task completed!",
+        "isLocked": true,
+        "steps": [
+          {
+            "id": "step-1",
+            "title": "Join testnet",
+            "description": "Join testnet",
+            "descriptionHtml": "<p>Join testnet</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-2",
+            "title": "Claim faucet",
+            "description": "Claim faucet",
+            "descriptionHtml": "<p>Claim faucet</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-3",
+            "title": "Deploy a demo contract",
+            "description": "Deploy a demo contract",
+            "descriptionHtml": "<p>Deploy a demo contract</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-4",
+            "title": "Interact daily",
+            "description": "Interact daily",
+            "descriptionHtml": "<p>Interact daily</p>",
+            "timeEstimate": "5 min"
+          },
+          {
+            "id": "step-5",
+            "title": "Refer a friend",
+            "description": "Refer a friend",
+            "descriptionHtml": "<p>Refer a friend</p>",
+            "timeEstimate": "5 min"
+          }
+        ]
+      }
+    },
+    "reviewStatus": "published",
+    "revision": 1,
+    "sourceKeys": [],
+    "sourceSnapshotIds": [],
+    "sources": [
+      {
+        "source": "manual",
+        "sourceUrl": "https://fomo.cx",
+        "lastSeenAt": {
+          "$date": "2026-08-10T17:51:41.725Z"
+        }
+      }
+    ],
+    "sponsoredPriority": 0,
+    "updatedAt": {
+      "$date": "2026-08-10T17:51:41.725Z"
+    }
+  }
+]

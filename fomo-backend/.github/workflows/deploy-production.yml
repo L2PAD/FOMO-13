@@ -1,0 +1,51 @@
+name: Deploy production backend
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy backend production to Hetzner
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 30
+
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HETZNER_HOST }}
+          username: ${{ secrets.HETZNER_USER }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+
+            SOURCE_DIR="/opt/stacks/fomo/apps/FOMO-BACK"
+            APP_DIR="/opt/stacks/fomo/apps/FOMO-BACK-production"
+            DEPLOY_BRANCH="main"
+
+            if [ ! -e "${SOURCE_DIR}/.git" ]; then
+              echo "Source backend checkout was not found at ${SOURCE_DIR}."
+              exit 1
+            fi
+
+            if [ ! -e "${APP_DIR}/.git" ]; then
+              echo "Backend production checkout was not found at ${APP_DIR}; cloning main."
+              mkdir -p "$(dirname "${APP_DIR}")"
+              git clone -b "${DEPLOY_BRANCH}" "$(git -C "${SOURCE_DIR}" remote get-url origin)" "${APP_DIR}"
+            fi
+
+            PREVIOUS_SHA=""
+            PREVIOUS_SHA="$(git -C "${APP_DIR}" rev-parse HEAD || true)"
+
+            git -C "${APP_DIR}" fetch origin "${DEPLOY_BRANCH}:refs/remotes/origin/${DEPLOY_BRANCH}"
+            git -C "${APP_DIR}" checkout "${DEPLOY_BRANCH}"
+            git -C "${APP_DIR}" reset --hard "origin/${DEPLOY_BRANCH}"
+
+            cd "${APP_DIR}"
+            chmod +x scripts/deploy/deploy-production.sh
+            APP_DIR="${APP_DIR}" PREVIOUS_SHA="${PREVIOUS_SHA}" bash scripts/deploy/deploy-production.sh

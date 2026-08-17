@@ -1,0 +1,38 @@
+[
+  {
+    "content": "Explore repo structure & deployment docs (MONOREPO.md, bootstrap.sh)",
+    "status": "completed"
+  },
+  {
+    "content": "Move repo into /app preserving platform .env files",
+    "status": "completed"
+  },
+  {
+    "content": "Install backend (NestJS) deps + build dist/main.js",
+    "status": "completed"
+  },
+  {
+    "content": "Install admin (CRA) deps",
+    "status": "completed"
+  },
+  {
+    "content": "Install & build public website (Next.js)",
+    "status": "completed"
+  },
+  {
+    "content": "Install supervisor programs (redis, fomo_nest, fomo_website) & start services",
+    "status": "completed"
+  },
+  {
+    "content": "Seed demo data (admin, fomies, c360, nft, prime, ads, AI knowledge)",
+    "status": "completed"
+  },
+  {
+    "content": "Health-check all services & endpoints",
+    "status": "completed"
+  },
+  {
+    "content": "Verify public site (/) and admin (/admin) via screenshots on preview URL",
+    "status": "completed"
+  }
+]

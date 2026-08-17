@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "archivedAt": "2026-07-18",
+  "policy": {
+    "compiledByMainBuild": false,
+    "runtimeImportsAllowed": false,
+    "dataMigrationRequired": false
+  },
+  "units": [
+    {
+      "path": "canonical-projects",
+      "classification": "completed-backfill-and-admin-diagnostics",
+      "formerRoutes": ["/admin/canonical-projects"],
+      "replacement": "src/fomo-v2 canonical identity and domain services"
+    },
+    {
+      "path": "funding-round-participants",
+      "classification": "completed-backfill-and-admin-diagnostics",
+      "formerRoutes": ["/admin/funding-round-participants"],
+      "replacement": "src/fomo-v2/domains/funding"
+    },
+    {
+      "path": "investor-candidates",
+      "classification": "completed-backfill-and-admin-diagnostics",
+      "formerRoutes": ["/admin/investor-candidates"],
+      "replacement": "src/fomo-v2/domains/import-candidates and backers"
+    },
+    {
+      "path": "project-candidates",
+      "classification": "completed-backfill-and-admin-diagnostics",
+      "formerRoutes": ["/admin/project-candidates"],
+      "replacement": "src/fomo-v2/domains/import-candidates"
+    },
+    {
+      "path": "token-unlocks",
+      "classification": "unused-legacy-runtime-and-sync",
+      "formerRoutes": ["/token-unlocks"],
+      "replacement": "src/fomo-v2/domains/unlocks",
+      "retiredWorkerJobs": ["token-unlocks-intel-unlocks"],
+      "dataMigration": "not-required-empty-legacy-collection"
+    },
+    {
+      "path": "projects",
+      "classification": "retired-project-read-models-and-admin-sync-entrypoints",
+      "formerRoutes": [
+        "/projects/:slug/intel",
+        "/projects/:slug/unlocks",
+        "/projects/:slug/fundraising",
+        "/projects/:slug/ico-comparison",
+        "/projects/:slug/ico-comparison/search",
+        "/projects/:slug/ico-comparison/history",
+        "/projects/:projectId/exchange-overview",
+        "/projects/market-v2/parity",
+        "/project-intel/admin/*"
+      ],
+      "formerCommands": [
+        "backfill:ico-comparison",
+        "backfill:ico-comparison:dry",
+        "audit:ico-comparison-history"
+      ],
+      "retiredWorkerJobs": [
+        "projects-intel-icos",
+        "project-intel-icodrops",
+        "project-intel-dropstab"
+      ],
+      "replacement": "src/fomo-v2/domains/market, src/fomo-v2/domains/ico, src/fomo-v2/domains/unlocks and src/fomo-v2/domains/funding",
+      "dataMigration": "not-required-empty-legacy-collections"
+    },
+    {
+      "path": "tools/funding-rounds",
+      "classification": "retired-backfill-and-audit-scripts",
+      "formerCommands": [
+        "backfill:funding-rounds-token:dry",
+        "backfill:funding-rounds-token",
+        "audit:funding-round-token-coverage"
+      ],
+      "replacement": "src/fomo-v2/domains/funding/runners",
+      "dataMigration": "not-required-empty-legacy-collection"
+    },
+    {
+      "path": "tools/project-comparison",
+      "classification": "retired-index-migration-script",
+      "formerCommands": ["migrate:comparison-indexes"],
+      "replacement": "src/fomo-v2 persistence registry and index service",
+      "dataMigration": "not-required-empty-legacy-collections"
+    },
+    {
+      "path": "graph-foundation",
+      "classification": "retired-destructive-cleanup-tool",
+      "formerCommands": ["graph-foundation:cleanup"],
+      "replacement": "none; active fomo_v2 collections must not be bulk-deleted",
+      "dataMigration": "not-required-empty-legacy-collections"
+    },
+    {
+      "path": "funding-rounds",
+      "classification": "retired-runtime-routes-and-sync",
+      "formerRoutes": ["/rounds"],
+      "retiredWorkerJobs": ["funding-rounds-intel-fundraising"],
+      "replacement": "src/fomo-v2/domains/funding and its /rounds compatibility controller",
+      "dataMigration": "not-required-empty-legacy-collection"
+    }
+  ]
+}

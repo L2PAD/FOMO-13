@@ -1,0 +1,47 @@
+.body {
+  max-width: fit-content;
+  min-width: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2px 0px;
+    min-width: 24px;
+    max-width: 24px;
+    border: none;
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: var(--font-weight-regular);
+    line-height: 14.52px;
+    border-radius: 2px;
+    background: transparent;
+    &::placeholder {
+      font-family: Inter;
+      color: black;
+      font-size: 12px;
+    }
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &:focus {
+      background: var(--color-warning);
+    }
+
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+  width: 100%;
+  border-radius: 8px;
+}
+
+.periodButton {
+  margin-left: 2px;
+}

@@ -1,0 +1,11 @@
+services:
+  admin-frontend:
+    container_name: fomo-admin-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL:-https://devapi.fomo.cx/api}
+    ports:
+      - "127.0.0.1:3002:80"
+    restart: unless-stopped

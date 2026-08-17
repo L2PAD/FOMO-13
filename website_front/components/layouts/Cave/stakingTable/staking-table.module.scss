@@ -1,0 +1,120 @@
+.table {
+  background: var(--color-white);
+  border: 1px solid #f5f9fd;
+  box-shadow: 4px 4px 10px #eeeeee;
+  border-radius: 16px;
+  max-height: 430px;
+  @media (max-width: 880px) {
+    max-width: 95vw;
+    margin: 0 auto;
+    overflow-x: auto;
+  }
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-track-piece {
+  }
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #eaf2fb;
+    border-radius: 99px;
+    border: 5px solid transparent;
+    background-clip: content-box;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #d9e9fc;
+    border-radius: 99px;
+    border: 4px solid transparent;
+    background-clip: content-box;
+  }
+}
+.date {
+  display: block;
+  @media (max-width: 460px) {
+    display: none;
+  }
+}
+.mobileDates {
+  display: none;
+  @media (max-width: 460px) {
+    display: block;
+    max-width: fit-content;
+    margin-right: 25px;
+  }
+}
+.amount {
+  @media (max-width: 460px) {
+    max-width: 48px;
+    margin-left: 20px;
+  }
+}
+.head {
+  display: grid;
+  grid-template-columns: 0.4fr 0.35fr 0.3fr 0.3fr 0.23fr 0.4fr 0.4fr 0.35fr;
+  background: #f5f9fd;
+  max-height: 36px;
+  border-radius: 16px 16px 0px 0px;
+  padding: 11px 16px;
+
+  span {
+    font-weight: var(--font-weight-medium);
+    font-size: 12px;
+    line-height: 14px;
+    color: var(--color-text-muted);
+  }
+  @media (max-width: 880px) {
+    width: 820px;
+  }
+  @media (max-width: 460px) {
+    grid-template-columns: 0.2fr 0.35fr 0.3fr 0.3fr 0.4fr 0.4fr 0.4fr 0.3fr;
+  }
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 16px;
+  overflow-y: auto;
+  width: 100%;
+  &::-webkit-scrollbar {
+    width: 14px;
+  }
+
+  & > div {
+    max-width: 100%;
+    width: 100%;
+  }
+  @media (max-width: 880px) {
+    width: 820px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-track-piece {
+  }
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #eaf2fb;
+    border-radius: 99px;
+    border: 5px solid transparent;
+    background-clip: content-box;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #d9e9fc;
+    border-radius: 99px;
+    border: 4px solid transparent;
+    background-clip: content-box;
+  }
+}
+.emptyError {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: var(--font-weight-semibold);
+}

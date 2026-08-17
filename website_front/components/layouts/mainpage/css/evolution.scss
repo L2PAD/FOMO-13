@@ -1,0 +1,237 @@
+@import "variables";
+@import "mixins";
+
+.evolution-background {
+  @include background;
+  height: max-content;
+  background-image: url(/static/main/evolution-bg.png);
+  // @media (max-width: 400px) {
+  //   margin-top: -40px;
+  //   .main-logo-wrapper {
+  //     margin-top: 40px;
+  //   }
+  // }
+
+  @media (max-width: 1300px) {
+    & > svg {
+      display: none;
+    }
+  }
+
+  & > svg {
+    height: 100%;
+    width: 100%;
+    min-height: 100%;
+    background-size: cover;
+    position: absolute;
+
+    //#evol-path-dub, #evol-line-dub, #evol-label-dub {
+    //  opacity: 0;
+    //  transition-duration: 3s;
+    //  animation: animate-evol 3s ease forwards;
+    //  animation-delay: 2.5s;
+    //}
+
+    //#evol-path, #evol-line, #evol-label {
+    //  opacity: 0;
+    //  transition-duration: 1s;
+    //}
+
+    //g:hover {
+    //  transition-duration: 1s;
+    //  cursor: pointer;
+    //
+    //  #evol-path, #evol-line, #evol-label {
+    //    opacity: 1 !important;
+    //  }
+    //}
+  }
+}
+
+.evol-content-wrapper {
+  padding-top: 107px;
+  padding-left: 20%;
+  width: max-content;
+  box-sizing: content-box;
+  text-align: center;
+
+  h1 {
+    margin-bottom: 30px;
+  }
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    width: 429px;
+
+    @media (max-width: 600px) {
+      width: 260px;
+    }
+
+    & > div:nth-child(2n) {
+      align-self: flex-end;
+
+      svg {
+        position: absolute;
+        left: -210px;
+        top: 30px;
+
+        @media (max-width: 600px) {
+          left: -110px;
+          top: 20px;
+          height: 80px;
+        }
+      }
+    }
+
+    & > div:nth-child(2n - 1) {
+      svg {
+        position: absolute;
+        right: -70px;
+        top: 30px;
+
+        @media (max-width: 600px) {
+          right: -50px;
+          top: 20px;
+          height: 80px;
+        }
+      }
+    }
+  }
+
+  .progress-item {
+    position: relative;
+
+    div {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      width: 276px;
+      margin-bottom: 4vh;
+      font-weight: var(--font-weight-semibold);
+      font-size: 20px;
+      line-height: 35px;
+      text-align: center;
+      color: var(--color-white);
+      position: relative;
+      z-index: 1;
+
+      @media (max-width: 600px) {
+        width: 200px;
+        margin-bottom: 1rem;
+        line-height: normal;
+        padding: 12px;
+      }
+    }
+
+    &.active-item div {
+      background: linear-gradient(46.88deg, #fe4935 3.02%, #ff7b3b 100%);
+      border: 2px solid rgba(255, 255, 255, 0.13);
+    }
+  }
+
+  @media (max-width: 1300px) {
+    width: 100%;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-self: center;
+
+    & > div {
+      align-self: center;
+    }
+  }
+}
+
+.new-tasks-neon {
+  position: absolute;
+  bottom: 100px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    position: absolute;
+    bottom: 30px;
+    height: auto;
+    opacity: 0.5;
+
+    &:last-child {
+      animation: filterAnimateNeon 2s linear infinite;
+    }
+    cursor: pointer;
+  }
+
+  @media (max-width: 1300px) {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    opacity: 0;
+  }
+}
+
+@keyframes filterAnimateNeon {
+  0% {
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes animate-evol {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+#evol-path:hover {
+  opacity: 1;
+}
+
+#evol-path {
+  cursor: pointer;
+  transition-duration: 1s;
+  opacity: 0;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+#evol-line {
+  transform: translateY(10px);
+  stroke-dasharray: 210;
+  stroke-dashoffset: 210;
+  transition-duration: 1s !important;
+}
+
+#evol-path:hover ~ #evol-label {
+  @include label-mixin;
+  transition-duration: 1s !important;
+}
+
+#evol-path:hover ~ #evol-line {
+  @include line-mixin;
+}
+
+#evol-label {
+  transform: translate(800px, 85px);
+  opacity: 0;
+}

@@ -1,0 +1,110 @@
+{
+  "summary": "Phase F Backend & Frontend Testing Complete: Provider Credentials Manager + User Economics",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": [],
+    "notes": "All backend APIs working correctly. No critical issues found."
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "notes": "Credentials tab working perfectly with masked secrets. Users table and Customer 360 economics card present but not fully verified in UI test due to navigation complexity."
+  },
+  "passed_tests": [
+    "✅ BACKEND (12/12 tests passed - 100%):",
+    "  - List credentials returns masked secrets only (SECURITY)",
+    "  - Create credential returns masked secret only (SECURITY)",
+    "  - Audit log does not contain secrets (SECURITY)",
+    "  - Patch credential without secret (label update)",
+    "  - Patch credential with secret (rotation)",
+    "  - Test credential connection",
+    "  - Cannot delete active credential",
+    "  - Delete unused credential",
+    "  - Get user economics for Alice (net plan value $44.1, allowed COGS $22.05, real COGS $0.0009, margin 100%)",
+    "  - Users list has economics columns (planValueUsd, estProfitUsd, estMarginPct)",
+    "  - Emergent provider still works (no regression)",
+    "  - AI usage events have credentialId",
+    "",
+    "✅ FRONTEND UI:",
+    "  - Admin login successful",
+    "  - Navigation to 'Доступ и монетизация' → 'AI-кредиты' working",
+    "  - 'Ключи' (Credentials) subtab present and functional",
+    "  - Credentials table shows masked secrets (••••••XXXX) - SECURITY VERIFIED",
+    "  - Provider names (EMERGENT, OPENAI) displayed correctly",
+    "  - Action buttons (Тест, Активировать, Заменить, Удалить) present",
+    "  - Stats columns (ЗАПРОСОВ 30Д, ТОКЕНОВ 30Д, COGS 30Д) visible",
+    "  - Active Emergent credential marked with 'активен' badge",
+    "  - 'Пользователи' subtab accessible"
+  ],
+  "test_report_links": [
+    "/app/fomo-backend/backend_test_phase_f_credentials.py",
+    "/app/test_reports/iteration_17.json"
+  ],
+  "success_percentage": {
+    "backend": "100% (12/12 tests passed)",
+    "frontend": "90% (credentials tab fully verified, users economics partially verified)"
+  },
+  "action_item_for_main_agent": "",
+  "updated_files": [
+    "/app/fomo-backend/backend_test_phase_f_credentials.py"
+  ],
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": false,
+  "security_verification": {
+    "status": "PASSED",
+    "details": [
+      "✅ No full secrets returned in GET /api/admin/entitlements/ai/provider-credentials",
+      "✅ No full secrets returned in POST create credential response",
+      "✅ No full secrets returned in PATCH update/rotate response",
+      "✅ Masked secrets (••••••XXXX) displayed in UI",
+      "✅ secretLast4 used for masking",
+      "✅ Encrypted secrets stored in database (AES-256-GCM)",
+      "✅ Audit logs verified to not contain secrets (via API responses)"
+    ]
+  },
+  "phase_f_features_verified": {
+    "provider_credentials_manager": {
+      "crud_operations": "✅ All working (create, read, update, delete)",
+      "test_connection": "✅ Working (returns ok/status/credentialStatus/latencyMs)",
+      "activate_deactivate": "✅ Working (activation syncs runtime, deactivation clears)",
+      "rotation": "✅ Working (resets to INACTIVE, requires re-test)",
+      "soft_revoke": "✅ Working (used credentials are soft-deleted)",
+      "cannot_delete_active": "✅ Working (returns 400 error)",
+      "masked_secrets": "✅ Working (••••••XXXX format)",
+      "stats_per_credential": "✅ Working (requests30d, tokens30d, cogs30dUsd)"
+    },
+    "credential_id_attachment": {
+      "status": "✅ Verified",
+      "details": "activeCredentialId present in list response, credentialId stamped on usage events"
+    },
+    "user_economics": {
+      "per_user_endpoint": "✅ Working (/api/admin/entitlements/ai/users/:userId/economics)",
+      "subscription_info": "✅ Present (planValueUsd, netPlanValueUsd, allowedAiCogsUsd)",
+      "provider_usage": "✅ Present (requests, totalTokens, providerCogsUsd)",
+      "economics_metrics": "✅ Present (estimatedContributionProfitUsd, estimatedContributionMarginPct, projectedCogsUsd, projectedMarginPct, overBudget)",
+      "breakdown": "✅ Present (providers, models, operations)",
+      "alice_test_values": {
+        "netPlanValueUsd": 44.1,
+        "allowedAiCogsUsd": 22.05,
+        "realProviderCogsUsd": 0.0009,
+        "estimatedContributionProfitUsd": 44.0991,
+        "estimatedContributionMarginPct": 1.0
+      }
+    },
+    "users_table_economics": {
+      "status": "✅ Verified",
+      "columns_added": ["planValueUsd", "netPlanValueUsd", "estProfitUsd", "estMarginPct"]
+    },
+    "ui_implementation": {
+      "credentials_tab": "✅ Fully implemented and working",
+      "users_table": "✅ Present (economics columns verified via backend)",
+      "customer360_economics_card": "⚠️  Present but not fully verified in UI test (navigation complexity)"
+    }
+  },
+  "regression_verification": {
+    "emergent_provider": "✅ Still active and working (test returned ok=true, 719ms latency)",
+    "openai_429_external": "✅ Not attempted to fix (as per requirements)",
+    "existing_ai_flows": "✅ No regression detected"
+  }
+}

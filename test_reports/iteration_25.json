@@ -1,0 +1,66 @@
+{
+  "summary": "Completed testing H5/P15 - Contract Balance Decomposition feature. Backend API endpoint and frontend CRM rendering both working correctly. All components display properly with accurate values.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "Backend: Admin login successful (202 status with accessToken)",
+    "Backend: GET /api/admin/money/custody/decomposition returns 200",
+    "Backend: Response has totalAssets field ($5.06)",
+    "Backend: Response has components array with 5 items",
+    "Backend: All required component keys exist (user_liabilities, platform_owned, pending_settlements, otc_locked, unattributed)",
+    "Backend: Each component has required fields (key, label, value)",
+    "Backend: user_liabilities = $2.00 (matches expected value)",
+    "Backend: Components sum equals totalAssets (5.06 = 2 + 0.51 + 0 + 0 + 2.55)",
+    "Backend: Response has 'healthy' boolean (false, as expected due to unattributed > 0.01)",
+    "Backend: Response has contractAddress field",
+    "Backend: Regression test - GET /api/admin/money/stats?days=30 returns 200 with kpis and series",
+    "Frontend: Admin login successful",
+    "Frontend: Эквайринг page loads correctly",
+    "Frontend: Обзор tab is active and displays data",
+    "Frontend: 'Сверка с блокчейном' section found",
+    "Frontend: 'Разбор баланса контракта' section renders with decomposition data",
+    "Frontend: All 5 components display correctly (Средства пользователей, Платформенные средства, Незавершённые сеттлменты, OTC, Нераспределено)",
+    "Frontend: Component values match backend API ($2.00, $0.51, $0.00, $0.00, $2.55)",
+    "Frontend: Stats KPIs display correctly (On-contract: $5.06, In-system: $2.00, Delta: $3.06)",
+    "Frontend: Regression - All 4 tabs (Балансы, Депозиты, Покупки, Выводы) load and render correctly",
+    "Frontend: No console errors detected"
+  ],
+  "test_report_links": [
+    "/app/tests/backend_test_p15.py",
+    "/root/.emergent/automation_output/20260814_072410/console_20260814_072410.log",
+    ".screenshots/decomposition-section.png",
+    ".screenshots/acquiring-final.png"
+  ],
+  "action_item_for_main_agent": "",
+  "updated_files": [
+    "/app/tests/backend_test_p15.py"
+  ],
+  "success_percentage": {
+    "backend": "100% (20/20 tests passed)",
+    "frontend": "100% (all UI elements render correctly, no errors)"
+  },
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": false,
+  "detailed_findings": {
+    "decomposition_breakdown": {
+      "totalAssets": "$5.06 (on-chain contract balance)",
+      "components": {
+        "user_liabilities": "$2.00 (ledger-based user balances)",
+        "platform_owned": "$0.51 (owner's on-chain balance)",
+        "pending_settlements": "$0.00 (custody-locked purchases)",
+        "otc_locked": "$0.00 (not tracked by acquiring module)",
+        "unattributed": "$2.55 (flagged as unhealthy, requires attention)"
+      },
+      "healthy": false,
+      "explanation": "The $3.06 delta between contract ($5.06) and system ($2.00) is now EXPLAINED: $0.51 is platform-owned funds, $2.55 is unattributed (real problem). Only unattributed is flagged as requiring attention."
+    },
+    "regression_status": "All existing functionality intact - stats endpoint and all 4 money tabs working correctly"
+  }
+}

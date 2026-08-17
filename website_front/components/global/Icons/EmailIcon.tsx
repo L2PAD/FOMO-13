@@ -1,0 +1,22 @@
+import React, { FC } from "react";
+import { IconInterface } from "./IconIfterface";
+
+const EmailIcon: FC<IconInterface> = ({ className, fill = "white" }) => {
+  return (
+    <svg
+      className={className}
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1.69076 4L9.20638 11.0143C9.65105 11.4303 10.3483 11.4303 10.7923 11.0143L18.3079 4H1.69076ZM0.666016 4.86719V16H19.3327V4.86719L11.7025 11.9883C11.2245 12.4343 10.612 12.6576 9.99935 12.6576C9.38668 12.6576 8.77422 12.4343 8.29622 11.9883L0.666016 4.86719Z"
+        fill={fill}
+      />
+    </svg>
+  );
+};
+
+export default EmailIcon;

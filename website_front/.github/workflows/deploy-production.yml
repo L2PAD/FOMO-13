@@ -1,0 +1,61 @@
+name: Deploy production frontend
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy frontend production to Hetzner
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 30
+
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.HETZNER_SSH_KEY }}" > ~/.ssh/hetzner_key
+          chmod 600 ~/.ssh/hetzner_key
+          ssh-keyscan -H "${{ secrets.HETZNER_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy on Hetzner
+        env:
+          HETZNER_HOST: ${{ secrets.HETZNER_HOST }}
+          HETZNER_USER: ${{ secrets.HETZNER_USER }}
+          SOURCE_DIR: /opt/stacks/fomo/apps/FOMO-FRONT
+          APP_DIR: /opt/stacks/fomo/apps/FOMO-FRONT-production
+          DEPLOY_BRANCH: main
+          WORKTREE_BRANCH: production-main
+        run: |
+          ssh -i ~/.ssh/hetzner_key "${HETZNER_USER}@${HETZNER_HOST}" \
+            "SOURCE_DIR='${SOURCE_DIR}' APP_DIR='${APP_DIR}' DEPLOY_BRANCH='${DEPLOY_BRANCH}' WORKTREE_BRANCH='${WORKTREE_BRANCH}' bash -s" <<'EOF'
+          set -euo pipefail
+
+          if [ ! -e "${SOURCE_DIR}/.git" ]; then
+            echo "Source frontend checkout was not found at ${SOURCE_DIR}."
+            exit 1
+          fi
+
+          PREVIOUS_SHA=""
+          if [ -e "${APP_DIR}/.git" ]; then
+            PREVIOUS_SHA="$(git -C "${APP_DIR}" rev-parse HEAD || true)"
+          fi
+
+          git -C "${SOURCE_DIR}" fetch origin "${DEPLOY_BRANCH}"
+
+          if [ ! -e "${APP_DIR}/.git" ]; then
+            mkdir -p "$(dirname "${APP_DIR}")"
+            git -C "${SOURCE_DIR}" worktree add -B "${WORKTREE_BRANCH}" "${APP_DIR}" "origin/${DEPLOY_BRANCH}"
+          else
+            git -C "${APP_DIR}" fetch origin "${DEPLOY_BRANCH}"
+            git -C "${APP_DIR}" checkout "${WORKTREE_BRANCH}" || git -C "${APP_DIR}" checkout -B "${WORKTREE_BRANCH}" "origin/${DEPLOY_BRANCH}"
+            git -C "${APP_DIR}" reset --hard "origin/${DEPLOY_BRANCH}"
+          fi
+
+          cd "${APP_DIR}"
+          chmod +x scripts/deploy/deploy-production.sh
+          APP_DIR="${APP_DIR}" PREVIOUS_SHA="${PREVIOUS_SHA}" bash scripts/deploy/deploy-production.sh
+          EOF

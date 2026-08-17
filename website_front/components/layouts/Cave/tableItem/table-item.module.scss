@@ -1,0 +1,107 @@
+.line {
+  border: none;
+  width: 100%;
+  height: 2px;
+  background: #f5f9fd;
+  margin: 10px 0px 8px;
+}
+.mobileDates {
+  display: none;
+}
+
+.body {
+  position: relative;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 0.4fr 0.35fr 0.3fr 0.3fr 0.23fr 0.4fr 0.4fr 0.35fr;
+
+  @media (max-width: 880px) {
+    grid-template-columns: 0.35fr 0.2fr 0.3fr 0.3fr 0.35fr 0.35fr 0.35fr 0.35fr;
+    span {
+      font-size: 13px;
+      line-height: 16px;
+    }
+  }
+  color: var(--color-text-primary);
+  span {
+    font-size: 14px;
+    line-height: 16px;
+  }
+}
+.rect {
+  padding: 8px 10px;
+  position: absolute;
+  right: -5px;
+  font-family: "Raleway";
+  font-style: normal;
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  line-height: 16px;
+  text-align: right;
+  background: rgba(5, 201, 161, 0.1);
+  border-radius: 8px;
+  color: #05c9a1;
+  transition: all 0.3s ease;
+  &:hover {
+    background: rgba(2, 166, 133, 0.548);
+    color: white;
+  }
+  @media (max-width: 880px) {
+    right: -14px;
+  }
+}
+.btn {
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  line-height: 16px;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 72px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(5, 201, 161, 0.1);
+  color: #05c9a1;
+  &:hover {
+    background: rgba(2, 166, 133, 0.548);
+    color: white;
+  }
+  &:disabled {
+    cursor: not-allowed;
+  }
+  &:disabled:hover {
+    background: rgba(5, 201, 161, 0.1);
+    color: #05c9a1;
+  }
+}
+.bold {
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  line-height: 16px;
+}
+.date {
+  font-weight: var(--font-weight-regular);
+  font-size: 14px;
+  line-height: 16px;
+
+  color: var(--color-text-primary);
+}
+.unlocked {
+  font-weight: var(--font-weight-semibold);
+  color: #05c9a1;
+}
+.locked {
+  font-weight: var(--font-weight-semibold);
+  color: #ff3a4a;
+}
+.claimed {
+  background: rgba(128, 128, 128, 0.066);
+  color: rgba(0, 0, 0, 0.356);
+}
+.btn.claimed:hover {
+  background: rgba(128, 128, 128, 0.228);
+  color: rgba(0, 0, 0, 0.221);
+}

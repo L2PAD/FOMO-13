@@ -1,0 +1,117 @@
+@import "variables";
+
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+@mixin circle-rate($color) {
+  border-radius: 50%;
+  background-color: $color;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  z-index: 20;
+  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  line-height: 17px;
+  padding-top: 5px;
+  text-align: center;
+  color: var(--color-white);
+  top: 0;
+  right: 0;
+  margin-left: 2px;
+}
+
+@mixin card {
+  padding: 16px;
+  border: 1px solid rgba(83, 98, 124, 0.07);
+  box-shadow: 4px 4px 0px #eeeeee;
+  border-radius: 8px;
+}
+
+@mixin circle-image-border($color, $size-border, $size) {
+  border: $size-border solid $color;
+  width: $size;
+  height: $size;
+  filter: drop-shadow(0px 2px 12px rgba(0, 0, 0, 0.03));
+  border-radius: 50%;
+  margin-top: 2px;
+}
+
+@mixin title-bold($font-size, $line-height) {
+  font-weight: var(--font-weight-semibold);
+  font-size: $font-size;
+  line-height: $line-height;
+  color: var(--color-text-primary);
+}
+
+@mixin title-semibold($font-size, $line-height) {
+  font-weight: var(--font-weight-semibold);
+  font-size: $font-size;
+  line-height: $line-height;
+  color: var(--color-text-primary);
+}
+
+@mixin label-gray($font-size, $line-height) {
+  font-weight: var(--font-weight-regular);
+  font-size: $font-size;
+  line-height: $line-height;
+  color: var(--color-text-muted);
+}
+
+@mixin black-text($font-size, $line-height) {
+  font-weight: var(--font-weight-regular);
+  font-size: $font-size;
+  line-height: $line-height;
+  color: var(--color-text-primary);
+}
+
+@mixin green-title($font-size, $line-height, $font-weight) {
+  font-weight: $font-weight;
+  font-size: $font-size;
+  line-height: $line-height;
+  color: $green;
+}
+
+@mixin line-mixin {
+  stroke-dashoffset: 0;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
+}
+
+@mixin label-mixin {
+  opacity: 1;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
+}
+
+@mixin background {
+  background-position:
+    top center,
+    50%,
+    50%;
+  min-height: 100%;
+  position: relative;
+  /* Center and scale the image nicely */
+
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@mixin background-svg {
+  height: 100%;
+  width: 100%;
+  min-height: 100%;
+  background-size: cover;
+  position: absolute;
+
+  svg {
+    height: 100%;
+    width: 100%;
+    min-height: 100%;
+    background-size: cover;
+    position: absolute;
+  }
+}

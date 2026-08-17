@@ -1,0 +1,171 @@
+{
+  "summary": "Phase H37 Financial Consolidation Testing Complete - All backend endpoints and frontend UI verified with canonical number consistency across all 4 endpoints",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "Backend: GET /api/admin/money/statistics - enriched fields (fundedUsers, payingUsers, activeSubscriptions, settlementSuccessPct, refundRatePct) present and correct",
+    "Backend: GET /api/admin/money/statistics/timeseries?days=30 - daily series structure valid with deposits, withdrawals, purchases, revenue",
+    "Backend: GET /api/admin/money/statistics/users?limit=200 - per-user finance table with all required fields (balance, deposited, withdrawn, purchased, membership, aiCreditsUsed, providerCogsUsd, realizedRevenueUsd, contributionUsd, marginPct, status)",
+    "Backend: GET /api/admin/money/users/:id/finance - user finance structure valid with balance, commerce, purchases, timeline sections",
+    "Backend: GET /api/admin/entitlements/ai/users/:id/economics - AI economics with realizedRevenueUsd, realProviderCogsUsd, realContributionProfitUsd, realContributionMarginPct, profitabilityStatus, targetMarginPct",
+    "Consistency: balance.total = 50 USDC consistent across /statistics/users and /users/:id/finance",
+    "Consistency: realizedRevenue = $49 consistent across /statistics, /statistics/users, /users/:id/finance, /entitlements/ai/users/:id/economics",
+    "Consistency: contribution = $44.10 consistent across /statistics/users and /entitlements/ai/users/:id/economics",
+    "Consistency: margin = 0.9 (90%) consistent across /statistics/users and /entitlements/ai/users/:id/economics",
+    "Frontend: Statistics 'Финансы' tab (data-testid=stat-tab-finance) renders correctly with KPIs, charts, and users table",
+    "Frontend: Statistics Finance KPIs display funded users (1) and paying users (1) correctly",
+    "Frontend: Statistics Finance charts (fin-chart-flows, fin-chart-revenue) render correctly",
+    "Frontend: Statistics Finance users table (fin-users-table) displays 1 user with correct data",
+    "Frontend: Drill-down navigation from Statistics Finance table to Customer 360 Finance tab works correctly (navigates to /users_list/user/:id?tab=finance)",
+    "Frontend: Customer 360 'Финансы' tab opens directly with ?tab=finance query parameter",
+    "Frontend: Customer 360 Finance tab sections all present (c360-finance-balance, c360-finance-pnl, c360-finance-movements, c360-finance-purchases, c360-finance-ai)",
+    "Frontend: Customer 360 Finance KPIs display correctly (Available: 40.00 USDC, Realized revenue: $49.00, Provider COGS: $0.00, Contribution: $44.10, Margin: 90%)",
+    "Frontend: 'Монетизация и доступ' tab exists separately from 'Финансы' tab (not merged)",
+    "Frontend: 'Монетизация и доступ' tab content loads correctly when clicked"
+  ],
+  "test_report_links": [
+    "/app/tests/backend_test_h37.py",
+    "/root/.emergent/automation_output/20260813_152201/console_20260813_152201.log"
+  ],
+  "success_percentage": {
+    "backend": "100% (5/5 endpoints working, 4/4 consistency checks passed)",
+    "frontend": "100% (all UI elements present and functional, drill-down navigation working)"
+  },
+  "updated_files": [],
+  "action_item_for_main_agent": "",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": false,
+  "test_details": {
+    "phase": "H37",
+    "feature": "Financial Consolidation - Single canonical source for money + AI economics",
+    "test_user": {
+      "userId": "6a7cdd40a104ec674f9f6021",
+      "email": "bob.fomie@fomo.local",
+      "expected_values": {
+        "balance_total": 50,
+        "balance_available": 40,
+        "balance_reserved": 10,
+        "realized_revenue": 49,
+        "provider_cogs": 0,
+        "contribution": 44.10,
+        "margin": 0.9,
+        "status": "HEALTHY"
+      },
+      "actual_values": {
+        "balance_total": 50,
+        "balance_available": 40,
+        "balance_reserved": 10,
+        "realized_revenue": 49,
+        "provider_cogs": 0,
+        "contribution": 44.10,
+        "margin": 0.9,
+        "status": "HEALTHY"
+      },
+      "values_match": true
+    },
+    "backend_endpoints_tested": [
+      {
+        "endpoint": "GET /api/admin/money/statistics",
+        "status": "PASS",
+        "notes": "Enriched with fundedUsers=1, payingUsers=1, activeSubscriptions=3, realizedRevenue.total=$49"
+      },
+      {
+        "endpoint": "GET /api/admin/money/statistics/timeseries?days=30",
+        "status": "PASS",
+        "notes": "Returns daily series with deposits, withdrawals, purchases, revenue. hasData=true, 1 day of data"
+      },
+      {
+        "endpoint": "GET /api/admin/money/statistics/users?limit=200",
+        "status": "PASS",
+        "notes": "Returns 1 user with all required fields. Test user found with correct values"
+      },
+      {
+        "endpoint": "GET /api/admin/money/users/:id/finance",
+        "status": "PASS",
+        "notes": "Returns balance, commerce (depositedLifetime=99, purchasesLifetime=49, realizedRevenue=49), 7 timeline entries, 1 purchase"
+      },
+      {
+        "endpoint": "GET /api/admin/entitlements/ai/users/:id/economics",
+        "status": "PASS",
+        "notes": "Returns economics with realizedRevenueUsd=49, realProviderCogsUsd=0, realContributionProfitUsd=44.1, realContributionMarginPct=0.9, profitabilityStatus=HEALTHY"
+      }
+    ],
+    "consistency_checks": [
+      {
+        "check": "balance.total consistency",
+        "status": "PASS",
+        "values": "50 (statistics/users) ≈ 50 (user/finance)"
+      },
+      {
+        "check": "realizedRevenue consistency",
+        "status": "PASS",
+        "values": "49 (statistics/users) ≈ 49 (user/finance) ≈ 49 (user/economics)"
+      },
+      {
+        "check": "contribution consistency",
+        "status": "PASS",
+        "values": "44.1 (statistics/users) ≈ 44.1 (user/economics)"
+      },
+      {
+        "check": "margin consistency",
+        "status": "PASS",
+        "values": "0.9 (statistics/users) ≈ 0.9 (user/economics)"
+      }
+    ],
+    "frontend_tests": [
+      {
+        "test": "Statistics 'Финансы' tab",
+        "status": "PASS",
+        "elements_verified": [
+          "stat-tab-finance (tab button)",
+          "stat-finance (container)",
+          "fin-kpi-funded (KPI)",
+          "fin-kpi-paying (KPI)",
+          "fin-chart-flows (chart)",
+          "fin-chart-revenue (chart)",
+          "fin-users-table (table)"
+        ]
+      },
+      {
+        "test": "Statistics Finance drill-down",
+        "status": "PASS",
+        "notes": "Clicking user row navigates to /users_list/user/:id?tab=finance"
+      },
+      {
+        "test": "Customer 360 'Финансы' tab",
+        "status": "PASS",
+        "elements_verified": [
+          "c360-finance (container)",
+          "c360-finance-balance (section)",
+          "c360-finance-pnl (section)",
+          "c360-finance-movements (section)",
+          "c360-finance-purchases (section)",
+          "c360-finance-ai (section)",
+          "fin-available (KPI)",
+          "fin-realized (KPI)",
+          "fin-cogs (KPI)",
+          "fin-contribution (KPI)",
+          "fin-margin (KPI)"
+        ]
+      },
+      {
+        "test": "'Монетизация и доступ' tab separation",
+        "status": "PASS",
+        "notes": "Tab exists separately from 'Финансы' tab, content loads correctly"
+      }
+    ],
+    "screenshots": [
+      ".screenshots/h37_statistics_initial.png",
+      ".screenshots/h37_statistics_finance_tab.png",
+      ".screenshots/h37_customer360_finance.png",
+      ".screenshots/h37_customer360_monetization.png"
+    ]
+  }
+}

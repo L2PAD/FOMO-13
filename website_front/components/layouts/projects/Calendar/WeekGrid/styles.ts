@@ -1,0 +1,139 @@
+import styled from "styled-components";
+
+export const Wrapper = styled.div`
+  display: grid;
+  grid-template-columns: 0.03fr 1fr;
+  overflow: auto;
+`;
+
+export const TimeInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  div {
+    font-family: Inter;
+    border-left: 1px solid var(--color-border-subtle);
+    border-right: 1px solid var(--color-border-subtle);
+    width: 100%;
+    min-width: 50px;
+    text-align: center;
+    height: 64px;
+    color: var(--color-text-muted);
+    font-size: 10px;
+    padding: 3px;
+    font-weight: var(--font-weight-medium);
+
+    &:first-child {
+      border-top: 1px solid var(--color-border-subtle);
+      border-top-left-radius: 12px;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: 12px;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+  }
+`;
+
+export const ContentWrapper = styled.div`
+  min-width: 450px;
+`;
+
+export const HeaderWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+
+  div {
+    &:last-child {
+      border-top-right-radius: 12px;
+    }
+
+    &:nth-child(7n + 1) {
+      background: var(--color-surface-subtle);
+    }
+    &:nth-child(7n) {
+      background: var(--color-surface-subtle);
+    }
+  }
+`;
+
+export const WeekDayCell = styled.div<{
+  isCurrentMonth: boolean;
+  isCurrentDay: boolean;
+}>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  padding: 22px 5px;
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  border-top: 1px solid var(--color-border-subtle);
+  border-right: 1px solid var(--color-border-subtle);
+
+  span {
+    font-weight: var(--font-weight-medium);
+    border-radius: 50%;
+    background: ${({ isCurrentDay }) =>
+      isCurrentDay ? "black" : "transparent"};
+    font-size: 12px;
+    width: ${({ isCurrentDay }) => (isCurrentDay ? "20px" : "none")};
+    height: ${({ isCurrentDay }) => (isCurrentDay ? "20px" : "none")};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: ${({ isCurrentDay }) => (isCurrentDay ? "var(--color-white)" : "black")};
+  }
+`;
+
+export const BodyCells = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+
+  .day-column {
+    &:first-child {
+      background: var(--color-surface-subtle);
+    }
+  }
+
+  .day-column {
+    &:last-child {
+      background: var(--color-surface-subtle);
+    }
+  }
+`;
+
+export const BodyCell = styled.div`
+  border-bottom: 1px solid var(--color-border-subtle);
+  border-right: 1px solid var(--color-border-subtle);
+  height: 64px;
+
+  &:nth-child(1) {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  &:nth-child(2) {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  &:nth-child(3) {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  &:nth-child(4) {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  &:nth-child(5) {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  &:nth-child(6) {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+  &:nth-child(7) {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+`;

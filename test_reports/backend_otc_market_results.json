@@ -1,0 +1,73 @@
+
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+OTC/P2P MARKET — BACKEND API TESTING
+Testing market-stats, OTC, and P2P endpoints
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+
+================================================================================
+📋 TESTING: Admin Login
+================================================================================
+
+================================================================================
+🔍 Test #1: Admin login with admin@fomo.local
+   POST https://crm-admin-portal-8.preview.emergentagent.com/api/user/admin/login
+   Expected: 202
+   ✓ Token received: eyJhbGciOiJIUzI1NiIs...
+   ✅ PASSED - Status: 202
+
+================================================================================
+📋 TESTING: Market Stats Endpoint
+================================================================================
+
+================================================================================
+🔍 Test #2: GET /api/deals/admin/market-stats returns aggregates
+   GET https://crm-admin-portal-8.preview.emergentagent.com/api/deals/admin/market-stats
+   Expected: 200
+   ✓ All required fields present
+   ✓ Total deals: 5
+   ✓ Volume USD: $6200
+   ✓ Commission earned: $310
+   ✓ Reserved on contract: $2000
+   ✓ Traders: 2
+   ✓ Top traders count: 2
+   ✓ Popular positions count: 4
+   ✓ Rank distribution count: 2
+   ✓ Top trader structure valid
+   ✅ PASSED - Status: 200
+
+================================================================================
+📋 TESTING: OTC Deals Endpoint
+================================================================================
+
+================================================================================
+🔍 Test #3: GET /api/deals/otc/all returns {deals, total}
+   GET https://crm-admin-portal-8.preview.emergentagent.com/api/deals/otc/all?limit=10&offset=0
+   Expected: 200
+   ✓ Response has 'deals' and 'total'
+   ✓ Total deals: 3
+   ✓ Deals returned: 3
+   ✓ Deal structure valid
+   ✅ PASSED - Status: 200
+
+================================================================================
+📋 TESTING: P2P Deals Endpoint
+================================================================================
+
+================================================================================
+🔍 Test #4: GET /api/deals/p2p/all returns {deals, total}
+   GET https://crm-admin-portal-8.preview.emergentagent.com/api/deals/p2p/all?limit=10&offset=0
+   Expected: 200
+   ✓ Response has 'deals' and 'total'
+   ✓ Total deals: 1
+   ✓ Deals returned: 1
+   ✓ Deal structure valid
+   ✅ PASSED - Status: 200
+
+================================================================================
+📊 TEST SUMMARY
+================================================================================
+Total tests run: 4
+✅ Passed: 4
+❌ Failed: 0
+Success rate: 100.0%
+================================================================================

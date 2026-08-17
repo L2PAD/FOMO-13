@@ -1,0 +1,187 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# IDE and editors
+.idea/
+.vscode/
+
+# Dependencies
+node_modules/
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Production builds
+/build
+dist/
+dist
+
+# Environment files (comprehensive coverage)
+
+*token.json*
+*credentials.json*
+
+# Logs and debug files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+dump.rdb
+
+# System files
+.DS_Store
+*.pem
+
+# Python
+__pycache__/
+*pyc*
+venv/
+.venv/
+
+# Development tools
+chainlit.md
+.chainlit
+.ipynb_checkpoints/
+.ac
+
+# Deployment
+.vercel
+
+# Data and databases
+agenthub/agents/youtube/db
+
+# Runtime user-uploaded media (not part of codebase / not needed for deploy;
+# fresh deploys start with a fresh DB so these files are unreferenced).
+fomo-backend/uploads/
+
+# Archive files and large assets
+**/*.zip
+**/*.tar.gz
+**/*.tar
+**/*.tgz
+*.pack
+*.deb
+*.dylib
+
+# Build caches
+.cache/
+
+memory/test_credentials.md
+
+# Mobile development
+android-sdk/frontend/node_modules/.cache/default-development/0.pack
+frontend/node_modules/.cache/default-development/0.pack
+frontend/node_modules/.cache/default-development/3.pack
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000069.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000068.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000103.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000102.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000104.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000124.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000127.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000126.sst
+frontend/node_modules/.cache/default-development/5.pack
+frontend/node_modules/.cache/default-development/4.pack
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000161.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000143.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000163.sst
+frontend/node_modules/.cache/default-development/1.pack
+frontend/node_modules/.cache/default-development/1.pack
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000196.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000234.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000305.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000304.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000291.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000328.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000330.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000325.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000327.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000350.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000394.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000407.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000408.sst
+frontend/node_modules/.cache/default-development/2.pack
+.env
+.env.*
+*.env
+credentials.json
+*.key
+.credentials
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000475.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000432.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000474.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000433.sst
+frontend/node_modules/.cache/default-development/7.pack
+frontend/node_modules/.cache/default-development/8.pack
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000071.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000075.sst
+frontend/node_modules/.cache/default-development/9.pack
+frontend/node_modules/.cache/default-development/11.pack
+frontend/node_modules/.cache/default-development/10.pack
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000122.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000117.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000121.sst
+frontend/node_modules/.cache/default-development/12.pack
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000210.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000209.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000207.sst
+frontend/node_modules/.cache/default-development/13.pack
+frontend/node_modules/.cache/default-development/14.pack
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000256.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000253.sst
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000250.sst
+frontend/node_modules/.cache/default-development/16.pack
+website_front/.next/cache/turbopack/v16.3.0-d73f5622/00000294.sst
+frontend/node_modules/.cache/default-development/6.pack
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000071.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000075.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000069.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000094.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000117.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000118.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000137.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000157.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000161.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000159.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000160.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000220.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000304.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000317.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000073.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000085.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000165.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000166.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000183.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000184.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000216.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000215.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000233.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000253.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000258.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000255.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000271.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000272.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000292.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000309.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000343.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000358.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000372.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000374.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000398.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000424.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000443.sst
+website_front/.next/cache/turbopack/v16.3.1-3d32eb87/00000441.sst

@@ -1,0 +1,79 @@
+{
+  "summary": "Completed comprehensive testing of H5 Double-Spend Forensics feature. All tests passed (8/8, 100% success rate). The forensic endpoint correctly detects ledger-vs-onchain divergence, the withdrawal guard properly bounds withdrawals by ledger available, and the decomposition endpoint regression test passed.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "Admin authentication (POST /api/user/admin/login) - Returns 202 with valid accessToken",
+    "Forensics baseline (GET /api/admin/money/custody/double-spend-forensics) - Returns anyRisk=false with current data, checked 1 user with ledgerAvailable=1, onChainUsdBalance=1, delta=0",
+    "Divergence seeding - Successfully inserted DEBIT entry (0.5 USDC) in money_ledger_entries for user 6a7e499cec6c52fb5ea67495",
+    "Forensics with divergence - Correctly detected doubleSpendRisk=true, anyRisk=true, atRiskCount=1, delta=0.5 (onChain 1 > ledger 0.5)",
+    "Cleanup seeded entry - Successfully deleted test DEBIT entry from MongoDB",
+    "Forensics after cleanup - System returned to baseline (anyRisk=false, doubleSpendRisk=false)",
+    "Withdrawal guard code review - Verified guard exists at money.service.ts:355 (if bal.available < amount throw BadRequestException)",
+    "Decomposition regression (GET /api/admin/money/custody/decomposition) - Returns status=HEALTHY_WITH_UNCLASSIFIED, invariantOk=true, totalAssets=4.06, knownMoneyLiabilities=2, platformOwned=0.51, unclassified=1.55"
+  ],
+  "test_report_links": [
+    "/app/tests/backend_test_double_spend_forensics.py",
+    "/app/test_reports/backend_test_double_spend_forensics.log"
+  ],
+  "success_percentage": {
+    "backend": "100% (8/8 tests passed)",
+    "frontend": "N/A (backend-only testing)"
+  },
+  "updated_files": [
+    "/app/tests/backend_test_double_spend_forensics.py"
+  ],
+  "action_item_for_main_agent": "",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": false,
+  "detailed_findings": {
+    "forensic_endpoint": {
+      "endpoint": "GET /api/admin/money/custody/double-spend-forensics",
+      "status": "WORKING",
+      "findings": [
+        "Correctly returns per-user forensic data with ledgerAvailable, onChainUsdBalance, delta, doubleSpendRisk",
+        "Baseline test showed anyRisk=false with 1 user having perfect sync (ledger=1, onchain=1, delta=0)",
+        "After seeding 0.5 USDC DEBIT, correctly detected doubleSpendRisk=true for the test user",
+        "Delta calculation accurate: onChainUsdBalance (1) - ledgerAvailable (0.5) = 0.5",
+        "Summary fields correct: anyRisk=true, atRiskCount=1, totalOnChainExcess=0.5",
+        "After cleanup, system correctly returned to baseline state"
+      ]
+    },
+    "withdrawal_guard": {
+      "location": "/app/fomo-backend/src/money/money.service.ts:355",
+      "status": "VERIFIED",
+      "implementation": "if (bal.available < amount) throw new BadRequestException(`Insufficient available balance (${bal.available} ${asset}).`)",
+      "findings": [
+        "Guard is present in requestWithdrawal method",
+        "Checks ledger available balance before creating withdrawal record",
+        "Throws 400 BadRequestException if amount exceeds available",
+        "This is the canonical bound that prevents over-withdrawal through the platform API"
+      ]
+    },
+    "decomposition_regression": {
+      "endpoint": "GET /api/admin/money/custody/decomposition",
+      "status": "WORKING",
+      "findings": [
+        "Returns expected status: HEALTHY_WITH_UNCLASSIFIED",
+        "Invariant check passed: invariantOk=true",
+        "Numeric values present: totalAssets=4.06, knownMoneyLiabilities=2, platformOwned=0.51, unclassified=1.55",
+        "All required fields present in response",
+        "No regression detected from previous implementation"
+      ]
+    }
+  },
+  "test_methodology": {
+    "approach": "Direct MongoDB manipulation to simulate divergence",
+    "test_user": "6a7e499cec6c52fb5ea67495 (wallet: 0x94c862c0ef59828e74afd60ad985373fb9723f97)",
+    "divergence_simulation": "Inserted DEBIT entry of 0.5 USDC to reduce ledger available below on-chain balance",
+    "cleanup": "All seeded test data removed after testing to preserve real state",
+    "verification": "Confirmed system returned to baseline after cleanup"
+  }
+}

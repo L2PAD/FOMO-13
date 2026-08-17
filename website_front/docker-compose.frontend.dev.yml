@@ -1,0 +1,23 @@
+services:
+  frontend-development:
+    container_name: fomo-frontend-development
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://devapi.fomo.cx/api}
+        NEXT_PUBLIC_LOADER_API: ${NEXT_PUBLIC_LOADER_API:-https://devapi.fomo.cx}
+        NEXT_PUBLIC_REF_LINK: ${NEXT_PUBLIC_REF_LINK:-https://development.fomo.cx/ref/}
+        NEXT_PUBLIC_DISCORD_CLIENT_ID: ${NEXT_PUBLIC_DISCORD_CLIENT_ID:-}
+        NEXT_PUBLIC_TELEGRAM_BOT_LINK: ${NEXT_PUBLIC_TELEGRAM_BOT_LINK:-}
+        NEXT_PUBLIC_BACKERS_V2: ${NEXT_PUBLIC_BACKERS_V2:-true}
+        NEXT_PUBLIC_FUNDS_DETAIL_V2: ${NEXT_PUBLIC_FUNDS_DETAIL_V2:-true}
+        NEXT_PUBLIC_PERSONS_DETAIL_V2: ${NEXT_PUBLIC_PERSONS_DETAIL_V2:-true}
+        NEXT_PUBLIC_COMPARISON_PERF_LOGS: ${NEXT_PUBLIC_COMPARISON_PERF_LOGS:-false}
+        API_BASE_URL: ${API_BASE_URL:-https://devapi.fomo.cx}
+        DISCORD_REDIRECT_URI: ${DISCORD_REDIRECT_URI:-}
+    ports:
+      - "127.0.0.1:3001:3000"
+    env_file:
+      - ./.env.development
+    restart: unless-stopped

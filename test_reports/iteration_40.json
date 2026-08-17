@@ -1,0 +1,149 @@
+{
+  "summary": "Completed comprehensive backend testing for FOMO BUZZ-AI Stage 1: Live AI Summaries with INTERNAL billing context. Verified DI stability after FomoAiGateway was made REQUIRED in CommentsService and EntitlementsModule was added to 6 modules (actions, projects, tabs, funds, leaderboard, persons). All critical functionality working correctly.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "minor_issues": [
+      {
+        "component": "Projects API",
+        "issue": "GET /api/projects returns 404. Correct endpoint is /api/projects/all/active",
+        "impact": "Documentation/test issue only - module loads correctly",
+        "fix_priority": "LOW"
+      },
+      {
+        "component": "Leaderboard API",
+        "issue": "GET /api/leaderboard returns 403 Forbidden (requires JwtWalletGuard)",
+        "impact": "Expected behavior - endpoint requires authentication",
+        "fix_priority": "NONE"
+      },
+      {
+        "component": "Actions API",
+        "issue": "No public listing endpoint - only /moderator and /admin routes",
+        "impact": "Expected behavior - module loads correctly",
+        "fix_priority": "NONE"
+      }
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": []
+  },
+  "passed_tests": [
+    "Backend boots without DI errors and is stable (no crashes after FomoAiGateway made REQUIRED)",
+    "POST /api/comments/topic/{topicId}/summary/regenerate returns 201 with aiSummary.status='READY'",
+    "AI Summary includes provider='openai', model='gpt-4.1-mini', providerCostUsd=0.0002868 (real number > 0)",
+    "AI Summary has creditsCharged=0 (INTERNAL billing context does NOT deduct user credits)",
+    "GET /api/comments/topic/{topicId} returns aiSummary with insights.aiGenerated=true",
+    "After adding reply via POST /api/comments/answer/{topicId}, GET returns aiSummary.status='STALE' WITHOUT auto-regenerating",
+    "Stored summary content preserved (not regenerated) when status changes to STALE",
+    "MongoDB ai_usage_events collection has billingContext='INTERNAL', creditsCharged=0, providerCostUsd>0",
+    "Regression smoke tests: GET /api/comments/topic/all (200 OK)",
+    "Regression smoke tests: GET /api/projects/all/active (200 OK)",
+    "Regression smoke tests: GET /api/funds (200 OK)",
+    "Regression smoke tests: GET /api/persons (200 OK)",
+    "Regression smoke tests: GET /api/tabs (200 OK)",
+    "All 6 modules (actions, projects, tabs, funds, leaderboard, persons) load without DI crashes after EntitlementsModule import"
+  ],
+  "test_report_links": [
+    "/app/backend_test.py"
+  ],
+  "success_percentage": {
+    "backend": "100% (all critical tests passed)",
+    "di_stability": "100% (no dependency injection errors)",
+    "ai_summary": "100% (generation, retrieval, staleness detection all working)",
+    "billing": "100% (INTERNAL context correctly configured with creditsCharged=0)",
+    "regression": "100% (all 6 modules load and respond correctly)"
+  },
+  "action_item_for_main_agent": "",
+  "updated_files": [
+    "/app/backend_test.py"
+  ],
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": false,
+  "detailed_test_results": {
+    "di_stability_verification": {
+      "status": "PASS",
+      "details": "Backend logs show no DI errors. FomoAiGateway successfully injected as REQUIRED (not @Optional) in CommentsService. EntitlementsModule correctly imported in all 6 modules that re-provide CommentsService."
+    },
+    "ai_summary_generation": {
+      "status": "PASS",
+      "endpoint": "POST /api/comments/topic/6a81bbda654f6d97924808f2/summary/regenerate",
+      "response_code": 201,
+      "validation": {
+        "status": "READY",
+        "provider": "openai",
+        "model": "gpt-4.1-mini",
+        "providerCostUsd": 0.0002868,
+        "creditsCharged": 0
+      }
+    },
+    "ai_summary_retrieval": {
+      "status": "PASS",
+      "endpoint": "GET /api/comments/topic/6a81bbda654f6d97924808f2",
+      "response_code": 200,
+      "validation": {
+        "aiSummary_present": true,
+        "insights_aiGenerated": true,
+        "overview_present": true
+      }
+    },
+    "staleness_detection": {
+      "status": "PASS",
+      "details": "After adding reply, aiSummary.status changed to 'STALE'. Summary content preserved (not auto-regenerated). No new ai_usage_events created for staleness check.",
+      "validation": {
+        "status_changed_to_stale": true,
+        "summary_preserved": true,
+        "no_auto_regeneration": true
+      }
+    },
+    "billing_verification": {
+      "status": "PASS",
+      "mongodb_query": "db.ai_usage_events.findOne({billingContext: 'INTERNAL', operationType: 'buzz_post_summary'})",
+      "validation": {
+        "billingContext": "INTERNAL",
+        "creditsCharged": 0,
+        "providerCostUsd": 0.0003184,
+        "status": "COMPLETED"
+      }
+    },
+    "regression_tests": {
+      "status": "PASS",
+      "modules_tested": [
+        {
+          "module": "comments",
+          "endpoint": "/api/comments/topic/all",
+          "status": "PASS (200 OK)"
+        },
+        {
+          "module": "projects",
+          "endpoint": "/api/projects/all/active",
+          "status": "PASS (200 OK)"
+        },
+        {
+          "module": "funds",
+          "endpoint": "/api/funds",
+          "status": "PASS (200 OK)"
+        },
+        {
+          "module": "persons",
+          "endpoint": "/api/persons",
+          "status": "PASS (200 OK)"
+        },
+        {
+          "module": "tabs",
+          "endpoint": "/api/tabs",
+          "status": "PASS (200 OK)"
+        },
+        {
+          "module": "leaderboard",
+          "endpoint": "/api/leaderboard",
+          "status": "PASS (module loads, 403 is expected due to JwtWalletGuard)"
+        },
+        {
+          "module": "actions",
+          "endpoint": "/api/actions/moderator",
+          "status": "PASS (module loads, only admin/moderator routes available)"
+        }
+      ]
+    }
+  }
+}

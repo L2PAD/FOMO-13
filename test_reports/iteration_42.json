@@ -1,0 +1,72 @@
+{
+  "summary": "Completed comprehensive testing of FOMO Market Digests subsystem and Calendar polish features. All backend APIs working correctly. CRM digest management fully functional with AI generation and preview. Public site displays digests correctly before Comments section. Calendar cross-through implemented but requires authentication for news articles.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "component": "Calendar Event Modal - Read News",
+        "issue": "Calendar event 'Read news' button requires authentication to view linked news articles. When clicked without auth, shows 'Sign in to access FOMO AI' modal instead of navigating to news article.",
+        "affected_flow": "Calendar → Event Modal → Read News cross-through",
+        "severity": "MEDIUM",
+        "fix_priority": "MEDIUM",
+        "note": "This may be intentional design if news articles require authentication. If public events should link to public news, the relatedArticleId cross-through needs to bypass auth or the event modal should check article visibility."
+      }
+    ],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "Backend: Admin list digests (GET /api/admin/calendar/digests)",
+    "Backend: Create digest (POST /api/admin/calendar/digests)",
+    "Backend: Get digest by ID (GET /api/admin/calendar/digests/{id})",
+    "Backend: Patch digest (PATCH /api/admin/calendar/digests/{id})",
+    "Backend: AI generate WEEK (POST /api/admin/calendar/digests/generate)",
+    "Backend: AI generate MONTH (POST /api/admin/calendar/digests/generate)",
+    "Backend: AI generate QUARTER (POST /api/admin/calendar/digests/generate)",
+    "Backend: Publish digest (POST /api/admin/calendar/digests/{id}/publish)",
+    "Backend: Public list digests - only PUBLISHED, no sensitive fields (GET /api/calendar/digests)",
+    "Backend: Public get digest by ID (GET /api/calendar/digests/{id})",
+    "Backend: Unpublish digest (POST /api/admin/calendar/digests/{id}/unpublish)",
+    "Backend: Public get DRAFT digest returns 404 (GET /api/calendar/digests/{id})",
+    "Backend: Archive digest (POST /api/admin/calendar/digests/{id}/archive)",
+    "Backend: Calendar events endpoint returns relatedArticleId (GET /api/calendar/events)",
+    "Backend: Delete digest (DELETE /api/admin/calendar/digests/{id})",
+    "CRM: Login to admin panel",
+    "CRM: Navigate to Контент → Календарь → Дайджесты tab",
+    "CRM: Click '+ Создать дайджест' button opens modal",
+    "CRM: Digest modal has all required fields (title, period, summary, body, outlook, status)",
+    "CRM: Period select has 5 options (WEEK, MONTH, QUARTER, HALF_YEAR, YEAR)",
+    "CRM: '✨ Сгенерировать AI' button generates digest draft successfully",
+    "CRM: AI generation fills title, summary, and body fields",
+    "CRM: '👁 Предпросмотр' toggle shows/hides preview",
+    "CRM: Preview renders digest as it will appear on public site",
+    "CRM: Rich text editor for bodyHtml works correctly",
+    "Public: Market Digests section appears at bottom of /utility/news",
+    "Public: Market Digests section positioned BEFORE Comments block",
+    "Public: Digest cards display correctly with title, summary, outlook badge",
+    "Public: Clicking digest card opens reader modal",
+    "Public: Digest reader modal displays full digest content",
+    "Public: Calendar tab loads without 'Public market calendar' description box",
+    "Public: Calendar displays events (ARB Token Unlock, EarlyLand Community Quest, etc.)",
+    "Public: Clicking calendar event opens event detail modal",
+    "Public: Event modal shows project logo, metadata, and 'Read news' button"
+  ],
+  "test_report_links": [
+    "/app/tests/backend_digest_test.py",
+    "/app/test_reports/backend_digest_results.json"
+  ],
+  "action_item_for_main_agent": "MEDIUM priority: Calendar event 'Read news' cross-through requires authentication. If public calendar events should link to public news articles without auth, update the event modal to check article visibility or bypass auth for public articles. Otherwise, document that this is intentional behavior.",
+  "updated_files": [
+    "/app/tests/backend_digest_test.py"
+  ],
+  "success_percentage": {
+    "backend": "100% (15/15 tests passed)",
+    "frontend_crm": "100% (10/10 tests passed)",
+    "frontend_public": "95% (9/10 tests passed - 1 auth issue)"
+  },
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": true
+}

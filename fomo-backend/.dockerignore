@@ -1,0 +1,16 @@
+.git
+node_modules
+dist
+.env
+.env.*
+uploads/*
+!uploads/MainLogo.png
+logs
+coverage
+.cache
+.npm
+.nyc_output
+*.log
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*

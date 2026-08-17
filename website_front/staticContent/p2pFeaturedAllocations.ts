@@ -1,0 +1,48 @@
+export const featuredAllocations = [
+  {
+    id: "34",
+    title: "SharkRace Club",
+    type: "0xf5gd....75h0",
+    badge: "Sell",
+    owner: "USDT",
+    price: "41,2 UAH",
+    photo: "/71460.67482688709_Ellipse 1 (2).png",
+  },
+  {
+    id: "40",
+    title: "StarterX",
+    type: "0xf5gd....75h0",
+    badge: "Buy",
+    owner: "USDT",
+    price: "43,1 UAH",
+    photo: "/71460.67482688709_Ellipse 1 (2).png",
+  },
+  {
+    id: "23",
+    title: "Alverse Protocol",
+    type: "0xf5gd....75h0",
+    badge: "Buy",
+    owner: "USDT",
+    price: "43,1 UAH",
+    photo: "/71460.67482688709_Ellipse 1 (2).png",
+  },
+  {
+    id: "58",
+    title: "CryptoKitties",
+    type: "0xf5gd....75h0",
+    badge: "Sell",
+    owner: "USDT",
+    price: "41,2 UAH",
+    photo: "/71460.67482688709_Ellipse 1 (2).png",
+  },
+  {
+    id: "92",
+    title: "DecentraGame",
+    type: "0xf5gd....75h0",
+    badge: "Sell",
+    owner: "USDT",
+    price: "41,2 UAH",
+    photo: "/71460.67482688709_Ellipse 1 (2).png",
+  },
+];
+

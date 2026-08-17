@@ -1,0 +1,58 @@
+{
+  "summary": "Completed comprehensive testing of OTC/P2P Market page (/admin/users_list/otc) with Overview statistics tab. All backend APIs and frontend features working correctly.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "Backend: Admin login via POST /api/user/admin/login (202)",
+    "Backend: GET /api/deals/admin/market-stats returns complete aggregates (deals, volumeUsd, commissionEarnedUsd, reservedOnContractUsd, traders, topTraders, popularPositions, rankDistribution, volumeBySection)",
+    "Backend: GET /api/deals/otc/all returns {deals, total} with 3 OTC deals",
+    "Backend: GET /api/deals/p2p/all returns {deals, total} with 1 P2P deal",
+    "Frontend: Admin login successful and redirects to /admin/projects",
+    "Frontend: Navigation to /admin/users_list/otc loads correctly",
+    "Frontend: Page title 'OTC / P2P рынок' displays",
+    "Frontend: 'Обзор' tab is active by default with green color (rgb(4, 165, 132)) and green border",
+    "Frontend: KPI stat cards display with real data: Объём торгов ($6.2K), Заработано на комиссии ($310), Зарезервировано в эскроу ($2.0K), Активные сделки (2), Завершённые сделки (1)",
+    "Frontend: Top traders table (Топ-трейдеры) displays with data-testid='top-trader-0' showing 2 traders (bob_buterin, alice_nakamoto) with ranks and stats",
+    "Frontend: Популярные позиции section shows 4 service types with progress bars (Проекты, Услуги, Соцсеть, NFT)",
+    "Frontend: Распределение по рангам section shows 2 ranks (Celestial Master, Cosmic Explorer)",
+    "Frontend: Объём по секциям section shows OTC volume $6.2K with 40% completion rate",
+    "Frontend: Custom green dropdown for status filter (data-testid='deals-status-filter') works - opens/closes correctly, not native select",
+    "Frontend: OTC tab table fits without horizontal scroll (1394px table width < 1920px viewport)",
+    "Frontend: OTC tab shows 3 deal rows with all columns visible (ID, Название, Тип, Статус, Услуга, Сумма/цена, Создатель, Контрагент, Эскроу, Дата)",
+    "Frontend: Creator and counterparty usernames displayed in green (clickable styling)",
+    "Frontend: All 7 tabs present and switchable: Обзор, OTC, P2P, Выводы, Депозиты, Апелляции, Смарт-контракт",
+    "Frontend: Tab bar uses green underline for active tab",
+    "Frontend: Layout is compact and fits 15.3\" screen without horizontal scroll"
+  ],
+  "test_report_links": [
+    "/app/tests/backend_otc_market_test.py",
+    "/app/test_reports/backend_otc_market_results.json"
+  ],
+  "success_percentage": {
+    "backend": "100% (4/4 tests passed)",
+    "frontend": "100% (all features working)",
+    "overall": "100%"
+  },
+  "updated_files": [
+    "/app/tests/backend_otc_market_test.py"
+  ],
+  "action_item_for_main_agent": "",
+  "should_call_test_agent_after_fix": "false",
+  "should_main_agent_test_itself": "false",
+  "notes": [
+    "Backend market-stats endpoint returns real aggregated data from seeded deals",
+    "Frontend Overview tab displays all required KPI cards and statistics sections",
+    "Custom dropdown component correctly replaces native select with styled green dropdown",
+    "Top traders table includes clickable rows (though navigation to Customer360 not tested to avoid mutating state)",
+    "Table layout is responsive and compact for 15.3\" screens",
+    "All tabs functional with proper green underline styling for active tab",
+    "No destructive mutations performed as per testing instructions"
+  ]
+}
