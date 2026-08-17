@@ -90,6 +90,25 @@ export class News {
 
   @Prop({ default: [] })
   views: Array<mongoose.Types.ObjectId>;
+
+  // ── NEWS-1 Phase 4: AI-generated publication metadata (additive, optional) ──
+  @Prop({ default: false })
+  aiGenerated: boolean;
+
+  @Prop()
+  aiView: string;
+
+  @Prop({ default: [] })
+  keyPoints: string[];
+
+  @Prop({ default: [] })
+  provenanceUrls: string[];
+
+  @Prop()
+  trustColor: string; // GREEN | YELLOW | RED (publication trust)
+
+  @Prop()
+  generatedNewsHash: string; // link back to generated_news.unique_hash
 }
 
 export const NewsSchema = SchemaFactory.createForClass(News);

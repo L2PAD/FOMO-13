@@ -999,4 +999,51 @@ export class NewsService implements OnModuleInit {
       { _id: 1, page: 1, date: 1, title: 1 }
     ).lean();
   }
+
+  // ── NEWS-1 Phase 4: publish a GeneratedNews draft into canonical News ──
+  // Idempotent by externalId `genai:{hash}` (republish updates the same doc).
+  async publishGeneratedNews(g: any): Promise<{ newsId: string; created: boolean }> {
+    const hash = g.unique_hash;
+    const ed = g.editorial || {};
+    const title = (ed.titleEn || g.title_en || "").trim();
+    const text = (ed.extendedEn || g.extended_en || "").trim();
+    if (!title || !text) throw new BadRequestException("Cannot publish: missing title/body");
+    const externalId = `genai:${hash}`;
+    const payload: any = {
+      title,
+      text,
+      date: g.publishDate ? new Date(g.publishDate) : new Date(),
+      type: (ed.category || g.event_type || "Crypto"),
+      image: ed.image || g.image || undefined,
+      page: "crypto",
+      status: "active",
+      newsSection: "default",
+      isAdminCreate: true,
+      isUserCreator: false,
+      externalId,
+      contentHash: hash,
+      language: "en",
+      tags: (ed.tags && ed.tags.length ? ed.tags : (g.assets || [])).slice(0, 12),
+      author: "FOMO AI",
+      actionType: "news",
+      action: "published_from_ai",
+      actionDate: new Date(),
+      readTime: String(this.getReadTime(text)),
+      aiGenerated: true,
+      aiView: ed.aiViewEn || g.ai_view_en || undefined,
+      keyPoints: (ed.keyPoints || g.keyPoints || []).slice(0, 8),
+      provenanceUrls: (g.sourceUrls || []).slice(0, 20),
+      trustColor: g.trustColor || undefined,
+      generatedNewsHash: hash,
+    };
+    const existing = await this.newsModel.findOne({ externalId }).lean();
+    await this.newsModel.updateOne({ externalId }, { $set: payload }, { upsert: true });
+    const doc = await this.newsModel.findOne({ externalId }, { _id: 1 }).lean();
+    return { newsId: String(doc?._id || ""), created: !existing };
+  }
+
+  async unpublishGeneratedNews(hash: string): Promise<{ ok: boolean }> {
+    await this.newsModel.updateOne({ externalId: `genai:${hash}` }, { $set: { status: "archived" } });
+    return { ok: true };
+  }
 }

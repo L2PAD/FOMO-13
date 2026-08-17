@@ -90,3 +90,27 @@ raw article IDs → cluster (generic:bitcoin:date, 4 sources) → fingerprint 0a
 - Public site: richer news detail layout (current is bare) — use generated extended_en/ai_view.
 - Bull queue for AI generation (retries/backoff) + scheduler trigger (currently synchronous manual/endpoint).
 - Publish flow GeneratedNews(draft) → moderation (Phase 4) → canonical News (EN).
+
+---
+
+## STATUS — Phase 4 BACKEND COMPLETE & LIVE-VERIFIED (operational contour closed)
+Forensic: FOMO-DATA news modules had NO explicit publication/moderation lifecycle and NO green/yellow/red; the only trust signal was cluster `confidence = min(0.9, 0.5 + sources.length*0.1)` (+ ranking source/entity weights) and Full Update was absent. Decision → lifecycle & trust = BUILD, grounded on the real donor signal (independent source count + confidence). Full Update stays Phase 5.
+
+Implemented (src/news-ai + NewsService):
+- **AI Queue** `news-ai-gen` (Bull/Redis), processor concurrency 2, `jobId=gen:{fingerprint}` → no double generation. genStatus: QUEUED→PROCESSING→GENERATED / FAILED_RETRYABLE / PENDING_BUDGET. Retry/backoff (3 attempts, exponential). Jobs persist in Redis → survive restart. Isolated from parser.
+- **Scheduler** `NewsAiScheduler` (60s tick, setInterval; env `NEWS_AI_SCHEDULER_ENABLED`); enqueues when `settings.enabled` + budget allows; interval/maxStoriesPerRun/minSources/windowLimit configurable.
+- **Budget Guard** (pre-LLM), uses `ai_usage_events` (FOMO AI economics). Settings: dailyCogsLimitUsd, monthlyCogsLimitUsd, maxGenerationsPerDay, warningThresholdPct. Status HEALTHY/WARNING/LIMIT_REACHED. On LIMIT → genStatus PENDING_BUDGET, NO LLM call, raw/cluster preserved (verified: raw 947=947, LLM events 24=24).
+- **Moderation lifecycle**: DRAFT → AI_READY/NEEDS_REVIEW (autoReview policy) → APPROVED → PUBLISHED → ARCHIVED/REJECTED. Editor `PATCH drafts/:hash` stores `editorial` + `revisions[]` (AI original preserved). Actions: approve/reject/regenerate/publish/unpublish.
+- **Publish → canonical News** (`NewsService.publishGeneratedNews`): idempotent upsert by `externalId=genai:{hash}` (5 parallel publish → 1 News doc). No `sourceUrl` (avoids unique collision with imported raw News); provenance in `provenanceUrls`. News schema extended (additive): aiGenerated, aiView, keyPoints[], provenanceUrls[], trustColor, generatedNewsHash. Public EN feed (`/api/news/crypto`) shows AI news via the SAME endpoint (no parallel public type). Unpublish → News.status='archived', draft ARCHIVED, provenance/revisions kept.
+- **Trust** green/yellow/red: GREEN if independentSources>=3 && confidence>=0.7; YELLOW if 2; RED if <=1. `trustReason{independentSources, aiConfidence, sourceTrust, conflicts}` shown for justification.
+- **8 gateway events explained**: `componentTrace[]` = headline/summary/story/ai_view × EN/RU (legitimate multi-stage bilingual synthesis, donor parity).
+
+Endpoints: `GET overview|budget|settings|runs|drafts|drafts/:hash`, `PATCH settings|drafts/:hash`, `POST generate|drafts/:hash/{approve,reject,regenerate,publish,unpublish}`.
+
+Acceptance PASS: enqueue→queue→GENERATED(trust GREEN/YELLOW), edit→approve→publish→canonical News→public EN feed; 5 parallel publish→1; unpublish keeps provenance; budget LIMIT→PENDING_BUDGET no-LLM raw-preserved; provider-not-real→FAILED_RETRYABLE/no-fake (Phase-3 mock guard reused); Bull persistence covers restart.
+
+### Phase 4 REMAINING → next (per user mandate, AFTER Phase 4 backend)
+- **CRM Buzz frontend**: fully recreate/manage ALL of this backend in the admin **Buzz** tab (Дашборд/Новости/Feed/Календарь/Дайджесты/FOMO Updates) in current design tokens — settings (queue/scheduler/budget), moderation queue (list by status, editor, approve/publish/reject/regenerate, trust badges, provenance/COGS/trace), generation control.
+- **Twitter separation**: Twitter/X parsing is NOT Buzz/News — move it OUT of the News «Парсинг» sub-tab into its OWN independent header tab. News parsing must contain zero Twitter. Twitter feature itself is deferred (not built now).
+- Rich public News detail (EN) — after Buzz frontend.
+- Calendar candidates (controlled), Full Update (Phase 5).

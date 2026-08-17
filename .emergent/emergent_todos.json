@@ -1,34 +1,34 @@
 [
   {
-    "content": "Phase 2 acceptance A–E + importer bugfix (COMPLETE, verified)",
+    "content": "Phase 2 acceptance A–E + importer bugfix (COMPLETE)",
     "status": "completed"
   },
   {
-    "content": "Phase 3 parity map + FomoAiGateway contract (COMPLETE)",
+    "content": "Phase 3 AI synthesis backend + CRM tab (COMPLETE, live-verified)",
     "status": "completed"
   },
   {
-    "content": "Activate managed AI credential via ENV→MANAGED migrate-env + activate + test (COMPLETE, real)",
+    "content": "Phase 4 P0 AI Queue+Scheduler (statuses/retry/recovery/jobId-dedup/settings) — COMPLETE",
     "status": "completed"
   },
   {
-    "content": "Phase 3 BACKEND build+integrate (extractor/clustering/ranking/prompts migrated, synth via FomoAiGateway, entities, rule, endpoints) — COMPLETE",
+    "content": "Phase 4 P0 Budget Guard (pre-LLM limit, HEALTHY/WARNING/LIMIT_REACHED, raw preserved) — COMPLETE",
     "status": "completed"
   },
   {
-    "content": "Phase 3 backend acceptance: real trace+COGS+idempotency(5→1)+negative/no-fake+parser isolation — PASS",
+    "content": "Phase 4 P0 Moderation lifecycle + green/yellow/red + editor + publish→canonical News (idempotent) + unpublish — COMPLETE & verified",
     "status": "completed"
   },
   {
-    "content": "Phase 3 FRONTEND: fill CRM «AI-генерация» tab (drafts/detail/provenance/COGS/generate) + richer public news layout",
+    "content": "NEXT: CRM Buzz frontend — fully manage Phase 3/4 backend (settings/queue/budget/moderation/editor/publish) in current design",
     "status": "pending"
   },
   {
-    "content": "Phase 3 hardening: Bull queue for AI (retries/backoff) + scheduler trigger",
+    "content": "NEXT: Separate Twitter/X parsing out of News into its own header tab (News parsing = no Twitter; Twitter deferred)",
     "status": "pending"
   },
   {
-    "content": "Phase 4 moderation → publish GeneratedNews→canonical News; Phase 5 Full Update/calendar",
+    "content": "Phase 4.5: rich public News detail (EN). Phase 5: Calendar candidates + Full Update forensic",
     "status": "pending"
   }
 ]
