@@ -1,38 +1,30 @@
 [
   {
-    "content": "Explore repo structure & deployment docs (MONOREPO.md, bootstrap.sh)",
+    "content": "P0: Full forensic of FOMO-DATA + FOMO-12, capability map (NEWS1_FORENSIC.md)",
     "status": "completed"
   },
   {
-    "content": "Move repo into /app preserving platform .env files",
+    "content": "Phase 1 (backbone): NewsSource registry (121 seeded) + NewsFetcher (rss-parser) + NewsParserRun + multi-layer dedupe + write news_articles + import→News + Bull staggered scheduler + fetch safety/retry/circuit-breaker + admin endpoints",
     "status": "completed"
   },
   {
-    "content": "Install backend (NestJS) deps + build dist/main.js",
+    "content": "Phase 1 verify: real RSS news end-to-end → news_articles(706) → News(122) → website Buzz→News EN (verified via API+DB+screenshot)",
     "status": "completed"
   },
   {
-    "content": "Install admin (CRA) deps",
-    "status": "completed"
+    "content": "Phase 2: CRM News Control Center under Контент→Новости (RU, our design): Обзор/Источники/Парсинг/Запуски/Статистика/Диагностика + Health",
+    "status": "pending"
   },
   {
-    "content": "Install & build public website (Next.js)",
-    "status": "completed"
+    "content": "Phase 3: Clustering + provenance + AI synthesis via FomoAiGateway (classify/cluster/synthesis/translate) → GeneratedNews → News (EN); AI-генерация tab; COGS; AI failure isolation + retry",
+    "status": "pending"
   },
   {
-    "content": "Install supervisor programs (redis, fomo_nest, fomo_website) & start services",
-    "status": "completed"
+    "content": "Phase 4: Moderation (green/yellow/red publication trust) + publish lifecycle + website detail/comments + regression of Buzz/Topics/Calendar",
+    "status": "pending"
   },
   {
-    "content": "Seed demo data (admin, fomies, c360, nft, prime, ads, AI knowledge)",
-    "status": "completed"
-  },
-  {
-    "content": "Health-check all services & endpoints",
-    "status": "completed"
-  },
-  {
-    "content": "Verify public site (/) and admin (/admin) via screenshots on preview URL",
-    "status": "completed"
+    "content": "Phase 5: Full Update pipeline + calendar linkage + audit + permissions + bootstrap idempotency + final runtime acceptance",
+    "status": "pending"
   }
 ]

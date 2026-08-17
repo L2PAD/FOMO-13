@@ -156,6 +156,7 @@
     "qrcode": "^1.5.4",
     "reflect-metadata": "^0.1.13",
     "resend": "^6.16.0",
+    "rss-parser": "^3.13.0",
     "rxjs": "^7.2.0",
     "speakeasy": "^2.0.0",
     "twit": "^2.2.11",
