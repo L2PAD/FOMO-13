@@ -98,6 +98,12 @@ const DefaultIcon: FC<IconProps> = ({ size = 20 }) => (
   </svg>
 );
 
+const TwitterXIcon: FC<IconProps> = ({ size = 20 }) => (
+  <svg {...base(size)}>
+    <path d="M4 4l16 16M20 4L4 20" />
+  </svg>
+);
+
 // Keyed by the exact Russian/English nav titles used in navigation_data.ts
 const NAV_ICON_MAP: Record<string, FC<IconProps>> = {
   "Контент": ContentIcon,
@@ -110,6 +116,7 @@ const NAV_ICON_MAP: Record<string, FC<IconProps>> = {
   "NFTs": NftsIcon,
   "Пользователи": UsersIcon,
   "Система": SystemIcon,
+  "Twitter / X": TwitterXIcon,
 };
 
 export const getNavIcon = (title: string): FC<IconProps> => {

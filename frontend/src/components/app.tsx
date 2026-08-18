@@ -24,6 +24,7 @@ import Advertising from '../pages/Advertising';
 import FomoAiPage from '../pages/FomoAi';
 import SpaceportPage from '../pages/Spaceport';
 import BuzzPage from '../pages/Buzz';
+import TwitterPage from '../pages/Twitter';
 import Person from '../pages/Person';
 import LoginPage from '../pages/Login';
 import ModeratorPage from '../pages/Settings/moderator';
@@ -83,6 +84,7 @@ export const App = () => {
                 <Route path='/spaceport' component={SpaceportPage} />
                 <Route path='/buzz/:section' component={BuzzPage} />
                 <Route path='/buzz' component={BuzzPage} />
+                <Route path='/twitter' component={TwitterPage} />
                 <Route path='/acquiring' component={AcquiringPage} />
                 <Route path='/nfts' component={NFTSPages} />
                 <Route path='/users_list/user/:id' component={Customer360} />

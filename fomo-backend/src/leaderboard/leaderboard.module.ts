@@ -13,6 +13,7 @@ import { CommentsService } from "src/comments/comments.service";
 
 import { User, UserSchema } from "src/user/user.model";
 import { Comment, CommentSchema } from "src/comments/models/comment.model";
+import { DiscussionSummary, DiscussionSummarySchema } from "src/comments/models/discussion-summary.model";
 import { Action, ActionSchema } from "src/actions/models/action.model";
 import { News, NewsSchema } from "src/news/models/news.model";
 import { Person, PersonSchema } from "src/persons/person.model";
@@ -53,6 +54,7 @@ import { EntitlementsModule } from "src/entitlements/entitlements.module";
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: Comment.name, schema: CommentSchema },
+      { name: DiscussionSummary.name, schema: DiscussionSummarySchema },
       { name: Action.name, schema: ActionSchema },
       { name: Person.name, schema: PersonSchema },
       { name: Event.name, schema: EventSchema },

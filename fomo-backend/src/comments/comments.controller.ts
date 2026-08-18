@@ -193,6 +193,22 @@ export class CommentsController {
     return this.commentsService.generateTopicSuggestion(id, req.user._id);
   }
 
+  // NEWS-1 Phase 6A P3 — page-scoped Discussion AI Summary (e.g. News item).
+  // GET is public so the EN news page can render the cached summary + STALE state.
+  @Get("/discussion/:page/summary")
+  getDiscussionSummary(@Param("page") page: string) {
+    return this.commentsService.getDiscussionSummary(page);
+  }
+
+  // Manual regeneration triggers a REAL FomoAiGateway call (INTERNAL billing).
+  @Roles("any")
+  @UseGuards(JwtAuthGuard)
+  @Post("/discussion/:page/summary/regenerate")
+  regenerateDiscussionSummary(@Req() req: Request, @Param("page") page: string) {
+    return this.commentsService.regenerateDiscussionSummary(page, req.user?._id);
+  }
+
+
   @Roles("any")
   @UseGuards(JwtAuthGuard, BuzzAccessGuard)
   @Put("like/:id")

@@ -145,6 +145,13 @@ export const NavigationLinksList: NavigationItem[] = [
         links: [],
     },
     {
+        title: 'Twitter / X',
+        link: '/twitter',
+        isDropdown: false,
+        links: [],
+        requiredRoles: ['admin', 'moderator'],
+    },
+    {
         title: 'Контент',
         link: '/content',
         isDropdown: false,

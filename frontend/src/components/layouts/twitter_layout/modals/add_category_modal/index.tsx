@@ -5,10 +5,8 @@ import InputWithLabel from '../../../../common/components_for_modals/input_with_
 import { ModalRow } from '../../../projects_layouts/modals/creating_project/styles';
 import { RemoveButton, SubmitButton } from '../../../../common/global_modals/description_modal/styles';
 import createCategory from '../../../../services/categories/createCategory';
-import reloadWindow from '../../../../utils/reloadWindow';
 import { useQuery } from 'react-query';
 import fetchCategories from '../../../../services/categories/fetchCategories';
-import ModalSelect from '../../../../common/components_for_modals/modal_select';
 import deleteCategory from '../../../../services/categories/deleteCategory';
 
 const Categories = styled.div`
@@ -41,7 +39,6 @@ interface Props {
 
 const AddCategoryModal: FC<Props> = ({ onClose }) => {
     const [name, setName] = useState<string>('');
-    const [category, setCategory] = useState<string>('');
     const { data, refetch } = useQuery('categories', () => {
         return fetchCategories()
     })

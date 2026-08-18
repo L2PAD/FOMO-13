@@ -96,7 +96,13 @@ export class News {
   aiGenerated: boolean;
 
   @Prop()
+  summary: string; // short_en — concise 2-3 sentence summary (AI news)
+
+  @Prop()
   aiView: string;
+
+  @Prop()
+  whyMatters: string; // why_matters_en — impact/risks/what to watch (AI news)
 
   @Prop({ default: [] })
   keyPoints: string[];

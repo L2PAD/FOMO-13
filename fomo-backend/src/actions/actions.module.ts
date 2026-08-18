@@ -14,6 +14,7 @@ import { Funds, FundsSchema } from "src/funds/funds.model";
 import { Person, PersonSchema } from "src/persons/person.model";
 import { Nft, NftSchema } from "src/nft/nft.model";
 import { Comment, CommentSchema } from "src/comments/models/comment.model";
+import { DiscussionSummary, DiscussionSummarySchema } from "src/comments/models/discussion-summary.model";
 import { FundsModule } from "src/funds/funds.module";
 import { FilesService } from "src/files/files.service";
 import { CommentsService } from "src/comments/comments.service";
@@ -51,6 +52,7 @@ import { EntitlementsModule } from "src/entitlements/entitlements.module";
       { name: Person.name, schema: PersonSchema },
       { name: Nft.name, schema: NftSchema },
       { name: Comment.name, schema: CommentSchema },
+      { name: DiscussionSummary.name, schema: DiscussionSummarySchema },
       { name: Notification.name, schema: NotificationSchema },
       { name: Activity.name, schema: ActivitySchema },
       { name: ProjectTwitter.name, schema: ProjectTwitterSchema },

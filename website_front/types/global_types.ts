@@ -163,6 +163,16 @@ export interface INews {
   dislikes?: Array<string>;
   page?: string;
   author?: string;
+  // ── NEWS-1 Phase 6A: AI-generated publication fields (from canonical News) ──
+  aiGenerated?: boolean;
+  summary?: string;
+  aiView?: string;
+  whyMatters?: string;
+  keyPoints?: Array<string>;
+  provenanceUrls?: Array<string>;
+  trustColor?: string;
+  sourceName?: string;
+  sourceUrl?: string;
 }
 
 export interface Initiator {

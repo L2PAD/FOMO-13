@@ -1,34 +1,34 @@
 [
   {
-    "content": "Phase 2/3/4 backend (acceptance, AI synthesis, queue+budget+lifecycle+publish) — COMPLETE & verified",
+    "content": "P0 Twitter separation — DONE",
     "status": "completed"
   },
   {
-    "content": "Forensic: Full Update = NOT_FOUND (donor+current); Twitter = separable contour embedded in news UI",
+    "content": "P1 News Detail enrichment — DONE",
     "status": "completed"
   },
   {
-    "content": "CRM AI-генерация → Control Center (real settings + queue/budget/scheduler state) — DONE & screenshot-verified",
+    "content": "P2 Comments as News entity — DONE",
     "status": "completed"
   },
   {
-    "content": "CRM Модерация tab (editorial queue + editor + trust-explained + Approve/Publish/Reject/Regenerate/Unpublish, backend re-read) — DONE & screenshot-verified",
+    "content": "P3 Discussion AI Summary reuse — DONE",
     "status": "completed"
   },
   {
-    "content": "NEXT: RBAC (moderator editorial vs admin-only budget/scheduler) + audit trail",
-    "status": "pending"
+    "content": "P4 Influence/XP linkage — DONE",
+    "status": "completed"
   },
   {
-    "content": "NEXT: Public EN News Detail enrich (existing route) + Feed→Detail→Comments; non-AI graceful",
-    "status": "pending"
+    "content": "P8 Minimal reusable Admin Audit — DONE",
+    "status": "completed"
   },
   {
-    "content": "NEXT: Move Twitter parcing_tab out of News into own header tab (News parsing = no Twitter)",
-    "status": "pending"
+    "content": "Testing agent 6A backend vertical — DONE (100%, 20/20, 0 critical)",
+    "status": "completed"
   },
   {
-    "content": "NEXT: Calendar bridge (controlled, future-event only, Unified Calendar) + full end-to-end acceptance (testing agent)",
+    "content": "P5 Instrumentation / P6 Trending / P7 Source Intelligence lifecycle — remaining 6A analytics (next pass)",
     "status": "pending"
   }
 ]

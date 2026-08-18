@@ -8,6 +8,7 @@ import { ProjectsController } from "./projects.controller";
 import { ProjectsService } from "./projects.service";
 import { FilesService } from "../files/files.service";
 import { CommentsService } from "src/comments/comments.service";
+import { DiscussionSummary, DiscussionSummarySchema } from "src/comments/models/discussion-summary.model";
 import { ActionsService } from "src/actions/actions.service";
 import { LimitsModule } from "src/limits/limits.module";
 
@@ -46,6 +47,7 @@ import { EntitlementsModule } from "src/entitlements/entitlements.module";
       { name: User.name, schema: UserSchema },
       { name: Project.name, schema: ProjectSchema },
       { name: Comment.name, schema: CommentSchema },
+      { name: DiscussionSummary.name, schema: DiscussionSummarySchema },
       { name: Action.name, schema: ActionSchema },
       { name: Person.name, schema: PersonSchema },
       { name: Event.name, schema: EventSchema },

@@ -2,6 +2,7 @@ import { EventsModule } from './events/events.module';
 import { NewsModule } from './news/news.module';
 import { NewsParserModule } from './news-parser/news-parser.module';
 import { NewsAiModule } from './news-ai/news-ai.module';
+import { AdminAuditModule } from './admin-audit/admin-audit.module';
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
@@ -134,7 +135,7 @@ function parseThrottleLimit(value: string | undefined, fallback: number): number
     XpModule,
     PlatformAnalyticsModule,
     UserActionLogsModule, AdminAiChatModule, AdminDataSyncModule, UserModule, EventsModule,
-    NewsModule, NewsParserModule, NewsAiModule, AuthModule,
+    NewsModule, NewsParserModule, NewsAiModule, AdminAuditModule, AuthModule,
     PersonsModule, FundsModule,
     NftModule, RatingModule,
     CommentsModule, TopicsModule, LayoutModule,

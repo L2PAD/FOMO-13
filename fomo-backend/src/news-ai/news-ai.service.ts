@@ -6,6 +6,7 @@ import { Model } from "mongoose";
 import { createHash } from "crypto";
 import { NEWS_ARTICLES_CONNECTION } from "../news/models/news-article-source.model";
 import { FomoAiGateway } from "../entitlements/ai/fomo-ai-gateway.service";
+import { AdminAuditService } from "../admin-audit/admin-audit.service";
 import { NewsService } from "../news/news.service";
 import { NewsAiEntityExtractor, ExtractedEntities } from "./entity-extractor.service";
 import { NewsAiEntityNormalizer } from "./entity-normalizer.service";
@@ -14,6 +15,7 @@ import { NewsAiRanking } from "./news-ranking.service";
 import {
   NEWS_AI_OPERATION, NEWS_AI_POLICY_VERSION,
   HEADLINE_PROMPT, SUMMARY_PROMPT, STORY_PROMPT, AI_VIEW_PROMPT,
+  KEY_TAKEAWAYS_PROMPT, WHY_MATTERS_PROMPT,
 } from "./news-ai.prompts";
 import {
   NEWS_AI_QUEUE, NEWS_AI_JOBS, MODERATION, GEN, DEFAULT_SETTINGS,
@@ -44,6 +46,7 @@ export class NewsAiService {
     private readonly ranking: NewsAiRanking,
     private readonly gateway: FomoAiGateway,
     private readonly newsService: NewsService,
+    private readonly audit: AdminAuditService,
   ) {}
 
   // ─────────────── settings ───────────────
@@ -55,11 +58,18 @@ export class NewsAiService {
     }
     return { ...DEFAULT_SETTINGS, ...s, budget: { ...DEFAULT_SETTINGS.budget, ...(s?.budget || {}) } };
   }
-  async updateSettings(patch: any): Promise<any> {
+  async updateSettings(patch: any, actor?: string): Promise<any> {
     const cur = await this.getSettings();
     const next: any = { ...cur, ...patch, budget: { ...cur.budget, ...(patch?.budget || {}) } };
     delete next._id;
     await this.settingsModel.updateOne({ _id: "global" }, { $set: next }, { upsert: true });
+    if (patch?.budget) {
+      await this.audit.log({ actorId: actor, domain: "AI_POLICY", action: "AI_BUDGET_CHANGED", targetType: "news_ai_settings", targetId: "global", before: cur.budget, after: next.budget });
+    }
+    const policyKeys = Object.keys(patch || {}).filter((k) => k !== "budget");
+    if (policyKeys.length) {
+      await this.audit.log({ actorId: actor, domain: "AI_POLICY", action: "AI_POLICY_CHANGED", targetType: "news_ai_settings", targetId: "global", after: { changed: policyKeys } });
+    }
     return this.getSettings();
   }
 
@@ -206,6 +216,19 @@ export class NewsAiService {
     const storyRu = acc("story:ru", await this.callGateway("story", "ru", fill(STORY_PROMPT, { headline: headlineRu, summary: summaryRu, assets: assetsStr, topic, context, language: "Russian" }), fingerprint)) || storyEn;
     const aiViewEn = acc("ai_view:en", await this.callGateway("ai_view", "en", fill(AI_VIEW_PROMPT, { headline: headlineEn, summary: summaryEn, assets: assetsStr, language: "English" }), fingerprint));
     const aiViewRu = acc("ai_view:ru", await this.callGateway("ai_view", "ru", fill(AI_VIEW_PROMPT, { headline: headlineRu, summary: summaryRu, assets: assetsStr, language: "Russian" }), fingerprint)) || aiViewEn;
+    const takeawaysRawEn = acc("key_takeaways:en", await this.callGateway("key_takeaways", "en", fill(KEY_TAKEAWAYS_PROMPT, { headline: headlineEn, summary: summaryEn, context, language: "English" }), fingerprint)) || "";
+    const takeawaysRawRu = acc("key_takeaways:ru", await this.callGateway("key_takeaways", "ru", fill(KEY_TAKEAWAYS_PROMPT, { headline: headlineRu, summary: summaryRu, context, language: "Russian" }), fingerprint)) || "";
+    const whyMattersEn = acc("why_matters:en", await this.callGateway("why_matters", "en", fill(WHY_MATTERS_PROMPT, { headline: headlineEn, summary: summaryEn, assets: assetsStr, language: "English" }), fingerprint)) || "";
+    const whyMattersRu = acc("why_matters:ru", await this.callGateway("why_matters", "ru", fill(WHY_MATTERS_PROMPT, { headline: headlineRu, summary: summaryRu, assets: assetsStr, language: "Russian" }), fingerprint)) || whyMattersEn;
+
+    const parseTakeaways = (raw: string): string[] =>
+      String(raw || "")
+        .split(/\r?\n/)
+        .map((l) => l.replace(/^\s*(?:[-*•\u2022]|\d+[.)])\s*/, "").trim())
+        .filter((l) => l.length > 0)
+        .slice(0, 5);
+    const keyPointsEn = parseTakeaways(takeawaysRawEn);
+    const keyPointsRu = parseTakeaways(takeawaysRawRu);
 
     if (!storyEn || !headlineEn) throw new Error("ai_incomplete: missing headline/story");
 
@@ -216,6 +239,8 @@ export class NewsAiService {
       cluster_id: clusterId, event_type: eventType, topic,
       title_en: headlineEn, title_ru: headlineRu, short_en: summaryEn, short_ru: summaryRu,
       extended_en: storyEn, extended_ru: storyRu, ai_view_en: aiViewEn, ai_view_ru: aiViewRu,
+      why_matters_en: whyMattersEn, why_matters_ru: whyMattersRu,
+      keyPoints: keyPointsEn, keyPoints_ru: keyPointsRu,
       assets, entities, sourceArticleIds, sourceUrls, sources,
       provider: trace.provider, model: trace.model, inputTokens: trace.inputTokens, outputTokens: trace.outputTokens, totalTokens: trace.totalTokens,
       providerCostUsd: Math.round(trace.totalCostUsd * 1e8) / 1e8, creditsCharged: trace.creditsCharged, dataMode: trace.dataMode,
@@ -305,10 +330,13 @@ export class NewsAiService {
         moderationStatus: g.moderationStatus === MODERATION.PUBLISHED ? MODERATION.PUBLISHED : MODERATION.NEEDS_REVIEW },
       $push: { revisions: { at: now, by: actor, editorial: g.editorial || null } },
     });
+    await this.audit.log({ actorId: actor, domain: "NEWS", action: "NEWS_EDITED", targetType: "generated_news", targetId: hash, after: { fields: Object.keys(editorial || {}) } });
     return this.getDraft(hash);
   }
   async setModeration(hash: string, status: string, actor: string) {
     await this.generatedModel.updateOne({ unique_hash: hash }, { $set: { moderationStatus: status, moderatedBy: actor, moderatedAt: new Date() } });
+    const actionMap: Record<string, string> = { [MODERATION.APPROVED]: "NEWS_APPROVED", [MODERATION.REJECTED]: "NEWS_REJECTED" };
+    await this.audit.log({ actorId: actor, domain: "NEWS", action: actionMap[status] || "NEWS_MODERATED", targetType: "generated_news", targetId: hash, after: { moderationStatus: status } });
     return this.getDraft(hash);
   }
   async approve(hash: string, actor: string) { return this.setModeration(hash, MODERATION.APPROVED, actor); }
@@ -319,6 +347,7 @@ export class NewsAiService {
     await this.generatedModel.updateOne({ unique_hash: hash }, { $set: { genStatus: GEN.QUEUED, updatedAt: new Date() } });
     await this.queue.add(NEWS_AI_JOBS.GENERATE, { fingerprint: hash, sourceArticleIds: g.sourceArticleIds || [] },
       { jobId: `gen:${hash}:${Date.now()}`, attempts: 3, backoff: { type: "exponential", delay: 5000 }, removeOnComplete: 100, removeOnFail: 300 });
+    await this.audit.log({ domain: "NEWS", action: "NEWS_REGENERATED", targetType: "generated_news", targetId: hash });
     return { ok: true };
   }
 
@@ -328,11 +357,13 @@ export class NewsAiService {
     if (g.genStatus !== GEN.GENERATED) throw new BadRequestException("draft is not GENERATED");
     const res = await this.newsService.publishGeneratedNews(g); // idempotent upsert
     await this.generatedModel.updateOne({ unique_hash: hash }, { $set: { moderationStatus: MODERATION.PUBLISHED, publishedNewsId: res.newsId, publishedAt: new Date(), publishedBy: actor } });
+    await this.audit.log({ actorId: actor, domain: "NEWS", action: "NEWS_PUBLISHED", targetType: "news", targetId: res.newsId, after: { unique_hash: hash, created: res.created } });
     return { ok: true, newsId: res.newsId, created: res.created };
   }
   async unpublish(hash: string, actor: string) {
     await this.newsService.unpublishGeneratedNews(hash);
     await this.generatedModel.updateOne({ unique_hash: hash }, { $set: { moderationStatus: MODERATION.ARCHIVED, archivedBy: actor, archivedAt: new Date() } });
+    await this.audit.log({ actorId: actor, domain: "NEWS", action: "NEWS_UNPUBLISHED", targetType: "generated_news", targetId: hash });
     return { ok: true };
   }
 

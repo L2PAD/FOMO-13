@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
 import { CommentSchema, Comment } from './models/comment.model';
+import { DiscussionSummary, DiscussionSummarySchema } from './models/discussion-summary.model';
 import { UserSchema, User } from 'src/user/user.model';
 import { Activity, ActivitySchema } from 'src/activity/models/activity.model';
 import { ActivityService } from 'src/activity/activity.service';
@@ -28,6 +29,9 @@ import { ContentInfluenceService } from './content-influence.service';
       },
       {
         name: Activity.name, schema: ActivitySchema
+      },
+      {
+        name: DiscussionSummary.name, schema: DiscussionSummarySchema
       }
     ]
     ),

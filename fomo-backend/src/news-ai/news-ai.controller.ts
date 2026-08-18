@@ -31,7 +31,7 @@ export class NewsAiController {
   getSettings() { return this.service.getSettings(); }
 
   @Patch("settings")
-  updateSettings(@Body() body: any, @Req() req: Request) { this.requireAdmin(req); return this.service.updateSettings(body || {}); }
+  updateSettings(@Body() body: any, @Req() req: Request) { this.requireAdmin(req); return this.service.updateSettings(body || {}, this.actor(req)); }
 
   // ── generation (queue) ──
   @Post("generate")

@@ -10,6 +10,7 @@ import { User, UserSchema } from "src/user/user.model";
 import { Asset, AssetSchema } from "src/assets/models/asset.model";
 import { CryptoTab, CryptoTabSchema } from "./model/tab.model";
 import { Comment, CommentSchema } from "src/comments/models/comment.model";
+import { DiscussionSummary, DiscussionSummarySchema } from "src/comments/models/discussion-summary.model";
 import { Person, PersonSchema } from "src/persons/person.model";
 import { Funds, FundsSchema } from "src/funds/funds.model";
 import { News, NewsSchema } from "src/news/models/news.model";
@@ -47,6 +48,7 @@ import { EntitlementsModule } from "src/entitlements/entitlements.module";
       { name: User.name, schema: UserSchema },
       { name: Asset.name, schema: AssetSchema },
       { name: Comment.name, schema: CommentSchema },
+      { name: DiscussionSummary.name, schema: DiscussionSummarySchema },
       { name: Person.name, schema: PersonSchema },
       { name: Funds.name, schema: FundsSchema },
       { name: News.name, schema: NewsSchema },

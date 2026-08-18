@@ -207,3 +207,145 @@ export const Details = styled.div`
 export const Categories = styled.div`
   margin-left: auto;
 `;
+
+// ─────────────── NEWS-1 Phase 6A: AI-generated rich sections ───────────────
+export const AiBadge = styled.div<{ trust?: string }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary, #04a584);
+  background: rgba(4, 165, 132, 0.08);
+  border: 1px solid rgba(4, 165, 132, 0.24);
+  margin-bottom: 20px;
+
+  &::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: ${({ trust }) =>
+      trust === "RED"
+        ? "#DC2626"
+        : trust === "YELLOW"
+        ? "#D97706"
+        : "#04A584"};
+  }
+`;
+
+export const SectionHeading = styled.div`
+  font-size: 20px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 26px;
+  color: var(--color-text-primary);
+  margin: 36px 0 14px;
+
+  @media (max-width: 767px) {
+    font-size: 17px;
+    margin: 28px 0 10px;
+  }
+`;
+
+export const SummaryText = styled.div`
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  padding: 18px 20px;
+  border-radius: 12px;
+  background: rgba(7, 11, 53, 0.03);
+  border-left: 3px solid var(--color-primary, #04a584);
+
+  @media (max-width: 767px) {
+    font-size: 16px;
+    line-height: 24px;
+    padding: 14px 16px;
+  }
+`;
+
+export const TakeawaysList = styled.ul`
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  li {
+    position: relative;
+    padding-left: 28px;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--color-text-primary);
+  }
+
+  li::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--color-primary, #04a584);
+  }
+`;
+
+export const AiViewBox = styled.div`
+  padding: 20px 22px;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(4, 165, 132, 0.06) 0%,
+    rgba(4, 165, 132, 0.02) 100%
+  );
+  border: 1px solid rgba(4, 165, 132, 0.2);
+  font-size: 16px;
+  line-height: 25px;
+  color: var(--color-text-primary);
+
+  @media (max-width: 767px) {
+    padding: 16px 18px;
+    font-size: 15px;
+  }
+`;
+
+export const WhyMattersBox = styled.div`
+  padding: 18px 20px;
+  border-radius: 12px;
+  background: rgba(7, 11, 53, 0.03);
+  font-size: 16px;
+  line-height: 25px;
+  color: var(--color-text-primary);
+`;
+
+export const SourcesList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  a {
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--color-primary, #04a584);
+    text-decoration: none;
+    word-break: break-all;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    span {
+      color: rgba(7, 11, 53, 0.5);
+      font-weight: var(--font-weight-semibold);
+      min-width: 22px;
+    }
+  }
+`;
+

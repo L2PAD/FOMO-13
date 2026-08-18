@@ -16,6 +16,7 @@ import { NewsAiEntityExtractor } from "./entity-extractor.service";
 import { NewsAiEntityNormalizer } from "./entity-normalizer.service";
 import { NewsAiClustering } from "./news-clustering.service";
 import { NewsAiRanking } from "./news-ranking.service";
+import { AdminAuditModule } from "../admin-audit/admin-audit.module";
 
 const GeneratedNewsSchema = new mongoose.Schema({ unique_hash: { type: String, index: true, unique: true } }, { strict: false, timestamps: false });
 const NewsAiRunSchema = new mongoose.Schema({ correlationId: { type: String, index: true } }, { strict: false, timestamps: false });
@@ -28,6 +29,7 @@ const AiUsageEventSchema = new mongoose.Schema({}, { strict: false });
   imports: [
     EntitlementsModule, // provides FomoAiGateway
     NewsModule, // provides NewsService (canonical News publish)
+    AdminAuditModule, // provides AdminAuditService (audit trail)
     JwtModule.register({}),
     ConfigModule.forRoot(),
     BullModule.registerQueue({ name: NEWS_AI_QUEUE }),

@@ -1,7 +1,6 @@
 import {useState,useContext} from 'react';
 import {NEWS_TABS_LIST, newsTabsList} from '../../../static_content/news_data';
 import SmartTab from './news_tabs/smart_tab';
-import ParcingTab from './news_tabs/parcing_tab';
 import MarketTab from './news_tabs/market_tab';
 import TopicsTab from './news_tabs/topics_tab';
 import ModerationTab from './news_tabs/moderation_tab';
@@ -13,7 +12,6 @@ import { INews } from '../../types/global_types';
 
 const NEWS_TAB_LABELS: Record<string, string> = {
     Smart: 'Смарт',
-    Parcing: 'Парсинг',
     Market: 'Новости',
     Topics: 'Темы',
     Moderation: 'Модерация',
@@ -31,8 +29,6 @@ const NewsLayout = ({type}:{type:string}) => {
         switch(activeTab) {
             case NEWS_TABS_LIST.SMART:
                 return <SmartTab />
-            case NEWS_TABS_LIST.PARCING:
-                return <ParcingTab />
             case NEWS_TABS_LIST.MARKET:
                 return <MarketTab news={data?.data}/>
             case NEWS_TABS_LIST.TOPICS:

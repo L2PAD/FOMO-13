@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { Card, SectionTitle, SimpleTable, Badge, StateBlock, Column, useAsync } from '../../../../../pages/Statistics/ui';
-import { input, btn } from '../../../../../pages/AccessMonetization/parts';
-import { ITwitterAcc } from '../../../../types/global_types';
-import AddTwitterUserModal from '../../modals/add_twitter_user_modal';
-import UpdateTwitterUserModal from '../../modals/update_twitter_user_modal';
-import AddTwitterKeywordsModal from '../../modals/add_twitter_keywords_modal';
-import AddCategoryModal from '../../modals/add_category_modal';
-import { fetchData } from '../../../../hooks/useFetch';
+import { Card, SectionTitle, SimpleTable, Badge, StateBlock, Column, useAsync } from '../../../pages/Statistics/ui';
+import { input, btn } from '../../../pages/AccessMonetization/parts';
+import { ITwitterAcc } from '../../types/global_types';
+import AddTwitterUserModal from './modals/add_twitter_user_modal';
+import UpdateTwitterUserModal from './modals/update_twitter_user_modal';
+import AddTwitterKeywordsModal from './modals/add_twitter_keywords_modal';
+import AddCategoryModal from './modals/add_category_modal';
+import { fetchData } from '../../hooks/useFetch';
 
-const ParcingTab = () => {
+// Standalone Twitter / X sources control center.
+// NOTE: Reuses the existing `socialparcing` backend + Twitter modals/services.
+// It is intentionally decoupled from the News module (Phase 6A P0 separation).
+const TwitterControlCenter = () => {
     const [search, setSearch] = useState('');
     const [isAddTwitterModal, setIsAddTwitterModal] = useState(false);
     const [isAddKeywordsModal, setIsAddKeywordsModal] = useState(false);
@@ -44,23 +47,23 @@ const ParcingTab = () => {
     ];
 
     return (
-        <div style={{ paddingTop: 8 }}>
+        <div style={{ paddingTop: 8 }} data-testid="twitter-control-center">
             <Card>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
-                    <SectionTitle sub="Источники Twitter/X для парсера новостей. Сам парсер работает отдельно — здесь управление аккаунтами, ключевыми словами и категориями.">
-                        Источники парсинга
+                    <SectionTitle sub="Источники Twitter/X для парсера. Сам парсер работает отдельно — здесь управление аккаунтами, ключевыми словами и категориями.">
+                        Источники Twitter / X
                     </SectionTitle>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                        <button style={btn('primary')} onClick={() => setIsAddTwitterModal(true)}>+ Twitter аккаунт</button>
-                        <button style={btn('ghost')} onClick={() => setIsAddKeywordsModal(true)}>+ Ключевые слова</button>
-                        <button style={btn('ghost')} onClick={() => setIsCreateCategory(true)}>Категории</button>
+                        <button style={btn('primary')} data-testid="twitter-add-account" onClick={() => setIsAddTwitterModal(true)}>+ Twitter аккаунт</button>
+                        <button style={btn('ghost')} data-testid="twitter-add-keywords" onClick={() => setIsAddKeywordsModal(true)}>+ Ключевые слова</button>
+                        <button style={btn('ghost')} data-testid="twitter-categories" onClick={() => setIsCreateCategory(true)}>Категории</button>
                     </div>
                 </div>
                 <div style={{ margin: '14px 0' }}>
-                    <input style={{ ...input, maxWidth: 320 }} placeholder="Поиск аккаунта" value={search} onChange={(e) => setSearch(e.target.value)} />
+                    <input style={{ ...input, maxWidth: 320 }} data-testid="twitter-search" placeholder="Поиск аккаунта" value={search} onChange={(e) => setSearch(e.target.value)} />
                 </div>
                 {loading ? <StateBlock kind="loading" /> : error ? <StateBlock kind="error" onRetry={refetch} /> : (
-                    <SimpleTable columns={columns} rows={accounts} empty="Источников пока нет" testId="parcing-table" />
+                    <SimpleTable columns={columns} rows={accounts} empty="Источников пока нет" testId="twitter-sources-table" />
                 )}
             </Card>
 
@@ -72,4 +75,4 @@ const ParcingTab = () => {
     );
 };
 
-export default ParcingTab;
+export default TwitterControlCenter;

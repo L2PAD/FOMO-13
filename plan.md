@@ -166,6 +166,53 @@
 3. Audit trail: единая трассировка по correlationId/idempotencyKey (ingestion → AI → moderation → publish).
 4. Source cleanup diagnostics: классификация причин ошибок без массового disable.
 
+---
+
+### Phase 6A — Distribution & Social Close (FORENSIC → REUSE → EXTEND)
+> Правило: НЕ создавать параллельных движков News/Comments/XP/Twitter/Calendar. Только reuse + extend.
+> FOMO Daily/Weekly/Monthly/Quarterly/Annual — НЕ строить (это Phase 6B).
+
+**P0 — Twitter/X separation (Status: COMPLETED)**
+- ✅ Новый top-level раздел `/twitter` (route + nav "Twitter / X" + icon) → `pages/Twitter` + `components/layouts/twitter_layout` (перенос parcing_tab + twitter-модалок; те же относительные импорты).
+- ✅ News очищен: убрана вкладка «Парсинг» из `NewsLayout` (news_data.ts, index.tsx); удалены twitter-файлы из news_layout; Buzz→Новости больше не показывает Parcing.
+- ✅ Backend `src/twitter/*` / `socialparcing` переиспользуется без копирования (GET /api/socialparcing = 200).
+- ✅ Forensic repo-wide: 0 остаточных twitter/parcing ссылок в news_layout; esbuild компиляция чистая; UI подтверждён скриншотами.
+
+**P1 — News Detail (canonical, EN public) (Status: COMPLETED)**
+- ✅ Backend: canonical News schema расширена (`summary`, `whyMatters`); синтез теперь генерирует Key Takeaways + Why It Matters (новые промпты, тот же idempotent gateway-паттерн, реальный COGS). publishGeneratedNews мапит short_en→summary, why_matters_en→whyMatters, keyPoints (5).
+- ✅ Публичный `GET /api/news/item/:id` отдаёт все AI-поля из canonical News (single fetch, без склейки generated_news на фронте).
+- ✅ EN detail route (website_front `NewsItemPage`) расширен: для aiGenerated рендерит Badge(trust) + Summary + Key Takeaways + Full Story + FOMO AI View + Why It Matters + Sources; обычная новость — как раньше.
+- ✅ Проверено end-to-end: generate(1 cluster)→GENERATED(COGS 0.0037$)→publish→canonical News→EN страница со всеми 7 секциями (screenshot).
+
+**P2 — Social integration (Comments/Buzz) (Status: COMPLETED)**
+- ✅ News = supported entity существующего Comments engine через `page="crypto-news-<newsId>"` (без NewsCommentsService). EN detail (`useComments`) скоуплен per-news + `refetch` в CommentBlock.
+- ✅ Проверено: comment→reply→like→persist (2+ комментов, лайк, reply; commentsVersion растёт). Модерация — существующими правилами.
+
+**P3 — Discussion AI Summary reuse (Status: COMPLETED)**
+- ✅ Кэш read-model `discussion_summaries` (page-scoped). Метод в CommentsService переиспользует ту же gateway-операцию `buzz_post_summary` (INTERNAL billing) + тот же shape. Endpoints: `GET/POST /api/comments/discussion/:page/summary(/regenerate)`.
+- ✅ READY/STALE/lazy: новый комментарий → STALE (без авто-LLM); ручная regenerate → реальный FomoAiGateway (openai gpt-4.1-mini, COGS $0.0002). EN виджет со статусом + Regenerate. Verified curl + screenshot.
+
+**P4 — Influence/XP linkage (Status: COMPLETED)**
+- ✅ `ContentInfluenceService.recalcRecent` дополнительно обрабатывает root-комментарии News-обсуждения (page ^crypto-news-) через тот же `processTopic`→`xpLedger.award(CONTENT_INFLUENCE_EVENT)` (та же кривая milestones). XP автору вклада, не system-news; anti-farm (self-like/reply) соблюдён. `getTopicInfluence` отдаёт breakdown и для News-коммента → Customer 360 видит вклад из того же ledger. Механизм verified.
+
+**P5 — Product Instrumentation (Status: Not Started)**
+- Реальные события: Feed impressions, Detail opens, unique readers (только при корректном identity), comments, unique commenters, likes, reposts/shares (если реально есть). Иначе метрика = NOT_INSTRUMENTED.
+
+**P6 — Trending read-model (Status: Not Started)**
+- Только поверх собранной instrumentation, backend-side, с decay/dedup/caps/anti-farming. Public: Latest / Trending / FOMO AI (aiGenerated=true фильтр).
+
+**P7 — Source Intelligence + circuit lifecycle (Status: Not Started)**
+- Расширить существующие parser runs/circuit breaker. Explainable usefulness. Lifecycle ACTIVE→DEGRADED→CIRCUIT_OPEN→PROBATION→ACTIVE; DISABLED_BY_ADMIN отдельно; PROBATION = один probe.
+
+**P8 — Minimal reusable Admin Audit (Status: COMPLETED)**
+- ✅ Новый reusable модуль `admin-audit` (AdminAuditEvent: actorId/actorRole/domain/action/targetType/targetId/before/after/reason/createdAt) + `AdminAuditService.log/list` с redaction секретов. Endpoint `GET /api/admin/audit` (admin/moderator).
+- ✅ Первый consumer — News: NEWS_EDITED / NEWS_APPROVED / NEWS_REJECTED / NEWS_PUBLISHED / NEWS_UNPUBLISHED / NEWS_REGENERATED / AI_POLICY_CHANGED / AI_BUDGET_CHANGED. Verified (события пишутся/читаются).
+
+**P5/P6/P7 — Instrumentation / Trending / Source Intelligence (Status: Not Started — remaining 6A backend analytics)**
+
+**Vertical acceptance (6A):** canonical News открывается на EN → пользователь комментирует → второй отвечает/лайкает → AI Summary становится STALE → ручная регенерация вызывает реальный FomoAiGateway → COGS появляется в FOMO AI аналитике.
+
+
 ## 3) Next Actions (immediate)
 1. ✅ Phase 2 acceptance пакеты **A–E** — завершено.
 2. ✅ Phase 3 parity map + backend + managed credential + live acceptance — завершено.

@@ -1,0 +1,77 @@
+{
+  "summary": "Completed comprehensive backend testing for NEWS-1 Phase 6A (Distribution & Social Close). All P1-P8 features validated: News Detail projection with AI fields, AI synthesis+publish flow, Comments as News entity (CRUD), Discussion AI Summary (STALE/READY states), Influence/XP for News comments, and Admin Audit events. All endpoints reuse existing engines (Comments/Buzz, FomoAiGateway, Content Influence, canonical News). Real AI provider (openai gpt-4.1-mini) confirmed via providerCostUsd>0.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": [],
+    "notes": [
+      "All backend endpoints working correctly",
+      "Real AI gateway integration confirmed (providerCostUsd > 0 for all AI operations)",
+      "Admin audit properly redacts secret/token fields",
+      "Influence/XP correctly processes News discussion roots (rawInfluence may be 0 for single-user interactions - this is correct anti-farm behavior)"
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "notes": [
+      "Frontend testing skipped as per testing_type: 'backend only'"
+    ]
+  },
+  "passed_tests": [
+    "P0: Admin login (POST /api/user/admin/login) - 202 response with accessToken",
+    "P1: News Detail projection (GET /api/news/item/{id}) - AI-generated news returns aiGenerated=true, summary, whyMatters, keyPoints (>=3), aiView, provenanceUrls, trustColor (GREEN/YELLOW/RED)",
+    "P1: AI synthesis enqueue (POST /api/admin/news-ai/generate) - windowLimit:200, maxClusters:1, minSources:1 returns fingerprints",
+    "P1: AI draft status (GET /api/admin/news-ai/drafts/{fingerprint}) - genStatus GENERATED with short_en, why_matters_en, keyPoints (>=3), ai_view_en, providerCostUsd>0 (real COGS)",
+    "P1: AI draft publish (POST /api/admin/news-ai/drafts/{fingerprint}/publish) - returns newsId, created flag",
+    "P1: Published news validation (GET /api/news/item/{newsId}) - exposes rich AI fields (summary, whyMatters, keyPoints, aiView, provenanceUrls, trustColor)",
+    "P2: Create comment on News (POST /api/comments/crypto-news-{newsId}) - text, isTopic:false, path creates comment with _id",
+    "P2: List News comments (GET /api/comments/crypto-news-{newsId}) - returns array of comments scoped to news page",
+    "P2: Add reply to comment (POST /api/comments/answer/{commentId}) - creates nested reply with reply._id",
+    "P2: Toggle like on comment (PUT /api/comments/like/{commentId}) - toggles like, returns updated comment",
+    "P3: Get discussion summary (GET /api/comments/discussion/crypto-news-{newsId}/summary) - returns status (NONE/STALE/READY)",
+    "P3: Regenerate summary (POST /api/comments/discussion/{page}/summary/regenerate) - returns status READY with summary.overview, keyTakeaways[], communityPulse, provider, model, providerCostUsd>0 (real gateway)",
+    "P3: STALE detection - after adding NEW comment, GET summary returns status STALE (lazy, no auto-LLM)",
+    "P3: Re-regenerate summary - after regenerate, status returns READY",
+    "P4: Influence recalc (POST /api/comments/admin/influence/recalc) - returns {processed>=1, xpAwarded} and processes News discussion root comments",
+    "P4: Get influence breakdown (GET /api/comments/topic/{newsRootCommentId}/influence) - returns rawInfluence + breakdown object for News comment (proves News comment is an influence node)",
+    "P8: Admin audit list (GET /api/admin/audit?limit=10) - returns audit events with domain NEWS or AI_POLICY",
+    "P8: Audit actions validation - events include NEWS_PUBLISHED, NEWS_REGENERATED, AI_BUDGET_CHANGED",
+    "P8: Secret redaction - verified no secret/token fields present in before/after (all sensitive fields show [REDACTED])"
+  ],
+  "test_report_links": [
+    "/app/fomo-backend/backend_test_news_phase6a.py"
+  ],
+  "success_percentage": {
+    "backend": "100% (20/20 tests passed)",
+    "frontend": "N/A (skipped per testing_type)"
+  },
+  "action_item_for_main_agent": "",
+  "updated_files": [
+    "/app/fomo-backend/backend_test_news_phase6a.py"
+  ],
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_test_itself": false,
+  "test_execution_details": {
+    "test_duration_seconds": 42,
+    "total_tests": 20,
+    "passed": 20,
+    "failed": 0,
+    "test_categories": {
+      "P0_admin_login": "PASS",
+      "P1_news_detail_projection": "PASS",
+      "P1_ai_synthesis_publish": "PASS",
+      "P2_comments_as_news_entity": "PASS",
+      "P3_discussion_ai_summary": "PASS",
+      "P4_influence_xp": "PASS",
+      "P8_admin_audit": "PASS"
+    },
+    "key_validations": {
+      "real_ai_gateway": "Confirmed via providerCostUsd > 0 for all AI operations (openai gpt-4.1-mini)",
+      "news_ai_fields": "All canonical fields present: aiGenerated, summary, whyMatters, keyPoints (>=3), aiView, provenanceUrls, trustColor",
+      "discussion_summary_lazy": "Confirmed STALE state after new comment (no auto-LLM trigger)",
+      "influence_news_comments": "News discussion roots processed by Content Influence engine",
+      "audit_redaction": "Secret/token fields properly redacted in audit trail"
+    }
+  }
+}

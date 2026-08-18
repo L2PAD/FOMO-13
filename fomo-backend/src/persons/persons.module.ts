@@ -21,6 +21,7 @@ import { Funds, FundsSchema } from "src/funds/funds.model";
 import { News, NewsSchema } from "src/news/models/news.model";
 import { Project, ProjectSchema } from "src/projects/project.model";
 import { Comment, CommentSchema } from "src/comments/models/comment.model";
+import { DiscussionSummary, DiscussionSummarySchema } from "src/comments/models/discussion-summary.model";
 import { Action, ActionSchema } from "src/actions/models/action.model";
 import { Nft, NftSchema } from "src/nft/nft.model";
 import { NotificationsService } from "src/notifications/notifications.service";
@@ -50,6 +51,7 @@ import { ContentInfluenceService } from "src/comments/content-influence.service"
     MongooseModule.forFeature([
       { name: Person.name, schema: PersonSchema },
       { name: Comment.name, schema: CommentSchema },
+      { name: DiscussionSummary.name, schema: DiscussionSummarySchema },
       { name: User.name, schema: UserSchema },
       { name: Action.name, schema: ActionSchema },
 

@@ -10,6 +10,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { Comment, CommentDocument } from './models/comment.model';
+import { DiscussionSummary, DiscussionSummaryDocument } from './models/discussion-summary.model';
 import { User, UserDocument } from 'src/user/user.model';
 import { Message, MessageDocument } from 'src/message/models/message.model';
 import commentDto from './dto/comment.dto';
@@ -49,6 +50,7 @@ export class CommentsService {
         @InjectModel(Comment.name) private readonly CommentModel: Model<CommentDocument>,
         @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
         @InjectModel(Message.name) private readonly MessageModel: Model<MessageDocument>,
+        @InjectModel(DiscussionSummary.name) private readonly DiscussionSummaryModel: Model<DiscussionSummaryDocument>,
         private readonly activityService: ActivityService,
         private readonly filesService: FilesService,
         private readonly userActionLogsService: UserActionLogsService,
@@ -1091,6 +1093,138 @@ export class CommentsService {
 
         return { topicId, aiSummary, insights };
     }
+
+    // ─────────── NEWS-1 Phase 6A P3: page-scoped Discussion AI Summary ───────────
+    // Reuses the EXISTING BUZZ-AI gateway operation ("buzz_post_summary") and the
+    // same aiSummary shape. Scoped by `page` (e.g. "crypto-news-<newsId>") and
+    // cached in `discussion_summaries`. Lazy only: a new comment => STALE, never an
+    // automatic LLM call. Manual regenerate triggers a real FomoAiGateway call.
+    private async loadDiscussionComments(page: string): Promise<Array<any>> {
+        return this.CommentModel.find({
+            page,
+            moderationStatus: { $ne: "REMOVED" },
+        })
+            .sort({ date: 1 })
+            .lean();
+    }
+
+    private discussionVersions(comments: Array<any>): { contentVersion: string; commentsVersion: number } {
+        const commentsVersion = comments.length;
+        const contentVersion = this.hashString(
+            comments.map((c: any) => `${String(c._id)}:${c.text || ""}`).join("|"),
+        );
+        return { contentVersion, commentsVersion };
+    }
+
+    async getDiscussionSummary(page: string): Promise<any> {
+        const comments = await this.loadDiscussionComments(page);
+        const { contentVersion, commentsVersion } = this.discussionVersions(comments);
+        const stored: any = await this.DiscussionSummaryModel.findOne({ page }).lean();
+        if (!stored) {
+            return { page, summary: null, commentsVersion, status: "NONE" };
+        }
+        const isStale =
+            stored.status === "FAILED" ||
+            stored.contentVersion !== contentVersion ||
+            stored.commentsVersion !== commentsVersion;
+        const status = stored.status === "FAILED" ? "FAILED" : isStale ? "STALE" : "READY";
+        return {
+            page,
+            commentsVersion,
+            status,
+            summary: {
+                overview: stored.overview,
+                keyTakeaways: stored.keyTakeaways || [],
+                communityPulse: stored.communityPulse,
+                provider: stored.provider,
+                model: stored.model,
+                providerCostUsd: stored.providerCostUsd,
+                generatedAt: stored.generatedAt,
+                status,
+            },
+        };
+    }
+
+    async regenerateDiscussionSummary(page: string, userId?: string): Promise<any> {
+        const comments = await this.loadDiscussionComments(page);
+        const { contentVersion, commentsVersion } = this.discussionVersions(comments);
+
+        const commentsText = comments
+            .slice(0, 40)
+            .map((c: any) => `- ${c.text}`)
+            .join("\n");
+
+        const system =
+            "You are FOMO's crypto community analyst. Summarize a news discussion thread for a sidebar widget. " +
+            "Be concise, factual and neutral. Do NOT invent market data. Output strictly matches the JSON schema.";
+        const input =
+            `DISCUSSION PAGE: ${page}\n\n` +
+            `COMMENTS (${comments.length}):\n${commentsText || "(no comments yet)"}\n`;
+
+        const jsonSchema = {
+            type: "object",
+            properties: {
+                overview: { type: "string", description: "1-2 sentence overview of the discussion" },
+                keyTakeaways: { type: "array", items: { type: "string" }, description: "3-5 short bullet takeaways" },
+                communityPulse: { type: "string", description: "1 sentence on discussion sentiment/state" },
+            },
+            required: ["overview", "keyTakeaways", "communityPulse"],
+            additionalProperties: false,
+        };
+
+        const result: any = this.aiGateway
+            ? await this.aiGateway.execute({
+                userId: userId || "system",
+                operation: "buzz_post_summary",
+                billingContext: "INTERNAL",
+                mode: "STRUCTURED",
+                jsonSchema,
+                system,
+                input,
+                idempotencyKey: `buzz-sum-page-${page}-${contentVersion}-${commentsVersion}`,
+                context: { source: "NEWS_DISCUSSION_SUMMARY", page },
+            })
+            : { ok: false, errorCode: "gateway_unavailable" };
+
+        if (!result?.ok || !result?.content) {
+            await this.DiscussionSummaryModel.updateOne(
+                { page },
+                { $set: { page, status: "FAILED" } },
+                { upsert: true },
+            );
+            throw new HttpException(
+                result?.errorCode === "unknown_operation"
+                    ? "AI summary operation is not configured"
+                    : "AI Summary temporarily unavailable",
+                HttpStatus.SERVICE_UNAVAILABLE,
+            );
+        }
+
+        let parsed: any = {};
+        try { parsed = typeof result.content === "string" ? JSON.parse(result.content) : result.content; }
+        catch { parsed = {}; }
+
+        const summary = {
+            page,
+            overview: parsed.overview || "",
+            keyTakeaways: Array.isArray(parsed.keyTakeaways) ? parsed.keyTakeaways : [],
+            communityPulse: parsed.communityPulse || "",
+            provider: result.provider,
+            model: result.model,
+            latencyMs: result.latencyMs,
+            providerCostUsd: result.cost?.providerCostUsd ?? null,
+            creditsCharged: result.credits?.captured ?? 0,
+            generatedAt: new Date(),
+            contentVersion,
+            commentsVersion,
+            status: "READY" as const,
+        };
+
+        await this.DiscussionSummaryModel.updateOne({ page }, { $set: summary }, { upsert: true });
+
+        return { page, commentsVersion, status: "READY", summary };
+    }
+
 
     private hashString(str: string): string {
         let h = 0;

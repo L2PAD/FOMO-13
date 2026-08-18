@@ -12,6 +12,7 @@ import { FundsRatingService } from "./funds-rating.service";
 import { FilesService } from "../files/files.service";
 import { RatingService } from "src/rating/rating.service";
 import { CommentsService } from "src/comments/comments.service";
+import { DiscussionSummary, DiscussionSummarySchema } from "src/comments/models/discussion-summary.model";
 import { ActionsService } from "src/actions/actions.service";
 import { LimitsModule } from "src/limits/limits.module";
 
@@ -62,6 +63,7 @@ import {
     MongooseModule.forFeature([
       { name: Funds.name, schema: FundsSchema },
       { name: Comment.name, schema: CommentSchema },
+      { name: DiscussionSummary.name, schema: DiscussionSummarySchema },
       { name: User.name, schema: UserSchema },
       { name: Action.name, schema: ActionSchema },
       { name: Person.name, schema: PersonSchema },

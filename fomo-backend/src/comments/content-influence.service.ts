@@ -327,10 +327,38 @@ export class ContentInfluenceService implements OnModuleInit {
       const r = await this.processTopic(t, repliesByTopic.get(String(t._id)) || []);
       xpAwarded += r.awarded;
     }
-    if (xpAwarded > 0) {
-      this.logger.log(`Content influence: processed ${topics.length} topics, +${xpAwarded} XP`);
+
+    // ── NEWS-1 Phase 6A P4: News discussion contributions feed the SAME Content
+    // Influence/XP (author-side). A user's root comment on a News item earns XP
+    // from the REAL engagement it attracts (likes / unique reply authors), using
+    // the exact same milestone curve and ledger event. The AI/system news author
+    // is never rewarded; only human contributors are. NO separate "News XP".
+    const newsComments = await this.commentModel
+      .find({
+        page: { $regex: "^crypto-news-" },
+        isTopic: { $ne: true },
+        moderationStatus: { $ne: "REMOVED" },
+        date: { $gte: since },
+      })
+      .lean();
+    // Roots = news comments that are NOT referenced as a reply (answer) of another.
+    const replyIds = new Set<string>();
+    for (const c of newsComments) {
+      for (const a of ((c as any).answers || [])) replyIds.add(String(a));
     }
-    return { processed: topics.length, xpAwarded };
+    const newsRoots = newsComments.filter((c: any) => !replyIds.has(String(c._id)));
+    const newsRepliesByRoot = await this.loadRepliesByTopic(newsRoots);
+    let newsXp = 0;
+    for (const root of newsRoots) {
+      const r = await this.processTopic(root, newsRepliesByRoot.get(String(root._id)) || []);
+      newsXp += r.awarded;
+    }
+    xpAwarded += newsXp;
+
+    if (xpAwarded > 0) {
+      this.logger.log(`Content influence: processed ${topics.length} topics + ${newsRoots.length} news roots, +${xpAwarded} XP`);
+    }
+    return { processed: topics.length + newsRoots.length, xpAwarded };
   }
 
   /** Public influence read-model for a single topic (Customer 360 / profiles). */

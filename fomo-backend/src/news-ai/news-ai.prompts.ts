@@ -67,3 +67,33 @@ Requirements:
 - Maximum 240 characters
 
 Return ONLY the insight.`;
+
+export const KEY_TAKEAWAYS_PROMPT = `Extract the 3-5 most important key takeaways from this crypto news.
+
+Headline: {headline}
+Summary: {summary}
+Source context:
+{context}
+
+Requirements:
+- Return 3 to 5 short bullet points, one per line
+- Each bullet under 120 characters, factual and specific
+- No numbering, no leading dashes or symbols — plain text lines only
+- Write in {language}
+
+Return ONLY the bullet lines separated by newlines.`;
+
+export const WHY_MATTERS_PROMPT = `Explain concisely why this crypto news matters for the market and investors.
+
+Headline: {headline}
+Summary: {summary}
+Assets: {assets}
+
+Requirements:
+- 2-3 sentences focused on impact, risks and what to watch
+- Do NOT restate the headline; add analytical value
+- Maximum 320 characters
+- Write in {language}
+
+Return ONLY the explanation text.`;
+
