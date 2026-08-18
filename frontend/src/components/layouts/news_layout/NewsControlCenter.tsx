@@ -76,11 +76,13 @@ const OverviewTab: React.FC = () => {
   const [ov, setOv] = useState<any>(null);
   const [pc, setPc] = useState<any>(null);
   const [diag, setDiag] = useState<any>(null);
+  const [ai, setAi] = useState<any>(null);
   const load = useCallback(async () => {
-    const [o, p, d] = await Promise.all([npOverview(), npParsing(), npDiagnostics()]);
+    const [o, p, d, a] = await Promise.all([npOverview(), npParsing(), npDiagnostics(), naOverview()]);
     if (o.success) setOv(o.data);
     if (p.success) setPc(p.data);
     if (d.success) setDiag(d.data);
+    if (a.success) setAi(a.data);
   }, []);
   useEffect(() => { load(); const t = setInterval(load, 20000); return () => clearInterval(t); }, [load]);
   if (!ov) return <div style={{ color: T.sub, padding: 20 }}>Загрузка…</div>;
@@ -93,9 +95,18 @@ const OverviewTab: React.FC = () => {
     { k: "Реестр источников", ok: (ov.sources?.total || 0) > 0 },
     { k: "БД fomo_market", ok: (diag?.checks || []).find((c: any) => c.key === "registry")?.ok ?? true },
     { k: "Импортёр → News", ok: (diag?.checks || []).find((c: any) => c.key === "importer")?.ok ?? true },
-    { k: "AI-провайдер", ok: null },
+    { k: "AI-провайдер", ok: ai?.budget ? (ai.budget.status !== "LIMIT_REACHED") : null },
     { k: "Доставка на сайт", ok: (ov.articlesTotal || 0) > 0 },
   ];
+
+  // unified operational alerts (news parser + AI pipeline) — real read-models only
+  const aiAlerts: Array<{ label: string; detail: string; color: string }> = [];
+  if (ai?.budget?.status === "LIMIT_REACHED") aiAlerts.push({ label: "AI бюджет исчерпан", detail: `COGS ${ai.budget.todayCogs}$/день`, color: T.bad });
+  else if (ai?.budget?.status === "WARNING") aiAlerts.push({ label: "AI бюджет — предупреждение", detail: `использовано ${ai.budget.usagePct}%`, color: T.warn });
+  if ((ai?.queue?.failed || 0) > 0) aiAlerts.push({ label: "Очередь AI: сбои", detail: `${ai.queue.failed} job(s) failed`, color: T.bad });
+  if ((ai?.byGenStatus?.FAILED_RETRYABLE || 0) > 0) aiAlerts.push({ label: "Генерация: повтор", detail: `${ai.byGenStatus.FAILED_RETRYABLE} FAILED_RETRYABLE`, color: T.warn });
+  if ((ai?.byGenStatus?.PENDING_BUDGET || 0) > 0) aiAlerts.push({ label: "Ожидают бюджета", detail: `${ai.byGenStatus.PENDING_BUDGET} PENDING_BUDGET`, color: T.warn });
+  if ((ai?.byModeration?.NEEDS_REVIEW || 0) > 0) aiAlerts.push({ label: "Очередь модерации", detail: `${ai.byModeration.NEEDS_REVIEW} на проверке`, color: T.warn });
 
   return (
     <div style={{ display: "grid", gap: 16 }}>
@@ -117,17 +128,24 @@ const OverviewTab: React.FC = () => {
 
       <Card>
         <div style={{ fontSize: 15, fontWeight: 800, color: T.ink, marginBottom: 10 }}>Требует внимания</div>
-        {(!ov.needsAttention || ov.needsAttention.length === 0) ? (
+        {((ov.needsAttention?.length || 0) === 0 && aiAlerts.length === 0) ? (
           <div style={{ color: GREEN, fontSize: 13 }}>Всё в порядке — критичных проблем нет.</div>
         ) : (
           <div style={{ display: "grid", gap: 6 }}>
-            {ov.needsAttention.map((a: any, i: number) => (
-              <div key={i} style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 13, color: T.ink }}>
+            {(ov.needsAttention || []).map((a: any, i: number) => (
+              <div key={`s${i}`} style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 13, color: T.ink }}>
                 <Pill text={a.type === "stale" ? "Устарели данные" : "Сбои"} color={a.type === "stale" ? T.warn : T.bad} />
                 <span>{a.source}</span>
                 <span style={{ color: T.faint }}>
                   {a.type === "stale" ? `${a.staleMinutes} мин без обновления` : `${a.failures} ошибок подряд`}
                 </span>
+              </div>
+            ))}
+            {aiAlerts.map((a, i) => (
+              <div key={`a${i}`} data-testid={`ncc-alert-ai-${i}`} style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 13, color: T.ink }}>
+                <Pill text="AI" color={a.color} />
+                <span>{a.label}</span>
+                <span style={{ color: T.faint }}>{a.detail}</span>
               </div>
             ))}
           </div>
@@ -142,6 +160,30 @@ const OverviewTab: React.FC = () => {
         <KPI label="Всего статей" value={fmtNum(ov.articlesTotal)} />
         <KPI label="Последний парсинг" value={ov.lastSuccessfulParseAt ? fmtDate(ov.lastSuccessfulParseAt) : "—"} sub={ov.lastSuccessfulParseAt ? new Date(ov.lastSuccessfulParseAt).toLocaleTimeString("ru-RU") : ""} />
       </div>
+
+      <Card>
+        <div style={{ fontSize: 15, fontWeight: 800, color: T.ink, marginBottom: 12 }}>Редакционный конвейер</div>
+        <div style={{ display: "flex", alignItems: "stretch", gap: 6, flexWrap: "wrap" }}>
+          {[
+            { k: "Источники", v: `${ov.sources?.active ?? 0}` },
+            { k: "Raw (24ч)", v: fmtNum(ov.last24h?.fetched) },
+            { k: "Уникальные", v: fmtNum(ov.last24h?.new) },
+            { k: "AI черновики", v: fmtNum(ai?.drafts ?? 0), dim: !ai },
+            { k: "На проверке", v: fmtNum(ai?.byModeration?.NEEDS_REVIEW ?? 0), dim: !ai },
+            { k: "Approved", v: fmtNum(ai?.byModeration?.APPROVED ?? 0), dim: !ai },
+            { k: "Published", v: fmtNum(ai?.byModeration?.PUBLISHED ?? 0), dim: !ai, accent: true },
+          ].map((s, i, arr) => (
+            <React.Fragment key={s.k}>
+              <div style={{ flex: 1, minWidth: 96, textAlign: "center", padding: "10px 8px", border: `1px solid ${T.border}`, borderRadius: 10, background: s.accent ? T.soft : "transparent", opacity: s.dim ? 0.6 : 1 }}>
+                <div style={{ fontSize: 20, fontWeight: 800, color: s.accent ? GREEN : T.ink }}>{s.v}</div>
+                <div style={{ fontSize: 11, color: T.sub, marginTop: 2 }}>{s.k}</div>
+              </div>
+              {i < arr.length - 1 && <div style={{ alignSelf: "center", color: T.faint, fontSize: 16 }}>→</div>}
+            </React.Fragment>
+          ))}
+        </div>
+        <div style={{ fontSize: 11, color: T.faint, marginTop: 8 }}>Парсер и AI изолированы. Значения — реальные read-models (news-parser + news-ai).</div>
+      </Card>
     </div>
   );
 };
